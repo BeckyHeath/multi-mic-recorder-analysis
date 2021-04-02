@@ -56,12 +56,9 @@ for(i in c("non_continuous", "continuous")){
       bp <<- bp + theme(axis.title.x = element_blank()) +
           theme(legend.position = "none")
     }
-    
     plot_name <- paste("BP_", i,"_",j, sep="")
-    assign(plot_name,bp)
-
+    assign(plot_name,bp) 
   }
-  
 }
 
 top <- BP_continuous_n | BP_continuous_y
