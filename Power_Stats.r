@@ -10,6 +10,8 @@
 # Load Libraries and Set WD ####
 library(ggplot2)
 library(patchwork)
+library(stringr)
+library(tools)
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
@@ -30,30 +32,37 @@ for(i in c("non_continuous", "continuous")){
     sample$device <- as.factor(sample$device) 
     sample$phase <- factor(sample$phase, levels=c("PO", "REC", "UP","REC+UP","IDLE"))
     if(j =="n"){
-      bp <- ggplot(sample, aes(x=device, y=power, fill=device)) + 
+      title = str_replace(i,"_"," ")
+      title = toTitleCase(title)
+      bp <<- ggplot(sample, aes(x=device, y=power, fill=device)) + 
         geom_boxplot(lwd=0.2) +
         scale_fill_brewer(palette="Blues") +
-        labs(title= i ,x="Mic No.", y = "Power (W)") +
+        labs(title= title ,x="Mic Number.", y = "Power (W)") +
         theme_classic() +
         ylim(0,6) +
         theme(legend.position = "none")
-      
-        plot_name <- paste("BP_", i,"_",j, sep="")
-        assign(plot_name,bp)
     } else {
-      bp <- ggplot(sample, aes(x=phase, y=power, fill=device)) + 
+      bp <<- ggplot(sample, aes(x=phase, y=power, fill=device)) + 
         geom_boxplot(lwd=0.2) +
         scale_fill_brewer(palette="Blues", name = "Mic No.") +
         labs(x="Phase") +
         theme_classic() +
         ylim(0,6) +
+        theme(legend.position =c(0.9,0.3)) +
         theme(axis.title.y=element_blank())
-        plot_name <- paste("BP_", i,"_",j, sep="")
-        assign(plot_name,bp)
     }
+    
+    if(i == "continuous"){
+      bp <<- bp + theme(axis.title.x = element_blank()) +
+          theme(legend.position = "none")
+    }
+    
+    plot_name <- paste("BP_", i,"_",j, sep="")
+    assign(plot_name,bp)
 
-  } 
   }
+  
+}
 
 top <- BP_continuous_n | BP_continuous_y
 bottom <- BP_non_continuous_n | BP_non_continuous_y
