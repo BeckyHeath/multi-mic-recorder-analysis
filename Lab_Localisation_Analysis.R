@@ -57,12 +57,10 @@ plot_data_targets <- function(df){
     geom_point() + 
     xlim(0,100) +
     ylim(-180,180)+
-    xlab("Time") +
     ylab("Azimuth")+
+    xlab("Time")+
+    theme_minimal() +
     theme(legend.position = "none")
-    
-    theme_minimal()
-  
   return(plot)
   
 }
@@ -79,16 +77,15 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   label = str_remove(label,"/localized_")
   label = str_remove(label,".wav")
       
-  i_file <- section_data(i_file)
+  #i_file <- section_data(i_file)
     
   o_plot <- plot_data_targets(i_file)
     
   assign(label, o_plot)
 }
-    
-p <- `1a_pinknoise_N_2`| `1a_pinknoise2_N_2`| `1b_bird_N_2`
 
-p
+plot <- `1a_pinknoise_N_2`| `1a_pinknoise2_N_2` | `1b_bird_N_2`
+plot
 
 
 
