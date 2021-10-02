@@ -1,0 +1,54 @@
+{
+    "PAUSE_LENGTH": [
+        "#PLN#", 
+        "750"
+    ], 
+    "Network": [
+        "", 
+        "default.n"
+    ], 
+    "TFNAME": [
+        "#TFNAME#", 
+        "tf_circular_6ch.zip"
+    ], 
+    "MIN_SOURCE_INTERVAL": [
+        "#MSI#", 
+        "20"
+    ], 
+    "SEP_LOWER_BOUND_FREQUENCY": [
+        "#SLBF#", 
+        "1000"
+    ], 
+    "PERIOD": [
+        "#PERIOD#", 
+        "20"
+    ], 
+    "THRESH": [
+        "#THRESH#", 
+        "14"
+    ], 
+    "MICNO": [
+        "#MICNO#", 
+        "0 1 2 3 4 5"
+    ], 
+    "SEP_UPPER_BOUND_FREQUENCY": [
+        "#SUBF#", 
+        "8000"
+    ], 
+    "UPPER_BOUND_FREQUENCY": [
+        "#UBF#", 
+        "8000"
+    ], 
+    "FRAMES": [
+        "#FRM#", 
+        "20"
+    ], 
+    "LOWER_BOUND_FREQUENCY": [
+        "#LBF#", 
+        "1000"
+    ], 
+    "NUM_SOURCE": [
+        "#NS#", 
+        "1"
+    ]
+}
