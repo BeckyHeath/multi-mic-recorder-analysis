@@ -1,0 +1,8 @@
+file.name,parameter.json,threshold,num source,outcome
+1a2_pinknoise_N_2,circular_28_1.json,28,1,"Looks good, just noise between signals"
+1a_pinknoise_N_2,,,,
+1b_bird_N_2,,,,
+3a_pinknoise_Y_3,,,,
+5a_pinknoise_Y_2,,,,
+5b_bird_Y_2,,,,
+7a_pinknoise_N_3,,,,

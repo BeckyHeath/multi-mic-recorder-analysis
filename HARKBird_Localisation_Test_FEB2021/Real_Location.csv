@@ -1,9 +1,0 @@
-﻿sig.type,Start.time,Start.azimuth,value
-sweep,0,-180,real
-tone,15,-180,real
-tone,30,-90,real
-tone,45,-45,real
-tone,60,0,real
-tone,75,90,real
-tone,90,135,real
-sweep,105,0,real

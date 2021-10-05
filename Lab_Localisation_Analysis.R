@@ -28,16 +28,18 @@ true <- read.csv("HARKBird_Localisation_Test_FEB2021/Real_Location.csv")
 
 section_data <- function(df){
   
-  # Function to group the real data into distinct time periods?? idk if useful
-  df$Start.time[df$Start.time < 15] <- 0
-  df$Start.time[df$Start.time > 15 & df$Start.time < 30] <- 15
-  df$Start.time[df$Start.time > 30 & df$Start.time < 45] <- 30
-  df$Start.time[df$Start.time > 45 & df$Start.time < 60] <- 45
+  # Function to group the real data into distinct time periods?? 
+  # The recordings are then in groups to better compare real/predicted
+  df$Start.time[df$Start.time < 10] <- 0
+  df$Start.time[df$Start.time > 12 & df$Start.time < 16] <- 15
+  df$Start.time[df$Start.time > 30 & df$Start.time < 35] <- 30
+  df$Start.time[df$Start.time > 45 & df$Start.time < 50] <- 45
   df$Start.time[df$Start.time > 60 & df$Start.time < 75] <- 60
-  df$Start.time[df$Start.time > 75 & df$Start.time < 90] <- 75
-  df$Start.time[df$Start.time > 90 & df$Start.time < 105] <- 90
-  df$Start.time[df$Start.time > 105 & df$Start.time < 120] <- 105
-  df$Start.time[df$Start.time > 120 & df$Start.time < 135] <- 120
+  df$Start.time[df$Start.time > 75 & df$Start.time < 80] <- 75
+  df$Start.time[df$Start.time > 90 & df$Start.time < 95] <- 90
+  df$Start.time[df$Start.time > 105 & df$Start.time < 110] <- 105
+  df$Start.time[df$Start.time > 120 & df$Start.time < 125] <- 120
+  df$Start.time[df$Start.time > 125] <- 131
   return(df)
 }
 
@@ -87,9 +89,6 @@ true_pred_plots <- function(df){
     ylim(-180,180)+
     theme_minimal()
   
-  plot
-  
-  
   return(plot)
 }
 
@@ -115,7 +114,10 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   label = str_remove(label,"/localized_")
   label = str_remove(label,".wav")
       
-  i_file <- section_data(i_file)
+  i_file <- section_data(i_file) # get data to match up 
+  
+  #disregard sounds not made at the 15s intervals
+  i_file <- i_file[i_file$Start.time %% 15 == 0,]
     
   o_plot <- plot_data_targets(i_file)
     
@@ -124,7 +126,7 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
 
 # Patchwork Plots 
 # TODO: Still needs some formatting fixes
-plot <- `1a_pinknoise_N_2`| `1a_pinknoise2_N_2` | `1b_bird_N_2`
+plot <- `1a_pinknoise_N_2`| `1a2_pinknoise_N_2` | `1b_bird_N_2`
 plot2 <- `7a_pinknoise_N_3` | `5a_pinknoise_Y_2`| `5b_bird_Y_2`
 
 plot/plot2
