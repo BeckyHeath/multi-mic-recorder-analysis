@@ -19,7 +19,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # Load data and Split Dataset to 6mic and 1mic
 
-dataset.og <- read.csv("power-usage-data.csv")
+dataset.og <- read.csv("Data/power-usage-data.csv")
 
 dataset <- dataset.og
 dataset$test <- as.factor(dataset$test)
