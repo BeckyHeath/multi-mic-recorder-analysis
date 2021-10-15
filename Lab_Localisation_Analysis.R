@@ -18,13 +18,13 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 ##### Define Test File Location #####
 
-file_directory = "HARKBird_Localisation_Test_FEB2021/no_intro_thresh=28"
+file_directory = "Data/Lab_Localisation/outputs_threshold_experiments/optimum_threshold"
 
 
 ##### Define Functions #####
 
 # Load in true values: 
-true <- read.csv("HARKBird_Localisation_Test_FEB2021/Real_Location.csv")
+true <- read.csv("Data/Real_Location.csv")
 
 section_data <- function(df){
   
@@ -37,9 +37,9 @@ section_data <- function(df){
   df$Start.time[df$Start.time > 60 & df$Start.time < 75] <- 60
   df$Start.time[df$Start.time > 75 & df$Start.time < 80] <- 75
   df$Start.time[df$Start.time > 90 & df$Start.time < 95] <- 90
-  df$Start.time[df$Start.time > 105 & df$Start.time < 110] <- 105
-  df$Start.time[df$Start.time > 120 & df$Start.time < 125] <- 120
-  df$Start.time[df$Start.time > 125] <- 131
+  df$Start.time[df$Start.time > 105 & df$Start.time < 110] <- 131 # ignore
+  df$Start.time[df$Start.time > 120 & df$Start.time < 125] <- 131 # ignore 
+  df$Start.time[df$Start.time > 125] <- 131 # ignore
   return(df)
 }
 
@@ -80,9 +80,15 @@ true_pred_plots <- function(df){
   merge_df <- merge(df, true, by=c("Start.time"),all=TRUE)
   merge_df <- rename(merge_df, Real.Azimuth = Start.azimuth)
   
+  merge_df_er <- merge_df[complete.cases(merge_df),]
+  
+  error_data <- find_error(merge_df_er$Real.Azimuth, merge_df_er$Predicted.Azimuth)
+  printout <- paste0("\n###############\nFile:", label, "\nMean Error:", error_data[1],"\nSD:", error_data[2], "\nR_sq:", error_data[3])
+  cat(printout)
   
   # TODO: Get some stats for this at some point 
   plot <- ggplot(merge_df, aes(Real.Azimuth, Predicted.Azimuth))+
+    ggtitle(label) +
     geom_point(color = "Red", size =4, shape = 4)+
     geom_abline(color= "black", size = 0.6) +
     xlim(-180,180)+
@@ -92,6 +98,20 @@ true_pred_plots <- function(df){
   return(plot)
 }
 
+
+find_error <- function(x,y){
+  # finds the mean and sd of the error and r-sq where:
+  # x = real 
+  # and y = predicted
+  dif <- y-x
+  dif = dif * dif 
+  dif = sqrt(dif)
+  mean_val <- mean(dif)
+  sd_val <- sd(dif)
+  r_sq <- 1-sum((x-y)^2)/sum((x - mean(x))^2)
+  out <- c(mean_val,sd_val,r_sq)
+  return(out)
+}
 
 
 
@@ -126,7 +146,7 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
 
 # Patchwork Plots 
 # TODO: Still needs some formatting fixes
-plot <- `1a_pinknoise_N_2`| `1a2_pinknoise_N_2` | `1b_bird_N_2`
+plot <- `1a_pinknoise2_N_2`| `1a_pinknoise2_N_2` | `1b_bird_N_2`
 plot2 <- `7a_pinknoise_N_3` | `5a_pinknoise_Y_2`| `5b_bird_Y_2`
 
 plot/plot2
@@ -145,7 +165,8 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   
   # tidy label/ graph title name: 
   label = str_remove(as.character(i), file_directory)
-  label = str_remove(label,"/localized_")
+  label = substring(label, 4)
+  label = str_remove(label,"_localized_")
   label = str_remove(label,".wav")
   
   i_file <- section_data(i_file)
@@ -157,16 +178,18 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
 
 # Patchwork Plots 
 # TODO: Still needs some formatting fixes
-plot <- `1a_pinknoise_N_2`| `1a2_pinknoise_N_2` | `1b_bird_N_2`
-plot2 <- `7a_pinknoise_N_3` | `5a_pinknoise_Y_2`| `5b_bird_Y_2`
+# TODO: Resolve threshold issues
+plot <- `7a_pinknoise_N_3`| `5a_pinknoise_Y_2`
+plot2 <- `1b_bird_N_2` | `5b_bird_Y_2`
 
 plot/plot2
 
-`1a_pinknoise_N_2`
-`1a_pinknoise2_N_2`
-`1a2_pinknoise_N_2`
-`1b_bird_N_2`
-`3a_pinknoise_Y_3` # PROBLEM 
-`5a_pinknoise_Y_2`
-`5b_bird_Y_2` # PROBLEM 
-`7a_pinknoise_N_3`
+
+
+
+
+
+
+
+
+
