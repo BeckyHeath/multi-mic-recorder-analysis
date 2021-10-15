@@ -30,6 +30,12 @@ section_data <- function(df){
   
   # Function to group the real data into distinct time periods?? 
   # The recordings are then in groups to better compare real/predicted
+  #
+  # recallibrate start position to -180 
+  # 30deg mismatch in the transfer function (See HARKTOOL5)
+  
+  df$Start.azimuth <- df$Start.azimuth - 30
+  
   df$Start.time[df$Start.time < 10] <- 0
   df$Start.time[df$Start.time > 12 & df$Start.time < 16] <- 15
   df$Start.time[df$Start.time > 30 & df$Start.time < 35] <- 30
