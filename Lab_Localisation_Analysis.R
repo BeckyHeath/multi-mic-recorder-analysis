@@ -95,8 +95,8 @@ true_pred_plots <- function(df){
   # TODO: Get some stats for this at some point 
   plot <- ggplot(merge_df, aes(Real.Azimuth, Predicted.Azimuth))+
     ggtitle(label) +
-    geom_point(color = "Red", size =4, shape = 4)+
-    geom_abline(color= "black", size = 0.6) +
+    geom_point(color = "Red", size =4, shape = 4, stroke = 1.5)+
+    geom_abline(color= "black", size = 0.6, alpha = 0.5) +
     xlim(-180,180)+
     ylim(-180,180)+
     theme_minimal()
@@ -174,6 +174,9 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   label = substring(label, 4)
   label = str_remove(label,"_localized_")
   label = str_remove(label,".wav")
+  #label = substring(label, 4, nchar(label)-2)
+  
+
   
   i_file <- section_data(i_file)
   
@@ -185,8 +188,8 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
 # Patchwork Plots 
 # TODO: Still needs some formatting fixes
 # TODO: Resolve threshold issues
-plot <- `7a_pinknoise_N_3`| `5a_pinknoise_Y_2`
-plot2 <- `1b_bird_N_2` | `5b_bird_Y_2`
+plot <- `pinknoise_N`| `pinknoise_Y`
+plot2 <- `bird_N` | `bird_Y`
 
 plot/plot2
 
