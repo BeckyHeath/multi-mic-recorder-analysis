@@ -47,6 +47,10 @@ section_data <- function(df){
   df$Start.time[df$Start.time > 120 & df$Start.time < 125] <- 131 # ignore 
   df$Start.time[df$Start.time > 125] <- 131 # ignore
   
+  # Remove all datapoints after 130
+  df <- subset(df, Start.time < 130)
+  
+  
   return(df)
 }
 
@@ -180,6 +184,9 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   
 
   i_file <- section_data(i_file)
+  
+  # TODO BIN EVERYTHING AFTER 131 PRE DOING THE STATS 
+
   
   o_plot <- true_pred_plots(i_file)
   
