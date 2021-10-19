@@ -99,7 +99,7 @@ true_pred_plots <- function(df){
   
   # TODO: Get some stats for this at some point 
   plot <- ggplot(merge_df, aes(Real.Azimuth, Predicted.Azimuth))+
-    ggtitle(label) +
+    ggtitle(label_g) +
     geom_point(color = "Red", size =4, shape = 4, stroke = 1.5)+
     geom_abline(color= "black", size = 0.6, alpha = 0.5) +
     xlim(-180,180)+
@@ -164,21 +164,35 @@ plot/plot2
 
 ##### Generate Real vs. Predicted Plots ####
 
+j=0
 # Load in all the files you need: 
 for(i in list.dirs(file_directory, recursive = FALSE)){
   path = paste(as.character(i),"sourcelist.csv", sep = "/")
   i_file = read.csv(path, sep = "\t")
   
-  # Stop files that didn't catch any signals tripping out the loop
-  if(nrow(i_file) == 0){
-    next
-  }
+  # Generate Label
   
   # tidy label/ graph title name: 
   label = str_remove(as.character(i), file_directory)
   label = substring(label, 4)
   label = str_remove(label,"_localized_")
   label = str_remove(label,".wav")
+  j=j+1
+  
+  if(j == 1){
+    label_g = "Waterproofed"
+  } else if(j==4){
+    label_g = "Not Waterproofed"
+  } else {
+    label_g =""
+  }
+  
+  # Stop files that didn't catch any signals tripping out the loop
+  if(nrow(i_file) == 0){
+    next
+  }
+  
+
   
   #label = substring(label, 4, nchar(label)-2) # For removing unnecessary data in the label
   
@@ -200,7 +214,6 @@ plot <- `7a_pinknoise_N_3`| `5a_pinknoise_Y_2`
 plot2 <- `1b_bird_N_2` | `5b_bird_Y_2`
 
 plot/plot2
-
 
 
 
