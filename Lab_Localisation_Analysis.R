@@ -1,5 +1,5 @@
 ########################################################################### .
-# Localisation Accuracy Scripts
+# Scripts for Analysing the Sweeps 
 #
 # Becky Heath
 # r.heath18@imperial.ac.uk
@@ -7,11 +7,6 @@
 # Autumn 2021
 
 ##### Load Packages and set working directory #####
-library(stringr)
-library(ggplot2)
-library(patchwork)
-library(tibble)
-library(tidyverse)
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
