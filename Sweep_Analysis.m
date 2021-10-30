@@ -31,6 +31,9 @@ out_data = cat(2,frequencies,psdata);
 % psd_function.plot % (uncomment this if you want to see the plots)
 
 % Export Spectrums as csv (first col freq, second col data) 
-out_file_name = "Data\Sweep_Data\" + file_names(10) + ".csv";
+ch_no = 1;
+
+out_file_name = "Data\Sweep_Data\" + file_names(10) + "_ch="+ ch_no+ ".csv";
+out_file_name = erase(out_file_name, ".wav");
 
 csvwrite(out_file_name, out_data);
