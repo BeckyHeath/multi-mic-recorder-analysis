@@ -23,14 +23,9 @@ test_file = dir_path + file_names(10); % just the test file at the minute
 % Generate Power Spectrum TODO: Check that this is correct)
 n_fft = floor((length(y)/30));
 psd_function = psd(spectrum.periodogram,y,'Fs',Fs,'NFFT',n_fft);
-frequencies = psd_function.Frequencies;
 psdata = psd_function.Data;
-
-out_data = cat(2,frequencies,psdata);
 
 % psd_function.plot % (uncomment this if you want to see the plots)
 
-% Export Spectrums as csv (first col freq, second col data) 
+% Export Spectrums 
 out_file_name = "Data\Sweep_Data\" + file_names(10) + ".csv";
-
-csvwrite(out_file_name, out_data);
