@@ -16,14 +16,28 @@ dir_path = "Data\Lab_Localisation\Audio_Data_Edited\Files_standardised\";
 files = dir(dir_path + "*.wav");
 file_names =  { files.name };
 
+%%%% ALREADY DONE - UNCOMMENT TO RE-DO 
 status = generate_spectra(file_names, dir_path);
 
 % Seperate Into YES waterproof or NO waterproof groups 
-% + Average the spectrum accross groups 
-
-% change path and indexing conditions
 dir_path = "Data\Sweep_Data\";
-files_wp = dir(dir_path + "*_*_Y*.wav");
+files_wp = dir(dir_path + "*_*_Y*.csv");
+files_no_wp = dir(dir_path + "*_*_N*.csv");
+
+files_wp_names =  { files_wp.name };
+files__no_wp_names =  { files_no_wp.name };
+
+% Extract and Average the Data
+for i = 1:size(files_wp_names,2)
+    i_file = files_wp_names(i);
+    path = dir_path + i_file;
+    data = readtable(path);
+    disp(i_file)
+    disp(size(data))
+    
+end
+ 
+
 
 
 % Subtract the Waterproofed Spectra from Un-waterproofed spectra 
@@ -39,7 +53,8 @@ function status = generate_spectra(x,dir_path)
     for file_no = 1:size(x,2)
         in_file = x(file_no);
         test_file = dir_path + in_file; 
-        [y_all,Fs] = audioread(test_file);
+        samples = [1,25*16000];   % Change if Fs is not 16000
+        [y_all,Fs] = audioread(test_file,samples);
     
         for ch_no = 1:size(y_all,2)
             y = y_all(:,ch_no);
@@ -60,5 +75,5 @@ function status = generate_spectra(x,dir_path)
             csvwrite(out_file_name, out_data);
         end
     end
-
+    status = "Job Done"; % placeholder for now
 end 
