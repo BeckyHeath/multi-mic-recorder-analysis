@@ -10,9 +10,8 @@
 tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
-% Load in Audio File
-
-% Set path to files + load file (TODO: make this iterative): 
+% Load in Audio Files and Generate Power Spectrums
+% Power Spectrums Saved in Data/Sweep_Data
 dir_path = "Data\Lab_Localisation\Audio_Data_Edited\Files_standardised\";
 files = dir(dir_path + "*.wav");
 file_names =  { files.name };
