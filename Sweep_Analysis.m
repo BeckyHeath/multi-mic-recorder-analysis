@@ -28,12 +28,20 @@ files_wp_names =  { files_wp.name };
 files__no_wp_names =  { files_no_wp.name };
 
 % Extract and Average the Data
+file_dim = size(readtable(dir_path + files_wp_names(1)));
+num_vals = file_dim(1);
+
+all_vals = table.empty(num_vals,0);
+
 for i = 1:size(files_wp_names,2)
     i_file = files_wp_names(i);
     path = dir_path + i_file;
     data = readtable(path);
-    disp(i_file)
-    disp(size(data))
+    spectra = data (:,2);
+    all_vals = cat(2,all_vals,spectra);
+
+    
+
     
 end
  
@@ -59,7 +67,7 @@ function status = generate_spectra(x,dir_path)
         for ch_no = 1:size(y_all,2)
             y = y_all(:,ch_no);
             % Generate Power Spectrum TODO: Check that this is correct)
-            n_fft = floor((length(y)/30));  
+            n_fft = floor((length(y)/15));  
             psd_function = psd(spectrum.periodogram,y,'Fs',Fs,'NFFT',n_fft);
             frequencies = psd_function.Frequencies;
             psdata = psd_function.Data;
