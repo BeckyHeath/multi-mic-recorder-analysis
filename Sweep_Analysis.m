@@ -1,6 +1,6 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Scripts for comparing power spectrums from 
-% two different types of .wav recordings (6ch)
+% two different types of .wav recordings (multichanel)
 %
 % Becky Heath 
 % Autumn 2021 
@@ -17,23 +17,26 @@ dir_path = "Data\Lab_Localisation\Audio_Data_Edited\Files_standardised\";
 files = dir(dir_path);
 file_names =  { files.name };
 
-test_file = dir_path + file_names(10); % just the test file at the minute 
-[y,Fs] = audioread(test_file);
+in_file = file_names(8);
+test_file = dir_path + in_file; 
+[y_all,Fs] = audioread(test_file);
 
-% Generate Power Spectrum TODO: Check that this is correct)
-n_fft = floor((length(y)/30));
-psd_function = psd(spectrum.periodogram,y,'Fs',Fs,'NFFT',n_fft);
-frequencies = psd_function.Frequencies;
-psdata = psd_function.Data;
+for ch_no = 1:size(y_all,2)
+    y = y_all(:,ch_no);
+    % Generate Power Spectrum TODO: Check that this is correct)
+    n_fft = floor((length(y)/30));  
+    psd_function = psd(spectrum.periodogram,y,'Fs',Fs,'NFFT',n_fft);
+    frequencies = psd_function.Frequencies;
+    psdata = psd_function.Data;
 
-out_data = cat(2,frequencies,psdata);
+    out_data = cat(2,frequencies,psdata);
 
-% psd_function.plot % (uncomment this if you want to see the plots)
+    % psd_function.plot % (uncomment this if you want to see the plots)
 
-% Export Spectrums as csv (first col freq, second col data) 
-ch_no = 1;
+    % Export Spectrums as csv (first col freq, second col data) 
+    out_file_name = "Data\Sweep_Data\" + in_file + "_ch="+ ch_no+ ".csv";
+    out_file_name = erase(out_file_name, ".wav");
 
-out_file_name = "Data\Sweep_Data\" + file_names(10) + "_ch="+ ch_no+ ".csv";
-out_file_name = erase(out_file_name, ".wav");
+    csvwrite(out_file_name, out_data);
 
-csvwrite(out_file_name, out_data);
+end
