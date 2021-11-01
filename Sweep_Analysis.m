@@ -25,18 +25,22 @@ files_wp = dir(dir_path + "*_*_Y*.csv");
 files_no_wp = dir(dir_path + "*_*_N*.csv");
 
 files_wp_names =  { files_wp.name };
-files__no_wp_names =  { files_no_wp.name };
+files_no_wp_names =  { files_no_wp.name };
 
-means_wp_names = get_means(dir_path,files_wp_names);
-means_no_wp_names = get_means(dir_path,files__no_wp_names);
 
-%plot(means.frequency,means.means)
+% get means: 
+[means_wp_names, frequency1] = get_means(dir_path,files_wp_names);
+[means_no_wp_names, frequency2] = get_means(dir_path,files_no_wp_names);
 
+%TODO: check frequencies match (they should do if generated in script)
 
 % Subtract the Waterproofed Spectra from Un-waterproofed spectra 
-
+dif = means_no_wp_names.means - means_wp_names.means;
+dif = table(dif);
+dif = cat(2,frequency1, dif);
 
 % Plot difference (and smooth?) 
+plot(dif.frequency, dif.dif,dif.frequency, means_wp_names.means,dif.frequency, means_no_wp_names.means)
 
 
 
@@ -75,7 +79,7 @@ end
 
 
 
-function outMeans = get_means(dir_path,file_list)
+function [ outMeans, outFrequencies ] = get_means(dir_path,file_list)
     % Define the df dimensions
     file_dim = size(readtable(dir_path + file_list(1)));
     num_vals = file_dim(1);
@@ -88,7 +92,7 @@ function outMeans = get_means(dir_path,file_list)
         label = char(i_file);
         path = dir_path + i_file;
         data = readtable(path);
-        plt = plot(data.Var1, data.Var2);
+        %plt = plot(data.Var1, data.Var2);
         data.Properties.VariableNames{1} = 'frequency';
         data.Properties.VariableNames{2} = label;
         frequencies = data(:,1);
@@ -102,4 +106,5 @@ function outMeans = get_means(dir_path,file_list)
         means = cat(2,frequencies, means);   
     end
     outMeans = means; % Export the mean data
+    outFrequencies = frequencies;
 end 
