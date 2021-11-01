@@ -27,28 +27,10 @@ files_no_wp = dir(dir_path + "*_*_N*.csv");
 files_wp_names =  { files_wp.name };
 files__no_wp_names =  { files_no_wp.name };
 
-% Extract and Average the Data
-file_dim = size(readtable(dir_path + files_wp_names(1)));
-num_vals = file_dim(1);
+means_wp_names = get_means(dir_path,files_wp_names);
+means_no_wp_names = get_means(files__no_wp_names);
 
-all_vals = table.empty(num_vals,0);
-
-% Load in data and join all sprectral data together
-for i = 1:size(files_wp_names,2)
-    i_file = files_wp_names(i);
-    label = char(i_file);
-    path = dir_path + i_file;
-    data = readtable(path);
-    data.Properties.VariableNames{2} = label;
-    spectra = data (:,2);
-    all_vals = cat(2,all_vals,spectra);
-
-    
-
-    
-end
- 
-
+%plot(means.frequency,means.means)
 
 
 % Subtract the Waterproofed Spectra from Un-waterproofed spectra 
@@ -59,6 +41,8 @@ end
 
 
 % Define Functions Below: 
+
+
 function status = generate_spectra(x,dir_path)
 
     for file_no = 1:size(x,2)
@@ -87,4 +71,35 @@ function status = generate_spectra(x,dir_path)
         end
     end
     status = "Job Done"; % placeholder for now
+end 
+
+
+
+function outMeans = get_means(dir_path,file_list)
+    % Define the df dimensions
+    file_dim = size(readtable(dir_path + file_list(1)));
+    num_vals = file_dim(1);
+
+    all_vals = table.empty(num_vals,0);
+
+    % Load in data and join all sprectral data together
+    for i = 1:size(file_list,2)
+        i_file = file_list(i);
+        label = char(i_file);
+        path = dir_path + i_file;
+        data = readtable(path);
+        plt = plot(data.Var1, data.Var2);
+        data.Properties.VariableNames{1} = 'frequency';
+        data.Properties.VariableNames{2} = label;
+        frequencies = data(:,1);
+        spectra = data (:,2);
+        all_vals = cat(2,all_vals,spectra);
+
+        % Average the values per row
+        all_vals_matrix = all_vals{:,:};
+        means = mean(all_vals_matrix,2);
+        means = table(means);
+        means = cat(2,frequencies, means);   
+    end
+    outMeans = means; % Export the mean data
 end 
