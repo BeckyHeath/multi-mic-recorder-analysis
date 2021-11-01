@@ -17,7 +17,7 @@ files = dir(dir_path + "*.wav");
 file_names =  { files.name };
 
 %%%% ALREADY DONE - UNCOMMENT TO RE-DO 
-status = generate_spectra(file_names, dir_path);
+%status = generate_spectra(file_names, dir_path);
 
 % Seperate Into YES waterproof or NO waterproof groups 
 dir_path = "Data\Sweep_Data\";
@@ -33,16 +33,23 @@ num_vals = file_dim(1);
 
 all_vals = table.empty(num_vals,0);
 
+% Load in data and join all sprectral data together
 for i = 1:size(files_wp_names,2)
     i_file = files_wp_names(i);
+    label = char(i_file);
     path = dir_path + i_file;
     data = readtable(path);
+    data.Properties.VariableNames{1} = 'frequency';
+    data.Properties.VariableNames{2} = label;
+    frequencies = data(:,1);
     spectra = data (:,2);
     all_vals = cat(2,all_vals,spectra);
 
-    
-
-    
+    % Average the values per row
+    all_vals_matrix = all_vals{:,:};
+    means = mean(all_vals_matrix,2);
+    means = table(means);
+    means = cat(2,frequencies, means);   
 end
  
 
