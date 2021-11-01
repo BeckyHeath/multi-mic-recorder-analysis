@@ -40,7 +40,14 @@ dif = table(dif);
 dif = cat(2,frequency1, dif);
 
 % Plot difference (and smooth?) 
+figure
 plot(dif.frequency, dif.dif,dif.frequency, means_wp_names.means,dif.frequency, means_no_wp_names.means)
+
+title('Sweep Comparison')
+xlabel('Frequency/Hz')
+ylabel('Amplitude')
+legend('No Waterproofing','With Waterproofing', 'Difference')
+ylim([0,4.5e-7])
 
 
 
