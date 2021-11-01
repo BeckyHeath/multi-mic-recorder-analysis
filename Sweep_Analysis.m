@@ -17,7 +17,7 @@ file_names =  { files.name };
 
 % generate spectra from the Audio List:
 %%%% ALREADY DONE - UNCOMMENT TO RE-DO 
-%status = generate_spectra(file_names, dir_path);
+status = generate_spectra(file_names, dir_path);
 
 % Seperate spectral csvs into waterproofed vs unwaterproofed 
 dir_path = "Data\Sweep_Data\";
@@ -76,8 +76,10 @@ function status = generate_spectra(x,dir_path)
         in_file = x(file_no);
         test_file = dir_path + in_file; 
 
-        % Determine the number of samples (??)
+        % Determine the number of samples
+        % The sweeps all fall within the first 25 secoonds! 
         samples = [1,25*16000];   % Change if Fs is not 16000
+                                  % Change if recording is not 25s
 
         % load file
         [y_all,Fs] = audioread(test_file,samples);
@@ -91,6 +93,7 @@ function status = generate_spectra(x,dir_path)
             n_fft = floor((length(y)/15));  
 
             % Generate Spectra and output daya
+            % TODO: check that psd is right (I'm not sure?)
             psd_function = psd(spectrum.periodogram,y,'Fs',Fs,'NFFT',n_fft);
             frequencies = psd_function.Frequencies;
             psdata = psd_function.Data;
@@ -112,8 +115,8 @@ end
 function [ outMeans, outFrequencies ] = get_means(dir_path,file_list)
 % Function which takes an input of a list spectral data csvs to analyse. 
 % The function takes all of the spectral data from the file lest and 
-% finds the mean average of the spectral data in this group. This spectral 
-% data, along with the corresponding frequencies is then out-put
+% finds the mean average of the spectral data in this group. This mean
+% spectral data, along with the corresponding frequencies is then out-put
 %
 %
 % ARGS:   dir_path       = path to csv files
