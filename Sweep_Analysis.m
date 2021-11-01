@@ -87,7 +87,10 @@ function status = generate_spectra(x,dir_path)
         % Split and iterate through channels
         for ch_no = 1:size(y_all,2)
             y = y_all(:,ch_no);
+
             % Generate Power Spectrum TODO: Check that this is correct)
+            % TODO: put the power spectrum in DBFS 
+            % TODO: present y in LOG scale 
 
             % Determine the number of bands to analyse
             n_fft = floor((length(y)/15));  
