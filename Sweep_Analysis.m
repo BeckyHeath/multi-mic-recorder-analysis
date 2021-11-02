@@ -17,7 +17,7 @@ file_names =  { files.name };
 
 % generate spectra from the Audio List:
 %%%% ALREADY DONE - UNCOMMENT TO RE-DO 
-status = generate_spectra(file_names, dir_path);
+%status = generate_spectra(file_names, dir_path);
 
 % Seperate spectral csvs into waterproofed vs unwaterproofed 
 dir_path = "Data\Sweep_Data\";
@@ -45,11 +45,12 @@ dif = cat(2,frequency1, dif);
 
 % Plot difference (and smooth?) 
 figure
-plot(dif.frequency, dif.dif,dif.frequency, means_wp_names.means,dif.frequency, means_no_wp_names.means)
+plot(dif.frequency, dif.dif,means_wp_names.frequency, means_wp_names.means,means_no_wp_names.frequency, means_no_wp_names.means)
 title('Sweep Comparison')
 xlabel('Frequency/Hz')
 ylabel('Amplitude')
-legend('No Waterproofing','With Waterproofing', 'Difference')
+legend('Difference','With Waterproofing', 'Without Waterproofing')
+%set(gca, 'YScale', 'log')
 ylim([0,4.5e-7])
 
 
