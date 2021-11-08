@@ -51,7 +51,7 @@ figure
 plot(dif.frequency, dif.dif,means_wp_names.frequency, means_wp_names.means,means_no_wp_names.frequency, means_no_wp_names.means)
 title('Sweep Comparison')
 xlabel('Frequency/Hz')
-ylabel('Power Spectrum (dB)')
+ylabel('Amplitude')
 legend('Difference','With Waterproofing', 'Without Waterproofing')
 set(gca, 'YScale', 'log')
 %ylim([0,4.5e-14])
@@ -72,7 +72,7 @@ function status = generate_spectra(x,audio_dir_path,sweep_dir_path)
 %
 % ARGS: x        = list of files to analyse
 %       sweep_dir_path = path to file list
-%       audio_dir_path = path to save files in
+%       audio_dir_path = path to file list
 %
 % OUTPUT(s): status = placeholder 
 %            + a repo of csvs containing indicidual channel spectral data
