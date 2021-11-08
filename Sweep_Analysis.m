@@ -39,21 +39,22 @@ files_no_wp_names =  { files_no_wp.name };
 % Not Waterproofed: 
 [means_no_wp_names, frequency2] = get_means(sweep_dir_path,files_no_wp_names);
 
-%TODO (??): check frequencies match (they will if generated in script)
+
 
 % Find difference between waterpoofed and un-waterproofed spectra 
-dif = means_no_wp_names.means - means_wp_names.means;
-dif = table(dif);
-dif = cat(2,frequency1, dif);
+difference = means_no_wp_names.means - means_wp_names.means;
+difference = table(difference);
+dif = cat(2,frequency1, difference);
 
 % Plot difference (and smooth?) 
+
+% Removed Difference from the Plot Lines
 figure
-plot(dif.frequency, dif.dif,means_wp_names.frequency, means_wp_names.means,means_no_wp_names.frequency, means_no_wp_names.means)
+plot(means_wp_names.frequency, means_wp_names.means,means_no_wp_names.frequency, means_no_wp_names.means)
 title('Sweep Comparison')
 xlabel('Frequency/Hz')
 ylabel('Power Spectrum (dB)')
-legend('Difference','With Waterproofing', 'Without Waterproofing')
-set(gca, 'YScale', 'log')
+legend('With Waterproofing', 'Without Waterproofing')
 %ylim([0,4.5e-14])
 
 
