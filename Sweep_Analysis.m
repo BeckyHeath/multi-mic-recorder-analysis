@@ -20,7 +20,7 @@ sweep_dir_path = "Data\Sweep_Data\";
 
 % generate spectra from the Audio List:
 %%%% ALREADY DONE - UNCOMMENT TO RE-DO 
-status = generate_spectra(file_names, audio_dir_path,sweep_dir_path);
+%status = generate_spectra(file_names, audio_dir_path,sweep_dir_path);
 
 % Seperate spectral csvs into waterproofed vs unwaterproofed 
 sweep_dir_path = "Data\Sweep_Data\";
@@ -47,25 +47,56 @@ difference = table(difference);
 dif = cat(2,frequency1, difference);
 
 % Plot difference (and smooth?) 
-figure
-plot(dif.frequency,dif.difference,means_wp_names.frequency, means_wp_names.means,means_no_wp_names.frequency, means_no_wp_names.means)
+
+% subplot(2,1,1);
+% plot(means_wp_names.frequency, means_wp_names.means,means_no_wp_names.frequency, means_no_wp_names.means)
+% title('Sweep Comparison')
+% ylabel('Power Spectrum (dB)')
+% legend('With Waterproofing', 'Without Waterproofing')
+% grid on
+% 
+% subplot(2,1,2); 
+% plot(dif.frequency, dif.difference)
+% title('Difference in Spectra')
+% xlabel('Frequency/Hz')
+% ylabel('Power Spectrum (dB)')
+% grid on
+
+[fit_dif, gof_dif] = wp_curve(dif.frequency, dif.difference);
+[fit_wp, gof_wp] = wp_curve(means_wp_names.frequency, means_wp_names.means);
+[fit_no_wp, gof_no_wp] = wp_curve(means_no_wp_names.frequency, means_no_wp_names.means);
+
+subplot(2,1,1);
+plot(fit_wp)
+hold on
+plot(fit_no_wp)
 title('Sweep Comparison')
+ylabel('Power Spectrum (dB)')
+legend('With Waterproofing', 'Without Waterproofing')
+grid on
+
+subplot(2,1,2); 
+plot(dif.frequency, dif.difference)
+title('Difference in Spectra')
 xlabel('Frequency/Hz')
 ylabel('Power Spectrum (dB)')
-legend('Difference','With Waterproofing', 'Without Waterproofing')
+grid on
+
+
+
 %set(gca, 'YScale', 'log')
 
 % Plot Spectrograms of exemplar Audio
 
-% The sweeps all fall within the first 25 secoonds! 
-samples = [1,25*16000];   % Change if Fs is not 16000
-                            % Change if recording is not 25s
-
-no_wp_audio = audioread((audio_dir_path + file_names(3)),samples);
-wp_audio = audioread((audio_dir_path + file_names(4)),samples);
-
-no_wp_audio = no_wp_audio(:,1);
-wp_audio = wp_audio(:,1);
+% % The sweeps all fall within the first 25 secoonds! 
+% samples = [1,25*16000];   % Change if Fs is not 16000
+%                             % Change if recording is not 25s
+% 
+% no_wp_audio = audioread((audio_dir_path + file_names(3)),samples);
+% wp_audio = audioread((audio_dir_path + file_names(4)),samples);
+% 
+% no_wp_audio = no_wp_audio(:,1);
+% wp_audio = wp_audio(:,1);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
