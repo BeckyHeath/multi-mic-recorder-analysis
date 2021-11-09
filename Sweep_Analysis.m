@@ -49,40 +49,33 @@ dif = cat(2,frequency1, difference);
 % Plot difference (and smooth?) 
 
 % Get Smoothed Values: 
-wp_sm = smooth(means_wp_names.frequency, means_wp_names.means,0.1,'loess');
-no_wp_sm = smooth(means_no_wp_names.frequency, means_no_wp_names.means,0.1,'loess');
-dif_sm = smooth(dif.frequency, dif.difference,0.1,'loess');
+wp_sm = smooth(means_wp_names.frequency, means_wp_names.means,0.3,'rloess');
+no_wp_sm = smooth(means_no_wp_names.frequency, means_no_wp_names.means,0.3,'rloess');
+dif_sm = smooth(dif.frequency, dif.difference,0.3,'rloess');
 
 % Seperate Plots: 
 subplot(2,1,1);
-plot(means_wp_names.frequency, wp_sm, 'color','#D95319')
+plot(means_wp_names.frequency, wp_sm, 'color','#D95319','linewidth',1)
 hold on 
-plot(means_no_wp_names.frequency, no_wp_sm,'color', '#EDB120')
+patchline(means_wp_names.frequency, means_wp_names.means,'edgecolor',[0.8500, 0.3250, 0.0980],'linewidth',1,'edgealpha',0.3);
+hold on
+plot(means_no_wp_names.frequency, no_wp_sm,'color', '#EDB120', 'linewidth',1)
+hold on 
+patchline(means_no_wp_names.frequency, means_no_wp_names.means,'edgecolor',	[0.9290, 0.6940, 0.1250],'linewidth',1,'edgealpha',0.3);
+hold on
 title('Sweep Comparison')
 ylabel('Power Spectrum (dB)')
-legend('With Waterproofing', 'Without Waterproofing')
+%legend('With Waterproofing', 'Without Waterproofing')
 grid on
 
 subplot(2,1,2); 
 plot(dif.frequency, dif_sm)
+hold on 
+patchline(dif.frequency, dif.difference,'edgecolor',[0, 0.4470, 0.7410],'linewidth',1,'edgealpha',0.3);
 title('Difference in Spectra')
 xlabel('Frequency/Hz')
 ylabel('Power Spectrum (dB)')
 grid on
-
-
-
-% Plot Spectrograms of exemplar Audio
-
-% % The sweeps all fall within the first 25 secoonds! 
-% samples = [1,25*16000];   % Change if Fs is not 16000
-%                             % Change if recording is not 25s
-% 
-% no_wp_audio = audioread((audio_dir_path + file_names(3)),samples);
-% wp_audio = audioread((audio_dir_path + file_names(4)),samples);
-% 
-% no_wp_audio = no_wp_audio(:,1);
-% wp_audio = wp_audio(:,1);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
