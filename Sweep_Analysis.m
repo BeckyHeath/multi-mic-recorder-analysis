@@ -46,18 +46,27 @@ difference = means_no_wp_names.means - means_wp_names.means;
 difference = table(difference);
 dif = cat(2,frequency1, difference);
 
-% Plot difference (and smooth?) 
+% % Plot difference (and smooth?) 
+% figure
+% plot(means_wp_names.frequency, means_wp_names.means,means_no_wp_names.frequency, means_no_wp_names.means)
+% title('Sweep Comparison')
+% xlabel('Frequency/Hz')
+% ylabel('Power Spectrum (dB)')
+% legend('With Waterproofing', 'Without Waterproofing')
+% set(gca, 'YScale', 'log')
+% %ylim([0,4.5e-14])
 
-% Removed Difference from the Plot Lines
-figure
-plot(means_wp_names.frequency, means_wp_names.means,means_no_wp_names.frequency, means_no_wp_names.means)
-title('Sweep Comparison')
-xlabel('Frequency/Hz')
-ylabel('Power Spectrum (dB)')
-legend('With Waterproofing', 'Without Waterproofing')
-%ylim([0,4.5e-14])
+% Plot Spectrograms of exemplar Audio
 
+% The sweeps all fall within the first 25 secoonds! 
+samples = [1,25*16000];   % Change if Fs is not 16000
+                            % Change if recording is not 25s
 
+no_wp_audio = audioread((audio_dir_path + file_names(3)),samples);
+wp_audio = audioread((audio_dir_path + file_names(4)),samples);
+
+no_wp_audio = no_wp_audio(:,1);
+wp_audio = wp_audio(:,1);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
