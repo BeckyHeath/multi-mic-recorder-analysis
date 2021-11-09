@@ -16,14 +16,14 @@ files = dir(audio_dir_path + "*.wav");
 file_names =  { files.name };
 
 % Where sweeps should be saved: 
-sweep_dir_path = "Data\Sweep_Data_Experimental\";
+sweep_dir_path = "Data\Sweep_Data\";
 
 % generate spectra from the Audio List:
 %%%% ALREADY DONE - UNCOMMENT TO RE-DO 
 status = generate_spectra(file_names, audio_dir_path,sweep_dir_path);
 
 % Seperate spectral csvs into waterproofed vs unwaterproofed 
-sweep_dir_path = "Data\Sweep_Data_Experimental\";
+sweep_dir_path = "Data\Sweep_Data\";
 files_wp = dir(sweep_dir_path + "*_*_Y*.csv"); % y = YES waterproof
 files_no_wp = dir(sweep_dir_path + "*_*_N*.csv"); % n = NO waterproof
 
