@@ -106,7 +106,7 @@ function status = generate_spectra(x,audio_dir_path,sweep_dir_path)
 
             [psdata,frequencies] = pspectrum(y,Fs);
 
-            out_data = cat(2,frequencies,psdata);
+            out_data = cat(2,frequencies,pow2db(psdata));
 
             % Export Spectrums as csv (first col freq, second col data) 
             out_file_name = sweep_dir_path + in_file + "_ch="+ ch_no+ ".csv";
