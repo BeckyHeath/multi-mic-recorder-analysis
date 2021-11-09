@@ -46,15 +46,14 @@ difference = means_no_wp_names.means - means_wp_names.means;
 difference = table(difference);
 dif = cat(2,frequency1, difference);
 
-% % Plot difference (and smooth?) 
-% figure
-% plot(means_wp_names.frequency, means_wp_names.means,means_no_wp_names.frequency, means_no_wp_names.means)
-% title('Sweep Comparison')
-% xlabel('Frequency/Hz')
-% ylabel('Power Spectrum (dB)')
-% legend('With Waterproofing', 'Without Waterproofing')
-% set(gca, 'YScale', 'log')
-% %ylim([0,4.5e-14])
+% Plot difference (and smooth?) 
+figure
+plot(dif.frequency,dif.difference,means_wp_names.frequency, means_wp_names.means,means_no_wp_names.frequency, means_no_wp_names.means)
+title('Sweep Comparison')
+xlabel('Frequency/Hz')
+ylabel('Power Spectrum (dB)')
+legend('Difference','With Waterproofing', 'Without Waterproofing')
+%set(gca, 'YScale', 'log')
 
 % Plot Spectrograms of exemplar Audio
 
