@@ -49,22 +49,21 @@ dif = cat(2,frequency1, difference);
 % Plot difference (and smooth?) 
 
 % Get Smoothed Values: 
-wp_sm = smooth(means_wp_names.frequency, means_wp_names.means,0.1,'loess');
-no_wp_sm = smooth(means_no_wp_names.frequency, means_no_wp_names.means,0.1,'loess');
-dif_sm = smooth(dif.frequency, dif.difference,0.1,'loess');
+dif.frequency, dif.difference
 
-% Seperate Plots: 
+wp_sm = smooth(means_wp_names.frequency, means_wp_names.means,0.1,'loess');
+wp_sm = smooth(means_wp_names.frequency, means_wp_names.means,0.1,'loess');
+wp_sm = smooth(means_wp_names.frequency, means_wp_names.means,0.1,'loess');
+
 subplot(2,1,1);
-plot(means_wp_names.frequency, wp_sm, 'color','#D95319')
-hold on 
-plot(means_no_wp_names.frequency, no_wp_sm,'color', '#EDB120')
+plot(means_wp_names.frequency, means_wp_names.means,means_no_wp_names.frequency, means_no_wp_names.means)
 title('Sweep Comparison')
 ylabel('Power Spectrum (dB)')
 legend('With Waterproofing', 'Without Waterproofing')
 grid on
 
 subplot(2,1,2); 
-plot(dif.frequency, dif_sm)
+plot(dif.frequency, dif.difference)
 title('Difference in Spectra')
 xlabel('Frequency/Hz')
 ylabel('Power Spectrum (dB)')
