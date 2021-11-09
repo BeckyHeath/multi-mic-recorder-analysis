@@ -48,28 +48,8 @@ dif = cat(2,frequency1, difference);
 
 % Plot difference (and smooth?) 
 
-% subplot(2,1,1);
-% plot(means_wp_names.frequency, means_wp_names.means,means_no_wp_names.frequency, means_no_wp_names.means)
-% title('Sweep Comparison')
-% ylabel('Power Spectrum (dB)')
-% legend('With Waterproofing', 'Without Waterproofing')
-% grid on
-% 
-% subplot(2,1,2); 
-% plot(dif.frequency, dif.difference)
-% title('Difference in Spectra')
-% xlabel('Frequency/Hz')
-% ylabel('Power Spectrum (dB)')
-% grid on
-
-[fit_dif, gof_dif] = wp_curve(dif.frequency, dif.difference);
-[fit_wp, gof_wp] = wp_curve(means_wp_names.frequency, means_wp_names.means);
-[fit_no_wp, gof_no_wp] = wp_curve(means_no_wp_names.frequency, means_no_wp_names.means);
-
 subplot(2,1,1);
-plot(fit_wp)
-hold on
-plot(fit_no_wp)
+plot(means_wp_names.frequency, means_wp_names.means,means_no_wp_names.frequency, means_no_wp_names.means)
 title('Sweep Comparison')
 ylabel('Power Spectrum (dB)')
 legend('With Waterproofing', 'Without Waterproofing')
@@ -81,6 +61,26 @@ title('Difference in Spectra')
 xlabel('Frequency/Hz')
 ylabel('Power Spectrum (dB)')
 grid on
+
+[fit_dif, gof_dif] = wp_curve(dif.frequency, dif.difference);
+[fit_wp, gof_wp] = wp_curve(means_wp_names.frequency, means_wp_names.means);
+[fit_no_wp, gof_no_wp] = wp_curve(means_no_wp_names.frequency, means_no_wp_names.means);
+
+% subplot(2,1,1);
+% plot(fit_wp)
+% hold on
+% plot(fit_no_wp)
+% title('Sweep Comparison')
+% ylabel('Power Spectrum (dB)')
+% legend('With Waterproofing', 'Without Waterproofing')
+% grid on
+% 
+% subplot(2,1,2); 
+% plot(dif.frequency, dif.difference)
+% title('Difference in Spectra')
+% xlabel('Frequency/Hz')
+% ylabel('Power Spectrum (dB)')
+% grid on
 
 
 
