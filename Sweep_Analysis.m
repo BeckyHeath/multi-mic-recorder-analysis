@@ -2,7 +2,7 @@
 % Scripts for comparing power spectrums from 
 % two different types of .wav recordings (multichanel)
 %
-% Becky Heath 
+% Becky Heath with contributions from Dr. Lorenzo Picinali
 % Autumn 2021 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
