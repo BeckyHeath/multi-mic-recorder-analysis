@@ -1,0 +1,2 @@
+# Ignore all .wavs (they're big and can be generated in script) 
+*.wav
