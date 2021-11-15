@@ -28,11 +28,11 @@ no_wp = no_wp_all(:,2);
 
 
 % Generate Spectrogram
-subplot(2,1,1);
+subplot(2,2,2);
 spectrogram(no_wp,1280,1200,1280,Fs,'yaxis')
 title('No Waterproofing')
 
-subplot(2,1,2);
+subplot(2,2,4);
 spectrogram(wp,1280,1200,1280,Fs,'yaxis')
 title('with Waterproofing')
 

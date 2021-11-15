@@ -54,7 +54,7 @@ no_wp_sm = smooth(means_no_wp_names.frequency, means_no_wp_names.means,0.3,'rloe
 dif_sm = smooth(dif.frequency, dif.difference,0.3,'rloess');
 
 % Seperate Plots: 
-subplot(2,1,1);
+subplot(2,2,1);
 plot(means_wp_names.frequency, wp_sm, 'color','#D95319','linewidth',1)
 hold on 
 patchline(means_wp_names.frequency, means_wp_names.means,'edgecolor',[0.8500, 0.3250, 0.0980],'linewidth',1,'edgealpha',0.3);
@@ -68,7 +68,7 @@ ylabel('Power Spectrum (dB)')
 %legend('With Waterproofing', 'Without Waterproofing')
 grid on
 
-subplot(2,1,2); 
+subplot(2,2,3); 
 plot(dif.frequency, dif_sm)
 hold on 
 patchline(dif.frequency, dif.difference,'edgecolor',[0, 0.4470, 0.7410],'linewidth',1,'edgealpha',0.3);
