@@ -79,7 +79,7 @@ ylabel('Power Spectrum (dB)')
 grid on
 
 % GENERATE SPECTRA 
-early_path = audio_dir_path + AnalysisGroup +  "_early_02.wav"; % set example for 
+early_path = audio_dir_path + AnalysisGroup +  "_pr_02.wav"; % set example for 
 late_path = audio_dir_path + AnalysisGroup + "_late_01.wav";
 
 % Set Sample Size + Load Files 
