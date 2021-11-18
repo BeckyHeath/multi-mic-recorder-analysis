@@ -14,10 +14,10 @@ cd(fileparts(tmp.Filename));
 audio_path = "Data/Lab_Localisation/Audio_Data_Edited/Files_clean/";
 csvs_path = "Data/Sweep_Data/";
 
-desc1 = "Dev2 no WP bird";
-desc2 = "Dev2 WP bird";
-fn_1 = "1b_bird_N_2";
-fn_2 = "5b_bird_Y_2";
+desc1 = "Dev 2";
+desc2 = "Dev 3";
+fn_1 = "5a_pinknoise_2";
+fn_2 = "3a_pinknoise_Y_3";
 
 % Load in Audio
 samples = [1,7*16000]; % Sweeps are just the first 7 seconds
