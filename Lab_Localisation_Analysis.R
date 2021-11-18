@@ -35,7 +35,9 @@ section_data <- function(df){
   
   df$Start.azimuth <- df$Start.azimuth - 30
   
-  df$Start.time[df$Start.time < 7] <- 0  # Sweep Signal
+  # Numbers not divisible by 15 will be Removed 
+  
+  df$Start.time[df$Start.time < 7] <- 1  # Sweep Signal (ignored)
   df$Start.time[df$Start.time > 15 & df$Start.time < 20] <- 15  # First Tone  
   df$Start.time[df$Start.time > 30 & df$Start.time < 35] <- 30  # Second Tone
   df$Start.time[df$Start.time > 45 & df$Start.time < 50] <- 45  # Third Tone
@@ -46,7 +48,7 @@ section_data <- function(df){
 }
 
 
-true_pred_plots <- function(df){
+true_pred_plots <- function(df,tag){
   
   # Creates plots showing true vs. predicted values
   
@@ -61,13 +63,15 @@ true_pred_plots <- function(df){
   printout <- paste0("\n###############\nFile:", label, "\nMean Error:", error_data[1],"\nSD:", error_data[2], "\nR_sq:", error_data[3])
   cat(printout)
   
-  # TODO: Get some stats for this at some point 
   plot <- ggplot(merge_df, aes(Real.Azimuth, Predicted.Azimuth))+
     ggtitle(label_g) +
     geom_point(color = "Red", size =4, shape = 4, stroke = 1.5)+
     geom_abline(color= "black", size = 0.6, alpha = 0.5) +
     xlim(-180,180)+
     ylim(-180,180)+
+    xlab("Predicted") + 
+    ylab("True") +
+    annotate("text", x = -150, y = 150, label = tag) +
     theme_minimal()
   
   return(plot)
@@ -105,10 +109,17 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   label = str_remove(label,".wav")
   j=j+1
   
+  
+  # Set Graph Labels (Tags)
+  tags = array(data=c('A','C','B','D'))
+  tag = tags[j]
+  
+  print(paste0("J = ",j))
+  
   if(j == 1){
-    label_g = "Weatherproofed"
-  } else if(j==4){
     label_g = "Not Weatherproofed"
+  } else if(j==3){
+    label_g = "Weatherproofed"
   } else {
     label_g =""
   }
@@ -119,7 +130,7 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   }
   
   i_file <- section_data(i_file)
-  o_plot <- true_pred_plots(i_file)
+  o_plot <- true_pred_plots(i_file,tag)
   
   assign(label, o_plot)
 }
@@ -128,18 +139,10 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
 
 
 # Patchwork Plots 
-# TODO: Still needs some formatting fixes
-# TODO: Resolve threshold issues
 plot <- `1a_pinknoise_N_2`| `5a_pinknoise_Y_2`
 plot2 <- `1b_bird_N_2` | `5b_bird_Y_2`
 
 plot/plot2
-
-
-
-
-
-
 
 
 
