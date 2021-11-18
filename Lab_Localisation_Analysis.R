@@ -10,6 +10,8 @@
 
 library(stringr)
 library(ggplot2)
+library(plyr)
+library(patchwork)
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 
@@ -33,7 +35,7 @@ section_data <- function(df){
   
   df$Start.azimuth <- df$Start.azimuth - 30
   
-  df$Start.time[df$Start.time < 7] <- 0  % Sweep Signal
+  df$Start.time[df$Start.time < 7] <- 0  # Sweep Signal
   df$Start.time[df$Start.time > 15 & df$Start.time < 20] <- 15  # First Tone  
   df$Start.time[df$Start.time > 30 & df$Start.time < 35] <- 30  # Second Tone
   df$Start.time[df$Start.time > 45 & df$Start.time < 50] <- 45  # Third Tone
@@ -50,10 +52,9 @@ true_pred_plots <- function(df){
   
   # Merge Data 
   df <- df[, c("Start.time", "Start.azimuth")]
-  df <- rename(df, Predicted.Azimuth = Start.azimuth)
+  df <- rename(df, c("Start.azimuth" = "Predicted.Azimuth"))
   merge_df <- merge(df, true, by=c("Start.time"),all=TRUE)
-  merge_df <- rename(merge_df, Real.Azimuth = Start.azimuth)
-  
+  merge_df <- rename(merge_df, c("Start.azimuth" = "Real.Azimuth"))
   merge_df_er <- merge_df[complete.cases(merge_df),]
   
   error_data <- find_error(merge_df_er$Real.Azimuth, merge_df_er$Predicted.Azimuth)
@@ -88,45 +89,6 @@ find_error <- function(x,y){
 }
 
 
-
-
-##### Generate Target Figures ####
-
-# Load in all the files you need: 
-for(i in list.dirs(file_directory, recursive = FALSE)){
-  path = paste(as.character(i),"sourcelist.csv", sep = "/")
-  i_file = read.csv(path, sep = "\t")
-  
-  # Stop files that didn't catch any signals tripping out the 
-  # loop by adding an extra row
-  if(nrow(i_file) == 0){
-    i_file <- add_row(i_file)
-  }
-    
-    # tidy label/ graph title name: 
-  label = str_remove(as.character(i), file_directory)
-  label = str_remove(label,"_localized")
-  label = str_remove(label,"/")
-  label = str_remove(label,".wav")
-      
-  
-  i_file <- section_data(i_file) # get data to match up 
-  
-  #disregard sounds not made at the 15s intervals
-  i_file <- i_file[i_file$Start.time %% 15 == 0,]
-    
-  o_plot <- plot_data_targets(i_file)
-    
-  assign(label, o_plot)
-}
-
-# Patchwork Plots 
-# TODO: Still needs some formatting fixes
-plot <- `1a_pinknoise2_N_2`| `1a_pinknoise2_N_2` | `1b_bird_N_2`
-plot2 <- `7a_pinknoise_N_3` | `5a_pinknoise_Y_2`| `5b_bird_Y_2`
-
-plot/plot2
-
 ##### Generate Real vs. Predicted Plots ####
 
 j=0
@@ -139,15 +101,14 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   
   # tidy label/ graph title name: 
   label = str_remove(as.character(i), file_directory)
-  label = substring(label, 4)
-  label = str_remove(label,"_localized_")
+  label = str_remove(label,"/localized_")
   label = str_remove(label,".wav")
   j=j+1
   
   if(j == 1){
-    label_g = "Waterproofed"
+    label_g = "Weatherproofed"
   } else if(j==4){
-    label_g = "Not Waterproofed"
+    label_g = "Not Weatherproofed"
   } else {
     label_g =""
   }
@@ -157,25 +118,19 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
     next
   }
   
-
-  
-  #label = substring(label, 4, nchar(label)-2) # For removing unnecessary data in the label
-  
-
   i_file <- section_data(i_file)
-  
-  # TODO BIN EVERYTHING AFTER 131 PRE DOING THE STATS 
-
-  
   o_plot <- true_pred_plots(i_file)
   
   assign(label, o_plot)
 }
 
+
+
+
 # Patchwork Plots 
 # TODO: Still needs some formatting fixes
 # TODO: Resolve threshold issues
-plot <- `7a_pinknoise_N_3`| `5a_pinknoise_Y_2`
+plot <- `1a_pinknoise_N_2`| `5a_pinknoise_Y_2`
 plot2 <- `1b_bird_N_2` | `5b_bird_Y_2`
 
 plot/plot2
