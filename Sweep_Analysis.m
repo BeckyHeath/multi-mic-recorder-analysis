@@ -54,7 +54,7 @@ no_wp_sm = smooth(means_no_wp_names.frequency, means_no_wp_names.means,0.3,'rloe
 dif_sm = smooth(dif.frequency, dif.difference,0.3,'rloess');
 
 % Seperate Plots: 
-subplot(2,2,[1,2]);
+subplot(2,3,[1,2]);
 plot(means_wp_names.frequency, wp_sm, 'color','#D95319','linewidth',1)
 hold on 
 patchline(means_wp_names.frequency, means_wp_names.means,'edgecolor',[0.8500, 0.3250, 0.0980],'linewidth',1,'edgealpha',0.3);
@@ -65,10 +65,10 @@ patchline(means_no_wp_names.frequency, means_no_wp_names.means,'edgecolor',	[0.9
 hold on
 title('Sweep Comparison')
 ylabel('Power Spectrum (dB)')
-legend('With Waterproofing', 'Without Waterproofing')
+%legend('With Waterproofing', 'Without Waterproofing')
 grid on
 
-subplot(2,2,[3,4]); 
+subplot(2,3,[4,5]); 
 plot(dif.frequency, dif_sm)
 hold on 
 patchline(dif.frequency, dif.difference,'edgecolor',[0, 0.4470, 0.7410],'linewidth',1,'edgealpha',0.3);
@@ -77,6 +77,35 @@ xlabel('Frequency/Hz')
 ylabel('Power Spectrum (dB)')
 grid on
 
+
+% Add in Spectra: 
+% Set up File Locations and Load in Relevant Data
+audio_path = "Data/Lab_Localisation/Audio_Data_Edited/Files_clean/";
+
+desc1 = "No Weatherproofing";
+desc2 = "With Weatherproofing";
+fn_1 = "1b_bird_N_2";
+fn_2 = "5b_bird_Y_2";
+
+
+% Load in Audio
+samples = [1,7*16000]; % Sweeps are just the first 7 seconds
+aud1 = audioread(audio_path+fn_1+".wav",samples);
+aud2 = audioread(audio_path+fn_2+".wav",samples);
+
+% Split Channels (get just one):
+a1 = aud1(:,2);
+a2 = aud2(:,2);
+
+
+% Generate Spectrogram
+subplot(2,3,3);
+spectrogram(a1,1280,1200,1280,16000,'yaxis')
+title(desc1)
+
+subplot(2,3,6);
+spectrogram(a2,1280,1200,1280,16000,'yaxis')
+title(desc2)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Functions: 
