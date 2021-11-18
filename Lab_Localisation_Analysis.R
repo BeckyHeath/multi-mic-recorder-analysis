@@ -8,18 +8,20 @@
 
 ##### Load Packages and set working directory #####
 
+library(stringr)
+library(ggplot2)
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 
 ##### Define Test File Location #####
 
-file_directory = "Data/Lab_Localisation/outputs_threshold_experiments/optimum_threshold"
+file_directory = "Data/Lab_Localisation/dev2_clean_outputs/"
 
 
 ##### Define Functions #####
 
 # Load in true values: 
-true <- read.csv("Data/Real_Location.csv")
+true <- read.csv("Data/Real_Location_Clean.csv")
 
 section_data <- function(df){
   
@@ -31,48 +33,14 @@ section_data <- function(df){
   
   df$Start.azimuth <- df$Start.azimuth - 30
   
-  df$Start.time[df$Start.time < 10] <- 0
-  df$Start.time[df$Start.time > 12 & df$Start.time < 16] <- 15
-  df$Start.time[df$Start.time > 30 & df$Start.time < 35] <- 30
-  df$Start.time[df$Start.time > 45 & df$Start.time < 50] <- 45
-  df$Start.time[df$Start.time > 60 & df$Start.time < 75] <- 60
-  df$Start.time[df$Start.time > 75 & df$Start.time < 80] <- 75
-  df$Start.time[df$Start.time > 90 & df$Start.time < 95] <- 90
-  df$Start.time[df$Start.time > 105 & df$Start.time < 110] <- 131 # ignore
-  df$Start.time[df$Start.time > 120 & df$Start.time < 125] <- 131 # ignore 
-  df$Start.time[df$Start.time > 125] <- 131 # ignore
-  
-  # Remove all datapoints after 130
-  df <- subset(df, Start.time < 130)
-  
-  
-  return(df)
-}
+  df$Start.time[df$Start.time < 7] <- 0  % Sweep Signal
+  df$Start.time[df$Start.time > 15 & df$Start.time < 20] <- 15  # First Tone  
+  df$Start.time[df$Start.time > 30 & df$Start.time < 35] <- 30  # Second Tone
+  df$Start.time[df$Start.time > 45 & df$Start.time < 50] <- 45  # Third Tone
+  df$Start.time[df$Start.time > 60 & df$Start.time < 65] <- 60  # Fourth Tone
+  df$Start.time[df$Start.time > 75 & df$Start.time < 80] <- 75  # Fifth Tone
 
-plot_data_targets <- function(df){
-  
-  # Creates plots showing little grey targets (true values) vs the predicted azimuth in red
-  
-  # Combine the Data
-  df$value <- as.character("predicted")
-  df <- df[, c("Start.time", "Start.azimuth", "value")]
-  true_ <- true[, c("Start.time", "Start.azimuth", "value")]
-  comp <- rbind(df, true_)
-  
-  plot <- ggplot(data = comp, aes(Start.time, Start.azimuth, color = value, size = value, alpha = value, shape = value)) +
-    ggtitle(label) + 
-    scale_color_manual(values = c("red","black")) +
-    scale_size_manual(values = c(1.8,8)) +
-    scale_alpha_manual(values = c(1,0.25)) +
-    scale_shape_manual(values = c(4,19)) +
-    geom_point() + 
-    xlim(0,100) +
-    ylim(-180,180)+
-    ylab("Azimuth")+
-    xlab("Time Point")+
-    theme_minimal() +
-    theme(legend.position = "none")
-  return(plot)
+  return(df)
 }
 
 
@@ -137,9 +105,11 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
     
     # tidy label/ graph title name: 
   label = str_remove(as.character(i), file_directory)
-  label = str_remove(label,"/localized_")
+  label = str_remove(label,"_localized")
+  label = str_remove(label,"/")
   label = str_remove(label,".wav")
       
+  
   i_file <- section_data(i_file) # get data to match up 
   
   #disregard sounds not made at the 15s intervals
