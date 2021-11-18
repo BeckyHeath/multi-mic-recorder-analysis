@@ -14,21 +14,45 @@ cd(fileparts(tmp.Filename));
 audio_path = "Data/Lab_Localisation/Audio_Data_Edited/Files_clean/";
 csvs_path = "Data/Sweep_Data/";
 
-desc1 = "Dev2 no WP bird";
-desc2 = "Dev2 WP bird";
-fn_1 = "1b_bird_N_2";
-fn_2 = "5b_bird_Y_2";
+desc1 = "1a pinknoise N 2";
+desc2 = "1b bird N 2";
+desc3 = "7a pinknoise N 3";
+desc4 = "5a pinknoise Y 2";
+desc5 = "5b bird Y 2";
+desc6 = "3a pinknoise Y 3";
+
+
+fn_1 = "1a_pinknoise_N_2";
+fn_2 = "1b_bird_N_2";
+fn_3 = "7a_pinknoise_N_3";
+fn_4 = "5a_pinknoise_Y_2";
+fn_5 = "5b_bird_Y_2";
+fn_6 = "3a_pinknoise_Y_3";
+
+
 
 % Load in Audio
 samples = [1,7*16000]; % Sweeps are just the first 7 seconds
 aud1 = audioread(audio_path+fn_1+".wav",samples);
 aud2 = audioread(audio_path+fn_2+".wav",samples);
+aud3 = audioread(audio_path+fn_3+".wav",samples);
+aud4 = audioread(audio_path+fn_4+".wav",samples);
+aud5 = audioread(audio_path+fn_5+".wav",samples);
+aud6 = audioread(audio_path+fn_6+".wav",samples);
 
 % Load in csvs (power spectrum data - all channels) 
 csvs1 = dir(csvs_path + fn_1 + "*.csv"); 
 csvs2 = dir(csvs_path + fn_2 + "*.csv"); 
+csvs3 = dir(csvs_path + fn_3 + "*.csv"); 
+csvs4 = dir(csvs_path + fn_4 + "*.csv"); 
+csvs5 = dir(csvs_path + fn_5 + "*.csv"); 
+csvs6 = dir(csvs_path + fn_6 + "*.csv"); 
 csvnames1 = {csvs1.name};
 csvnames2 = {csvs2.name};
+csvnames3 = {csvs3.name};
+csvnames4 = {csvs4.name};
+csvnames5 = {csvs5.name};
+csvnames6 = {csvs6.name};
 
 
 %% FIND THE DIFFERENCE DATA AND PLOT 
@@ -39,59 +63,119 @@ csvnames2 = {csvs2.name};
 % Group 2: 
 [means2, frequency2] = get_means(csvs_path,csvnames2 );
 
-% Find difference between waterpoofed and un-waterproofed spectra 
-difference = means1.means - means2.means;
-difference = table(difference);
-dif = cat(2,frequency1, difference);
+% Group 1: 
+[means3, frequency3] = get_means(csvs_path,csvnames3 );
 
-% Plot difference (and smooth?) 
+% Group 2: 
+[means4, frequency4] = get_means(csvs_path,csvnames4 );
+
+% Group 1: 
+[means5, frequency5] = get_means(csvs_path,csvnames5 );
+
+% Group 2: 
+[means6, frequency6] = get_means(csvs_path,csvnames6 );
+
+
+% Plot Values (and smooth?) 
 
 % Get Smoothed Values: 
 sm1 = smooth(means1.frequency, means1.means,0.3,'rloess');
 sm2 = smooth(means2.frequency, means2.means,0.3,'rloess');
-smDif = smooth(dif.frequency, dif.difference,0.3,'rloess');
+sm3 = smooth(means3.frequency, means3.means,0.3,'rloess');
+sm4 = smooth(means4.frequency, means4.means,0.3,'rloess');
+sm5 = smooth(means5.frequency, means5.means,0.3,'rloess');
+sm6 = smooth(means6.frequency, means6.means,0.3,'rloess');
 
 % Seperate Plots: 
-subplot(2,5,[1,3]);
+subplot(6,3,[1,2]);
 plot(means1.frequency, sm1, 'color','#D95319','linewidth',1)
 hold on 
 patchline(means1.frequency, means1.means,'edgecolor',[0.8500, 0.3250, 0.0980],'linewidth',1,'edgealpha',0.3);
 hold on
-plot(means2.frequency, sm2,'color', '#EDB120', 'linewidth',1)
+title(desc1)
+ylabel('Power Spectrum (dB)')
+grid on
+
+subplot(6,3,[4,5]);
+plot(means2.frequency, sm2, 'color','#D95319','linewidth',1)
 hold on 
-patchline(means2.frequency, means2.means,'edgecolor',	[0.9290, 0.6940, 0.1250],'linewidth',1,'edgealpha',0.3);
+patchline(means2.frequency, means2.means,'edgecolor',[0.8500, 0.3250, 0.0980],'linewidth',1,'edgealpha',0.3);
 hold on
-title('Sweep Comparison')
+title(desc2)
 ylabel('Power Spectrum (dB)')
-legend(desc1, desc2)
 grid on
 
-subplot(2,5,[6,8]); 
-plot(dif.frequency, smDif)
+subplot(6,3,[7,8]);
+plot(means3.frequency, sm3, 'color','#D95319','linewidth',1)
 hold on 
-patchline(dif.frequency, dif.difference,'edgecolor',[0, 0.4470, 0.7410],'linewidth',1,'edgealpha',0.3);
-title('Difference in Spectra')
-xlabel('Frequency/Hz')
+patchline(means3.frequency, means3.means,'edgecolor',[0.8500, 0.3250, 0.0980],'linewidth',1,'edgealpha',0.3);
+hold on
+title(desc3)
 ylabel('Power Spectrum (dB)')
 grid on
 
+subplot(6,3,[10,11]);
+plot(means4.frequency, sm4, 'color','#D95319','linewidth',1)
+hold on 
+patchline(means4.frequency, means4.means,'edgecolor',[0.8500, 0.3250, 0.0980],'linewidth',1,'edgealpha',0.3);
+hold on
+title(desc4)
+ylabel('Power Spectrum (dB)')
+grid on
+
+subplot(6,3,[13,14]);
+plot(means5.frequency, sm5, 'color','#D95319','linewidth',1)
+hold on 
+patchline(means5.frequency, means5.means,'edgecolor',[0.8500, 0.3250, 0.0980],'linewidth',1,'edgealpha',0.3);
+hold on
+title(desc5)
+ylabel('Power Spectrum (dB)')
+grid on
+
+subplot(6,3,[16,17]);
+plot(means6.frequency, sm6, 'color','#D95319','linewidth',1)
+hold on 
+patchline(means6.frequency, means6.means,'edgecolor',[0.8500, 0.3250, 0.0980],'linewidth',1,'edgealpha',0.3);
+hold on
+title(desc6)
+ylabel('Power Spectrum (dB)')
+grid on
 
 %% PLOT SPECTROGRAMS
 
 % Split Channels (get just one):
 a1 = aud1(:,2);
 a2 = aud2(:,2);
+a3 = aud3(:,2);
+a4 = aud4(:,2);
+a5 = aud5(:,2);
+a6 = aud6(:,2);
 
 
 % Generate Spectrogram
-subplot(2,5,[4,5]);
+subplot(6,3,3);
 spectrogram(a1,1280,1200,1280,16000,'yaxis')
 title(desc1)
 
-subplot(2,5,[9,10]);
+subplot(6,3,6);
 spectrogram(a2,1280,1200,1280,16000,'yaxis')
 title(desc2)
 
+subplot(6,3,9);
+spectrogram(a3,1280,1200,1280,16000,'yaxis')
+title(desc3)
+
+subplot(6,3,12);
+spectrogram(a4,1280,1200,1280,16000,'yaxis')
+title(desc4)
+
+subplot(6,3,15);
+spectrogram(a5,1280,1200,1280,16000,'yaxis')
+title(desc5)
+
+subplot(6,3,18);
+spectrogram(a6,1280,1200,1280,16000,'yaxis')
+title(desc6)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Functions: 

@@ -11,7 +11,7 @@ tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
 % get a file list for the audio to be analysed: 
-audio_dir_path = "Data\Lab_Localisation\Audio_Data_Edited\files_standardised\";
+audio_dir_path = "Data\Lab_Localisation\Audio_Data_Edited\files_clean\";
 files = dir(audio_dir_path + "*.wav");
 file_names =  { files.name };
 
@@ -20,7 +20,7 @@ sweep_dir_path = "Data\Sweep_Data\";
 
 % generate spectra from the Audio List:
 %%%% ALREADY DONE - UNCOMMENT TO RE-DO 
-%status = generate_spectra(file_names, audio_dir_path,sweep_dir_path);
+status = generate_spectra(file_names, audio_dir_path,sweep_dir_path);
 
 % Seperate spectral csvs into waterproofed vs unwaterproofed 
 sweep_dir_path = "Data\Sweep_Data\";
@@ -54,7 +54,7 @@ no_wp_sm = smooth(means_no_wp_names.frequency, means_no_wp_names.means,0.3,'rloe
 dif_sm = smooth(dif.frequency, dif.difference,0.3,'rloess');
 
 % Seperate Plots: 
-subplot(2,2,1);
+subplot(2,2,[1,2]);
 plot(means_wp_names.frequency, wp_sm, 'color','#D95319','linewidth',1)
 hold on 
 patchline(means_wp_names.frequency, means_wp_names.means,'edgecolor',[0.8500, 0.3250, 0.0980],'linewidth',1,'edgealpha',0.3);
@@ -65,10 +65,10 @@ patchline(means_no_wp_names.frequency, means_no_wp_names.means,'edgecolor',	[0.9
 hold on
 title('Sweep Comparison')
 ylabel('Power Spectrum (dB)')
-%legend('With Waterproofing', 'Without Waterproofing')
+legend('With Waterproofing', 'Without Waterproofing')
 grid on
 
-subplot(2,2,3); 
+subplot(2,2,[3,4]); 
 plot(dif.frequency, dif_sm)
 hold on 
 patchline(dif.frequency, dif.difference,'edgecolor',[0, 0.4470, 0.7410],'linewidth',1,'edgealpha',0.3);
@@ -103,8 +103,8 @@ function status = generate_spectra(x,audio_dir_path,sweep_dir_path)
 
         % Determine the number of samples
         % The sweeps all fall within the first 25 secoonds! 
-        samples = [1,25*16000];   % Change if Fs is not 16000
-                                  % Change if recording is not 25s
+        samples = [1,7*16000];   % Change if Fs is not 16000
+                                  % Change if Sweeps aren't done in 7s
 
         % load file
         [y_all,Fs] = audioread(test_file,samples);
