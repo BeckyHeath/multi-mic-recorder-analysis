@@ -14,28 +14,29 @@ cd(fileparts(tmp.Filename));
 audio_path = "Data/Lab_Localisation/Audio_Data_Edited/Files_Standardised/";
 csvs_path = "Data/Sweep_Data/";
 
+desc1 = "Start";
+desc2 = "End";
 fn_1 = "1a_pinknoise2_N_2";
 fn_2 = "7a_pinknoise_N_3";
 
 % Load in Audio
-samples = [1,25*16000];
+samples = [13.5*16000,21*16000];
 aud1 = audioread(audio_path+fn_1+".wav",samples);
 aud2 = audioread(audio_path+fn_1+".wav",samples);
 
 % Load in csvs (power spectrum data - all channels) 
 csvs1 = dir(csvs_path + fn_1 + "*.csv"); 
 csvs2 = dir(csvs_path + fn_2 + "*.csv"); 
-
 csvnames1 = {csvs1.name};
 csvnames2 = {csvs2.name};
 
 
+%% FIND THE DIFFERENCE DATA AND PLOT 
 % Get mean specrum from each of the groups: 
-
-% Waterproofed: 
+% Group 1: 
 [means1, frequency1] = get_means(csvs_path,csvnames1 );
 
-% Not Waterproofed: 
+% Group 2: 
 [means2, frequency2] = get_means(csvs_path,csvnames2 );
 
 % Find difference between waterpoofed and un-waterproofed spectra 
@@ -51,7 +52,7 @@ sm2 = smooth(means2.frequency, means2.means,0.3,'rloess');
 smDif = smooth(dif.frequency, dif.difference,0.3,'rloess');
 
 % Seperate Plots: 
-subplot(2,1,1);
+subplot(2,3,[1,2]);
 plot(means1.frequency, sm1, 'color','#D95319','linewidth',1)
 hold on 
 patchline(means1.frequency, means1.means,'edgecolor',[0.8500, 0.3250, 0.0980],'linewidth',1,'edgealpha',0.3);
@@ -60,12 +61,12 @@ plot(means2.frequency, sm2,'color', '#EDB120', 'linewidth',1)
 hold on 
 patchline(means2.frequency, means2.means,'edgecolor',	[0.9290, 0.6940, 0.1250],'linewidth',1,'edgealpha',0.3);
 hold on
-title('Sweep Comparison: Start v. End')
+title('Sweep Comparison')
 ylabel('Power Spectrum (dB)')
-legend('Start', 'End')
+legend(desc1, desc2)
 grid on
 
-subplot(2,1,2); 
+subplot(2,3,[4,5]); 
 plot(dif.frequency, smDif)
 hold on 
 patchline(dif.frequency, dif.difference,'edgecolor',[0, 0.4470, 0.7410],'linewidth',1,'edgealpha',0.3);
@@ -73,6 +74,23 @@ title('Difference in Spectra')
 xlabel('Frequency/Hz')
 ylabel('Power Spectrum (dB)')
 grid on
+
+
+%% PLOT SPECTROGRAMS
+
+% Split Channels (get just one):
+a1 = aud1(:,2);
+a2 = aud2(:,2);
+
+
+% Generate Spectrogram
+subplot(2,3,3);
+spectrogram(a1,1280,1200,1280,16000,'yaxis')
+title(desc1)
+
+subplot(2,3,6);
+spectrogram(a2,1280,1200,1280,16000,'yaxis')
+title(desc2)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
