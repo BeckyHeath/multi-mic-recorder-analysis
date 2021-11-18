@@ -1,3 +1,5 @@
+% POSSIBLY REDUNDANT 
+%
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Scripts for comparing power Spectrograms from 
 % two different types of .wav recordings (multichanel)
@@ -11,7 +13,7 @@ tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
 % Set Path and Files to be Loaded 
-audio_dir_path = "Data\Lab_Localisation\Audio_Data_Edited\standardised_subset\";
+audio_dir_path = "Data\Lab_Localisation\Audio_Data_Edited\Files_clean\";
 
 no_wp_path = audio_dir_path + "1a_pinknoise_N_2.wav";
 wp_path = audio_dir_path + "3a_pinknoise_Y_3.wav";
