@@ -10,7 +10,7 @@
 tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
-AnalysisGroup = "blue";
+AnalysisGroup = "yellow";
 
 % get a file list for the audio to be analysed: 
 % You may need to generate these files form the raw ones first
