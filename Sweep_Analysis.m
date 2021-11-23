@@ -20,7 +20,7 @@ sweep_dir_path = "Data\Sweep_Data\";
 
 % generate spectra from the Audio List:
 %%%% ALREADY DONE - UNCOMMENT TO RE-DO 
-status = generate_spectra(file_names, audio_dir_path,sweep_dir_path);
+%status = generate_spectra(file_names, audio_dir_path,sweep_dir_path);
 
 % Seperate spectral csvs into waterproofed vs unwaterproofed 
 sweep_dir_path = "Data\Sweep_Data\";
@@ -54,24 +54,24 @@ no_wp_sm = smooth(means_no_wp_names.frequency, means_no_wp_names.means,0.3,'rloe
 dif_sm = smooth(dif.frequency, dif.difference,0.3,'rloess');
 
 % Seperate Plots: 
+hold('on')
 subplot(2,3,[1,2]);
-plot(means_wp_names.frequency, wp_sm, 'color','#D95319','linewidth',1)
-hold on 
-patchline(means_wp_names.frequency, means_wp_names.means,'edgecolor',[0.8500, 0.3250, 0.0980],'linewidth',1,'edgealpha',0.3);
+a = plot(means_wp_names.frequency, wp_sm, 'color','#D95319','linewidth',1); 
 hold on
-plot(means_no_wp_names.frequency, no_wp_sm,'color', '#EDB120', 'linewidth',1)
-hold on 
-patchline(means_no_wp_names.frequency, means_no_wp_names.means,'edgecolor',	[0.9290, 0.6940, 0.1250],'linewidth',1,'edgealpha',0.3);
+b = plot(means_wp_names.frequency, means_wp_names.means,'color','#D95319','linewidth',1); b.Color(4)=0.3; 
 hold on
+c = plot(means_no_wp_names.frequency, no_wp_sm,'color', '#EDB120', 'linewidth',1);
+hold on
+d = plot(means_no_wp_names.frequency, means_no_wp_names.means,'color', '#EDB120', 'linewidth',1);d.Color(4)=0.3;
 title('Sweep Comparison')
 ylabel('Power Spectrum (dB)')
-%legend('With Waterproofing', 'Without Waterproofing')
+legend('With', 'With (smoothed)','Without', 'Without (smoothed)', 'Location','southwest')
 grid on
 
 subplot(2,3,[4,5]); 
-plot(dif.frequency, dif_sm)
+plot(dif.frequency, dif_sm, 'color', '[0, 0.4470, 0.7410]')
 hold on 
-patchline(dif.frequency, dif.difference,'edgecolor',[0, 0.4470, 0.7410],'linewidth',1,'edgealpha',0.3);
+e = plot(dif.frequency, dif.difference, 'color', '[0, 0.4470, 0.7410]'); e.Color(4)=0.4;
 title('Difference in Spectra')
 xlabel('Frequency/Hz')
 ylabel('Power Spectrum (dB)')
@@ -80,16 +80,16 @@ grid on
 
 % Add in Spectra: 
 % Set up File Locations and Load in Relevant Data
-audio_path = "Data/Lab_Localisation/Audio_Data_Edited/Files_clean/";
+audio_path = "Data/Lab_Localisation/Audio_Data_Edited/Files_clean2/";
 
 desc1 = "No Weatherproofing";
 desc2 = "With Weatherproofing";
-fn_1 = "1a_pinknoise_N_2";
-fn_2 = "3a_pinknoise_Y_3";
+fn_1 = "1b_bird_N_2";
+fn_2 = "5b_bird_Y_2";
 
 
 % Load in Audio
-samples = [1,7*16000]; % Sweeps are just the first 7 seconds
+samples = [1,9*16000]; % Sweeps are just the first 7 seconds
 aud1 = audioread(audio_path+fn_1+".wav",samples);
 aud2 = audioread(audio_path+fn_2+".wav",samples);
 
@@ -102,10 +102,12 @@ a2 = aud2(:,2);
 subplot(2,3,3);
 spectrogram(a1,1280,1200,1280,16000,'yaxis')
 title(desc1)
+caxis([-160 -40])
 
 subplot(2,3,6);
 spectrogram(a2,1280,1200,1280,16000,'yaxis')
 title(desc2)
+caxis([-160 -40])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Functions: 
@@ -132,7 +134,7 @@ function status = generate_spectra(x,audio_dir_path,sweep_dir_path)
 
         % Determine the number of samples
         % The sweeps all fall within the first 25 secoonds! 
-        samples = [1,7*16000];   % Change if Fs is not 16000
+        samples = [1,9*16000];   % Change if Fs is not 16000
                                   % Change if Sweeps aren't done in 7s
 
         % load file
