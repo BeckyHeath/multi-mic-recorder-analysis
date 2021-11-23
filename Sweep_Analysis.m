@@ -11,7 +11,7 @@ tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
 % get a file list for the audio to be analysed: 
-audio_dir_path = "Data\Lab_Localisation\Audio_Data_Edited\files_clean\";
+audio_dir_path = "Data\Lab_Localisation\Audio_Data_Edited\Files_clean2\";
 files = dir(audio_dir_path + "*.wav");
 file_names =  { files.name };
 
@@ -84,8 +84,8 @@ audio_path = "Data/Lab_Localisation/Audio_Data_Edited/Files_clean/";
 
 desc1 = "No Weatherproofing";
 desc2 = "With Weatherproofing";
-fn_1 = "1b_bird_N_2";
-fn_2 = "5b_bird_Y_2";
+fn_1 = "1a_pinknoise_N_2";
+fn_2 = "3a_pinknoise_Y_3";
 
 
 % Load in Audio
