@@ -11,7 +11,7 @@ tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
 % get a file list for the audio to be analysed: 
-audio_dir_path = "Data\Lab_Localisation\Audio_Data_Edited\Files_clean2\";
+audio_dir_path = "Data\Lab_Localisation\Audio_Data_Edited\Files_clean3\";
 files = dir(audio_dir_path + "*.wav");
 file_names =  { files.name };
 
@@ -20,7 +20,7 @@ sweep_dir_path = "Data\Sweep_Data\";
 
 % generate spectra from the Audio List:
 %%%% ALREADY DONE - UNCOMMENT TO RE-DO 
-%status = generate_spectra(file_names, audio_dir_path,sweep_dir_path);
+status = generate_spectra(file_names, audio_dir_path,sweep_dir_path);
 
 % Seperate spectral csvs into waterproofed vs unwaterproofed 
 sweep_dir_path = "Data\Sweep_Data\";
@@ -65,7 +65,7 @@ hold on
 d = plot(means_no_wp_names.frequency, means_no_wp_names.means,'color', '#EDB120', 'linewidth',1);d.Color(4)=0.3;
 title('Sweep Comparison')
 ylabel('Power Spectrum (dB)')
-legend('With', 'With (smoothed)','Without', 'Without (smoothed)', 'Location','southwest')
+legend('With (smoothed)', 'With','Without (smoothed)', 'Without', 'Location','southwest')
 grid on
 
 subplot(2,3,[4,5]); 
@@ -80,11 +80,11 @@ grid on
 
 % Add in Spectra: 
 % Set up File Locations and Load in Relevant Data
-audio_path = "Data/Lab_Localisation/Audio_Data_Edited/Files_clean2/";
+audio_path = "Data/Lab_Localisation/Audio_Data_Edited/Files_clean3/";
 
 desc1 = "No Weatherproofing";
 desc2 = "With Weatherproofing";
-fn_1 = "1b_bird_N_2";
+fn_1 = "1a_pinknoise2_N_2";
 fn_2 = "5b_bird_Y_2";
 
 
@@ -102,12 +102,12 @@ a2 = aud2(:,2);
 subplot(2,3,3);
 spectrogram(a1,1280,1200,1280,16000,'yaxis')
 title(desc1)
-caxis([-160 -40])
+caxis([-150 -30])
 
 subplot(2,3,6);
 spectrogram(a2,1280,1200,1280,16000,'yaxis')
 title(desc2)
-caxis([-160 -40])
+caxis([-150 -30])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Functions: 
