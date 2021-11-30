@@ -1,8 +1,8 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Compare and Plot the difference between
-% Two *given* Spectra - not for batch
+% Plot the spectra/ spectrograms of a 
+% a given list of files
 %
-% Becky Heath with contributions from Dr. Lorenzo Picinali
+% Becky Heath
 % Autumn 2021 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

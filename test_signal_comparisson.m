@@ -11,15 +11,15 @@ tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
 % Set up File Locations and Load in Relevant Data
-audio_path = "Data/Lab_Localisation/Test_Signals/";
+audio_path = "Data/Lab_Localisation/Audio_Data_Edited/Files_clean3/";
 
-desc1 = "Pink Noise";
-desc2 = "Eurasian Wren";
-fn_1 = "pink_noise";
-fn_2 = "Eurasian_Wren";
+desc1 = "Rec2";
+desc2 = "Rec3";
+fn_1 = "5a_pinknoise_Y_2";
+fn_2 = "3a_pinknoise_Y_3";
 
 % Load in Audio
-samples = [1,79.5*48000]; % whole signal
+samples = [1,1440000]; % whole signal
 aud1 = audioread(audio_path+fn_1+".wav",samples);
 aud2 = audioread(audio_path+fn_2+".wav",samples);
 

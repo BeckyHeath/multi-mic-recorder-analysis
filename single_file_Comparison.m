@@ -11,16 +11,16 @@ tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
 % Set up File Locations and Load in Relevant Data
-audio_path = "Data/Lab_Localisation/Audio_Data_Edited/Files_clean/";
+audio_path = "Data/Lab_Localisation/Audio_Data_Edited/Files_clean3/";
 csvs_path = "Data/Sweep_Data/";
 
-desc1 = "Dev 2";
-desc2 = "Dev 3";
-fn_1 = "5a_pinknoise_2";
-fn_2 = "3a_pinknoise_Y_3";
+desc1 = "No WP pinknoise";
+desc2 = "WP pinknoise";
+fn_1 = "1a_pinknoise2_N_2";
+fn_2 = "5a_pinknoise_Y_2";
 
 % Load in Audio
-samples = [1,7*16000]; % Sweeps are just the first 7 seconds
+samples = [1,9*16000]; % Sweeps are just the first 7 seconds
 aud1 = audioread(audio_path+fn_1+".wav",samples);
 aud2 = audioread(audio_path+fn_2+".wav",samples);
 
@@ -52,24 +52,24 @@ sm2 = smooth(means2.frequency, means2.means,0.3,'rloess');
 smDif = smooth(dif.frequency, dif.difference,0.3,'rloess');
 
 % Seperate Plots: 
+hold('on')
 subplot(2,5,[1,3]);
-plot(means1.frequency, sm1, 'color','#D95319','linewidth',1)
-hold on 
-patchline(means1.frequency, means1.means,'edgecolor',[0.8500, 0.3250, 0.0980],'linewidth',1,'edgealpha',0.3);
+a = plot(means1.frequency, sm1, 'color','#D95319','linewidth',1); 
 hold on
-plot(means2.frequency, sm2,'color', '#EDB120', 'linewidth',1)
-hold on 
-patchline(means2.frequency, means2.means,'edgecolor',	[0.9290, 0.6940, 0.1250],'linewidth',1,'edgealpha',0.3);
+b = plot(means1.frequency, means1.means,'color','#D95319','linewidth',1); b.Color(4)=0.3; 
 hold on
+c = plot(means2.frequency, sm2,'color', '#EDB120', 'linewidth',1);
+hold on
+d = plot(means2.frequency, means2.means,'color', '#EDB120', 'linewidth',1);d.Color(4)=0.3;
 title('Sweep Comparison')
 ylabel('Power Spectrum (dB)')
-legend(desc1, desc2)
+legend(desc1, '(smoothed)',desc2, '(smoothed)', 'Location','southwest')
 grid on
 
 subplot(2,5,[6,8]); 
-plot(dif.frequency, smDif)
+plot(dif.frequency, smDif, 'color', '[0, 0.4470, 0.7410]')
 hold on 
-patchline(dif.frequency, dif.difference,'edgecolor',[0, 0.4470, 0.7410],'linewidth',1,'edgealpha',0.3);
+e = plot(dif.frequency, dif.difference, 'color', '[0, 0.4470, 0.7410]'); e.Color(4)=0.4;
 title('Difference in Spectra')
 xlabel('Frequency/Hz')
 ylabel('Power Spectrum (dB)')
