@@ -48,7 +48,7 @@ section_data <- function(df){
 }
 
 
-true_pred_plots <- function(df,tag){
+true_pred_plots <- function(df,tag,label){
   
   # Creates plots showing true vs. predicted values
   
@@ -58,6 +58,10 @@ true_pred_plots <- function(df,tag){
   merge_df <- merge(df, true, by=c("Start.time"),all=TRUE)
   merge_df <- rename(merge_df, c("Start.azimuth" = "Real.Azimuth"))
   merge_df_er <- merge_df[complete.cases(merge_df),]
+  
+  dif <- merge_df_er$Real.Azimuth - merge_df_er$Predicted.Azimuth
+  difLabel = paste("dif_",label, sep="")
+  assign(difLabel, dif, envir = .GlobalEnv)
   
   error_data <- find_error(merge_df_er$Real.Azimuth, merge_df_er$Predicted.Azimuth)
   printout <- paste0("\n###############\nFile:", label, "\nMean Error:", error_data[1],"\nSD:", error_data[2], "\nR_sq:", error_data[3])
@@ -130,7 +134,7 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   }
   
   i_file <- section_data(i_file)
-  o_plot <- true_pred_plots(i_file,tag)
+  o_plot <- true_pred_plots(i_file,tag,label)
   
   assign(label, o_plot)
 }
