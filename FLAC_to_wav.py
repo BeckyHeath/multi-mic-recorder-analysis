@@ -11,8 +11,8 @@ import os
 import subprocess
                     #Move To Folder with Audio Files in 
 
-pre_comp_dir = "Data/Yellow_Field_Recordings/late/"
-post_comp_dir ="Data/Yellow_Field_Recordings/late/"
+pre_comp_dir = "Data/yellowgreen/early/"
+post_comp_dir ="Data/yellowgreen/early/"
 
 for wfile in os.listdir(pre_comp_dir):
     wfile = pre_comp_dir + wfile

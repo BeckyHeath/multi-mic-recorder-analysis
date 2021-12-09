@@ -14,8 +14,8 @@ cd(fileparts(tmp.Filename));
 % You may need to generate these files form the raw ones first
 
 
-rootPath = "Data\Yellow_Field_Recordings\";
-dirs = ["pre_24Aug","early","late"];
+rootPath = "Data\blue\";
+dirs = ["pre10May","early","late"];
 
 j=0;
 figure('WindowState','maximized')
@@ -66,7 +66,7 @@ for k = 1:size(dirs,2)
         end    
     end
 end
-figname = "Figures/Yellowdata/GroupedSpectraAll.png" ;
+figname = "Figures/BlueData/GroupedSpectraAll.png" ;
 saveas(gcf, figname)
 
 
