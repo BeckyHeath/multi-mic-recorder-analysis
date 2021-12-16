@@ -13,39 +13,38 @@ cd(fileparts(tmp.Filename));
 rootPath = "Data\Blue\";
 dirs = ["pre10May","early","late"];
 
-for k = 1:size(dirs,2)
+clearvars outArray
+outArray = ["FileRoot" "FileName" "ch1" "ch2" "ch3" "ch4" "ch5" "ch6"]; 
 
+for k = 1:size(dirs,2)
+    
     path = rootPath + dirs(k) + "\";
     Files = dir(path + "*.wav");
     FileNames =  { Files.name };
 
     for fileNo = 1:size(FileNames,2)
 
-        % Read File and Generate Power Spectrum 
+        % Read File and determine if signal is on
         i_file = path + FileNames(fileNo);
-        samples = [1,60*16000]; % Just look at the first minute
+        samples = [1,600*16000]; % Recordings are 10 minutes
         aud = audioread(i_file,samples);
-        [p,frequencies] = pspectrum(aud,16000);
-        pdb = pow2db(p);
         
-        TF = [0 0 0 0 0 0]; % Initialise anomoly df
-        % Detect Outliers row by row 
-        for row = 1:size(pdb,1)
-            [B,TF1] = rmoutliers(pdb(row,:));
-            TF = vertcat(TF,TF1);
-        end
-        
-        tots = sum(TF); 
-        disp(tots)
-        for val = 1:size(tots,2)
+        dirPath = rootPath + dirs(k);
+        outLine = [dirPath FileNames(fileNo) 0 0 0 0 0 0];
 
-            if tots(1,val) > 1000
-                out = "*******"+dirs(k) +": " + FileNames(fileNo) + ": " +  " CH: " + val + " IS ANOMOLOUS";
+        for ch = 1:6
+            count = sum(aud(:,ch) > 0.005);
+            if count > 9600
+                outLine(ch+2)= "ok";
+            elseif count > 1500
+                outLine(ch+2)= "part";
             else 
-                out = dirs(k) +": " + FileNames(fileNo) + ": " +  " ch: " + val + " is ok";
+                outLine(ch+2)= "dead"; 
             end 
-            disp(out)
-        end          
+        end 
+        disp(outLine)
+
+        outArray=[outArray;outLine];
     end
 end
 
