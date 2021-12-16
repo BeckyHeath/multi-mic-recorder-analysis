@@ -10,7 +10,7 @@
 tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
-rootPath = "Data\Yellow_Field_Recordings\";
+rootPath = "Data\Blue\";
 dirs = ["pre_24Aug","early","late"];
 
 for k = 1:size(dirs,2)
