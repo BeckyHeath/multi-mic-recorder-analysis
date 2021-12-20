@@ -3,3 +3,6 @@
 *.zip
 *.asv
 *.flac
+
+# Ignore files with personal information (FTP logins etc) 
+*NotForGithub*
