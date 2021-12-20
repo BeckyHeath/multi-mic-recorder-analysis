@@ -10,11 +10,11 @@
 tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
-rootPath = "Data\Blue\";
+rootPath = "Data\green\";
 dirs = ["pre10May","early","late"];
 
 clearvars outArray
-outArray = ["FileRoot" "FileName" "ch1" "ch2" "ch3" "ch4" "ch5" "ch6"]; 
+outArray = ["FileRoot" "FileName" "ch1" "ch2" "ch3" "ch4" "ch5" "ch6" "brokenCh"]; 
 
 for k = 1:size(dirs,2)
     
@@ -30,25 +30,29 @@ for k = 1:size(dirs,2)
         aud = audioread(i_file,samples);
         
         dirPath = rootPath + dirs(k);
-        outLine = [dirPath FileNames(fileNo) 0 0 0 0 0 0];
+        outLine = [dirPath FileNames(fileNo) 0 0 0 0 0 0 0];
 
         for ch = 1:6
-            count = sum(aud(:,ch) > 0.005);
-            if count > 9600
-                outLine(ch+2)= "ok";
-            elseif count > 1500
-                outLine(ch+2)= "part";
+            count = sum(aud(:,ch) > 0.002); % v. low amplitude
+            outLine(ch+2) = count;
+            if count > 960000
+                outLine(ch+2)= "-"; % all okay
+            elseif count > 96000
+                outLine(ch+2)= "/"; % part gone
             else 
-                outLine(ch+2)= "dead"; 
+                outLine(ch+2)= "X"; % dead
             end 
         end 
-        disp(outLine)
+        
+        % Find number of channels that are broken:
+        okCh = 6 - sum(outLine == "-");
+        outLine(9) = okCh;
 
         outArray=[outArray;outLine];
     end
 end
 
-
+writematrix(outArray,'Data/greenChannelUsage.csv')  
 
 
 
