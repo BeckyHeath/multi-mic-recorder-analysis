@@ -2,6 +2,8 @@
 % Scripts for Detecting Dead Channels in
 % multichannel recording 
 %
+% TODO: Optimise? This is very slow
+%
 % Becky Heath
 % Winter 2021
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -19,7 +21,7 @@ for col =  1:size(colours,2)
     dirs = ["pre","early","late"];
     
     clearvars outArray
-    outArray = ["FileRoot" "FileName" "ch1" "ch2" "ch3" "ch4" "ch5" "ch6" "brokenCh"]; 
+    outArray = ["FileRoot" "FileName" "ch1" "ch2" "ch3" "ch4" "ch5" "ch6" "deadCh" "partDeadCh"]; 
     
     for k = 1:size(dirs,2)
         
@@ -47,24 +49,23 @@ for col =  1:size(colours,2)
     
                 % Sort them in descending order
                 [sortedAreas, sortIndices] = sort(allAreas, 'Descend');
-                outLine(ch+2) = sortedAreas(1);
+                chain = sortedAreas(1);
     
-    %         for ch = 1:6
-    %             count = sum(aud(:,ch) > 0.002); % v. low amplitude
-    %             outLine(ch+2) = count;
-    %             if count > 960000
-    %                 outLine(ch+2)= "-"; % all okay
-    %             elseif count > 96000
-    %                 outLine(ch+2)= "/"; % part gone
-    %             else 
-    %                 outLine(ch+2)= "X"; % dead
-    %             end 
+                if chain > 9599000
+                    outLine(ch+2)= "X"; % dead signal
+                elseif chain > 100000
+                    outLine(ch+2)= "/"; % part gone (drop out)
+                else 
+                    outLine(ch+2)= "-"; % signal okay
+                end 
            end 
             
             % Find number of channels that are broken:
-            %okCh = 6 - sum(outLine == "-");
-            okCh = "?";
-            outLine(9) = okCh;
+            deadCh = sum(outLine == "X");
+            outLine(9) = deadCh;
+            
+            PartdeadCh = sum(outLine == "/");
+            outLine(10) = PartdeadCh;
     
             outArray=[outArray;outLine];
         end
