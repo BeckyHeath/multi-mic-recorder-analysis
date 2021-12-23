@@ -20,7 +20,7 @@ for col =  1:size(colours,2)
     dirs = ["pre","early","late"];
     
     clearvars outArray
-    outArray = ["FileRoot" "FileName" "ch1" "ch2" "ch3" "ch4" "ch5" "ch6"]; 
+    outArray = ["FileRoot" "FileName" "ch1" "ch2" "ch3" "ch4" "ch5" "ch6" "NumOutliers"]; 
     
     for k = 1:size(dirs,2)
         
@@ -50,12 +50,15 @@ for col =  1:size(colours,2)
             B = str2double( A(:,:) );
             outlier = isoutlier(B);
             outLine(3:8) = outlier;
+
+            countlier = sum(outLine == "true");
+            outLine(9) = countlier;
     
             outArray=[outArray;outLine];
         end
     end
     
-    outFileName = 'Data/' + colour + "outlier.csv";
+    outFileName = 'Data/' + colour + "Outlier.csv";
     
     writematrix(outArray,outFileName);
     
