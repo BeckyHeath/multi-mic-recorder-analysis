@@ -2,6 +2,7 @@
 % Scripts for Detecting Quieter Channels in
 % multichannel recording 
 %
+% This is taking ages - check why (seems wierd)
 %
 % Becky Heath
 % Winter 2021
@@ -20,7 +21,7 @@ for col =  1:size(colours,2)
     dirs = ["pre","early","late"];
     
     clearvars outArray
-    outArray = ["FileRoot" "FileName" "ch1" "ch2" "ch3" "ch4" "ch5" "ch6" "NumOutliers"]; 
+    outArray = ["FileRoot" "FileName" "ch1" "ch2" "ch3" "ch4" "ch5" "ch6"]; 
     
     for k = 1:size(dirs,2)
         
@@ -37,28 +38,28 @@ for col =  1:size(colours,2)
             
             dirPath = rootPath + dirs(k);
             outLine = [dirPath FileNames(fileNo) 0 0 0 0 0 0];
+            
+            % find variance
+            V = var(aud); 
+            V = V/1.0e-05;
+            
+            outLine(3:8) = V;
 
-    
-            for ch = 1:6
-                a = aud(:,ch);
-                a = abs(a);
-                tops = maxk(a,50000,1);
-                avgs = mean(tops);
-                outLine(ch+2)= avgs; %Average of the Loudest
-            end 
-            A = outLine(1,3:8);
-            B = str2double( A(:,:) );
-            outlier = isoutlier(B);
-            outLine(3:8) = outlier;
+            % This is not working great 
+%             A = outLine(1,3:8);
+%             B = str2double( A(:,:) );
+%             outlier = isoutlier(B);
+%             outLine(3:8) = outlier;
 
-            countlier = sum(outLine == "true");
-            outLine(9) = countlier;
+              % Forget Countier for now 
+%             countlier = sum(outLine < 0.005); % MAYBE (check this) 
+%             outLine(9) = countlier;
     
             outArray=[outArray;outLine];
         end
     end
     
-    outFileName = 'Data/' + colour + "Outlier.csv";
+    outFileName = 'Data/' + colour + "testOutlier.csv";
     
     writematrix(outArray,outFileName);
     
