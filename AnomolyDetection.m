@@ -21,7 +21,7 @@ for col =  1:size(colours,2)
     dirs = ["pre","early","late"];
     
     clearvars outArray
-    outArray = ["FileRoot" "FileName" "ch1" "ch2" "ch3" "ch4" "ch5" "ch6"]; 
+    outArray = ["FileRoot" "FileName" "ch1" "ch2" "ch3" "ch4" "ch5" "ch6" "OutlierNum"]; 
     
     for k = 1:size(dirs,2)
         
@@ -39,27 +39,34 @@ for col =  1:size(colours,2)
             dirPath = rootPath + dirs(k);
             outLine = [dirPath FileNames(fileNo) 0 0 0 0 0 0];
             
-            % find variance
-            V = var(aud); 
-            V = V/1.0e-05;
+%             % find variance % Worked okay but try RMS 
+%             V = var(aud); 
+%             V = V/1.0e-05;
+%             
+%             outLine(3:8) = V;
+
+            % try RMS OR MAYBE MEDIAN SPECTRA??
+            % Try bringing in spectral info! 
             
-            outLine(3:8) = V;
+            RMS = rms(aud); 
+            RMS = RMS/0.001;
+            RMS = log(RMS);
+            
+            outLine(3:8) = RMS;
 
-            % This is not working great 
-%             A = outLine(1,3:8);
-%             B = str2double( A(:,:) );
-%             outlier = isoutlier(B);
-%             outLine(3:8) = outlier;
+            A = outLine(1,3:8);
+            B = str2double( A(:,:) );
+            outlier = isoutlier(B);
+            outLine(3:8) = outlier;
 
-              % Forget Countier for now 
-%             countlier = sum(outLine < 0.005); % MAYBE (check this) 
-%             outLine(9) = countlier;
+            countlier = sum(outLine == "true"); % MAYBE (check this) 
+            outLine(9) = countlier;
     
             outArray=[outArray;outLine];
         end
     end
     
-    outFileName = 'Data/' + colour + "testOutlier.csv";
+    outFileName = 'Data/' + colour + "TF_RMS_OUTLIER.csv";
     
     writematrix(outArray,outFileName);
     
