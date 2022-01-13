@@ -66,12 +66,13 @@ for(i in dirNames){
       for(l in 1:chNo){
         aud = read_wave(filePath, channel = l) # Channel = L (l), not one (1)
         
-        # Calculate Index (ACI)
-        aci.list = acoustic_complexity(aud)
-        aci = as.numeric(aci.list$AciTotAll_left_bymin)
+        # Calculate Index (BIO
+        
+        index.list = bioacoustic_index(aud)
+        index = as.numeric(index.list$left_area)
         
         # save to the outLine
-        outLine[l + 2] = aci
+        outLine[l + 2] = index
       }
       
       outLine[9] = "y"
@@ -84,7 +85,7 @@ for(i in dirNames){
     }
   }
   
-  fileName = paste(dirPath,"/",i,"_ACIdata.csv",sep="")
+  fileName = paste(dirPath,"/",i,"_BIOdata.csv",sep="")
   write.table(out.file, file = fileName, sep = ",", append = TRUE, quote = FALSE,
               col.names = FALSE, row.names = FALSE)  
 } 

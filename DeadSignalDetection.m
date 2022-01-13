@@ -75,7 +75,7 @@ for col =  1:size(colours,2)
     
     writematrix(outArray,outFileName);
     
-    disp(colour + " done")
+    
 
 end 
 
