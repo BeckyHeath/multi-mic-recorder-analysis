@@ -38,35 +38,45 @@ for col =  1:size(colours,2)
             
             dirPath = rootPath + dirs(k);
             outLine = [dirPath FileNames(fileNo) 0 0 0 0 0 0];
+
+            % Calculate the proportional difference between 
+            % High and low bands (based on NDSI index) 
+
+            lowProp = bandpower(aud,16000,[1000 2000]);
+            highProp = bandpower(aud,16000,[2000 8000]);
+
+            compProp = lowProp./highProp;
+            outLine(3:8) = compProp;
             
-%             % find variance % Worked okay but try RMS 
+%             % Also tried using Variance: 
 %             V = var(aud); 
 %             V = V/1.0e-05;
 %             
-%             outLine(3:8) = V;
+% %           outLine(3:8) = V;
+% 
+%             % Also also tried using RMS: 
+%             RMS = rms(aud); 
+%             RMS = RMS/0.001;
+%             RMS = log(RMS);
+%             
+%             outLine(3:8) = RMS;
 
-            % try RMS OR MAYBE MEDIAN SPECTRA??
-            % Try bringing in spectral info! 
-            
-            RMS = rms(aud); 
-            RMS = RMS/0.001;
-            RMS = log(RMS);
-            
-            outLine(3:8) = RMS;
 
-            A = outLine(1,3:8);
-            B = str2double( A(:,:) );
-            outlier = isoutlier(B);
-            outLine(3:8) = outlier;
 
-            countlier = sum(outLine == "true"); % MAYBE (check this) 
-            outLine(9) = countlier;
+% Add this in again in a bit I just wanna see (:
+%             A = outLine(1,3:8);
+%             B = str2double( A(:,:) );
+%             outlier = isoutlier(B);
+%             outLine(3:8) = outlier;
+% 
+%             countlier = sum(outLine == "true"); % MAYBE (check this) 
+%             outLine(9) = countlier;
     
             outArray=[outArray;outLine];
         end
     end
     
-    outFileName = 'Data/' + colour + "TF_RMS_OUTLIER.csv";
+    outFileName = 'Data/' + colour + "NDSI_MATLAB_raw.csv";
     
     writematrix(outArray,outFileName);
     
