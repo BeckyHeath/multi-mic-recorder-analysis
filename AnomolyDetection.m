@@ -5,7 +5,7 @@
 % This is taking ages - check why (seems wierd)
 %
 % Becky Heath
-% Winter 2021
+% Winter 2021/2022
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Set working directory 
@@ -39,19 +39,19 @@ for col =  1:size(colours,2)
             dirPath = rootPath + dirs(k);
             outLine = [dirPath FileNames(fileNo) 0 0 0 0 0 0];
 
-%             mid = bandpower(aud,16000,[2000 5000]);
-%             
-%             outLine(3:8) = mid;
+            mid = bandpower(aud,16000,[2000 5000]);
+            
+            outLine(3:8) = mid;
 
             % MAYBE TRY FINDPEAKS?
 
-            % Calculate the proportional difference between 
-            % High and low bands (based on NDSI index) 
-            lowProp = bandpower(aud,16000,[1000 2000]);
-            highProp = bandpower(aud,16000,[2000 8000]);
-
-            compProp = lowProp./highProp;
-            outLine(3:8) = compProp;
+%             % Calculate the proportional difference between 
+%             % High and low bands (based on NDSI index) 
+%             lowProp = bandpower(aud,16000,[1000 2000]);
+%             highProp = bandpower(aud,16000,[2000 8000]);
+% 
+%             compProp = lowProp./highProp;
+%             outLine(3:8) = compProp;
             
 %             % Also tried using Variance: 
 %             V = var(aud); 
@@ -68,21 +68,21 @@ for col =  1:size(colours,2)
 
 
 
-% % Add this in again in a bit I just wanna see (:
-%             A = outLine(1,3:8);
-%             B = str2double( A(:,:) );
-%             outlier = isoutlier(B);
-%             outLine(3:8) = outlier;
-% 
-%             countlier = sum(outLine == "true"); % MAYBE (check this) 
-%             outLine(9) = countlier;
-%     
-            outLine(9) = "easyTiger";
+% Add this in again in a bit I just wanna see (:
+            A = outLine(1,3:8);
+            B = str2double( A(:,:) );
+            outlier = isoutlier(B,'quartiles');%non-normally distributed data
+            %outLine(3:8) = outlier; %keep raw values instead 
+           
+
+            countlier = sum(outlier,'all'); % MAYBE (check this) 
+            outLine(9) = countlier;
+   
             outArray=[outArray;outLine];
         end
     end
     
-    outFileName = 'Data/' + colour + "NDSI_raw.csv";
+    outFileName = 'Data/' + colour + "_bandpower_withCountQUARTILES.csv";
     
     writematrix(outArray,outFileName);
     
