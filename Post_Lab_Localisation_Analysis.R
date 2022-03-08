@@ -17,7 +17,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 ##### Define Test File Location #####
 
-file_directory = "Data/postMortem/LocalisedYellow"
+file_directory = "Data/postMortem/LocalisedYellow_THRESH27_5"
 
 
 ##### Define Functions #####
@@ -125,9 +125,9 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   print(paste0("J = ",j))
   
   if(j == 1){
-    label_g = "Not Weatherproofed"
+    label_g = "Bird Song"
   } else if(j==3){
-    label_g = "Weatherproofed"
+    label_g = "Pink Noise"
   } else {
     label_g =""
   }
