@@ -83,5 +83,5 @@ tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
 % Write to a csv 
-outFileName = "Data/Full_FileNo_Data.csv";
+outFileName = "Data/MetaData.csv";
 writematrix(outArray,outFileName); 
