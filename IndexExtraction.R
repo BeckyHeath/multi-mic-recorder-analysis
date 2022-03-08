@@ -68,8 +68,8 @@ for(i in dirNames){
         
         # Calculate Index (BIO
         
-        index.list = bioacoustic_index(aud)
-        index = as.numeric(index.list$left_area)
+        index.list = ndsi(aud, bio_max = 8000)
+        index = as.numeric(index.list$ndsi_left)
         
         # save to the outLine
         outLine[l + 2] = index
@@ -85,7 +85,7 @@ for(i in dirNames){
     }
   }
   
-  fileName = paste(dirPath,"/",i,"_BIOdata.csv",sep="")
+  fileName = paste(dirPath,"/",i,"_NDSIdata.csv",sep="")
   write.table(out.file, file = fileName, sep = ",", append = TRUE, quote = FALSE,
               col.names = FALSE, row.names = FALSE)  
 } 
