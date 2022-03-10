@@ -49,23 +49,54 @@ combinedDF <- full_join(long,boxMeta, by = c("date","Recorder"))
 
 ##### Get data about the recordings #####
 
-fieldDep <- c("conifer", "oak")
+recMeta <- data.frame(Recorder = character(),
+                       Phase = character(),
+                       recHours = numeric(),
+                       recVol = numeric())
 
-justFieldData <- combinedDF[combinedDF$value == fieldDep]
+# Iterate through recorders and phases and get meta info
+for(i in levels(as.factor(combinedDF$Recorder))){
+  recorder = i 
+  singleRec <- combinedDF[combinedDF$Recorder == recorder,]
+  for(j in levels(as.factor(singleRec$value))){
+    phase = j
+    singlePhase <- singleRec[singleRec$value == phase,]
+    
+    # Get Data 
+    numHours = (sum(singlePhase$numFiles,na.rm = TRUE)*10)/60 # TEN MINUTE RECORDINGS 
+    numHours = round(as.numeric(numHours), digits = 2) # 2 dp 
+    
+    dataVol = (sum(singlePhase$TotFileSizeMB, na.rm = TRUE))/1000
+    
+    # Write to df 
+    outLine <- data.frame(recorder, phase, numHours, dataVol)
+    recMeta <- rbind(recMeta, outLine)
+    
+  }
+  
+}
 
-numHours = (sum(justFieldData$numFiles,na.rm = TRUE)*10)/60 # TEN MINUTE RECORDINGS 
-numHours = round(as.numeric(numHours), digits = 2) # 2 dp 
+# Get Totals 
+metaTotals <- data.frame(Phase = character(),
+                      recHours = numeric(),
+                      recVol = numeric())
 
-dataVol = (sum(justFieldData$TotFileSizeMB, na.rm = TRUE))/1000
-
-
-printOut = cat("###############################", "\n", "Num Hours: ", numHours, "\n", "Data Volume: ", dataVol, "\n", "######################")
+for(i in levels(as.factor(recMeta$phase))){
+  phase = i
+  singlePhase <- recMeta[recMeta$phase == phase,]
+  
+  recHours = sum(singlePhase$numHours, na.rm = TRUE)
+  recVol = sum(singlePhase$dataVol, na.rm = TRUE)#
+  
+  outLine = data.frame(phase, recHours, recVol)
+  metaTotals = rbind(metaTotals,outLine)
+}
 
 
 ##### Graphing Data #####
 
-
 # Seperate out by recorder 
+
 
 # Sumup recording hours from each 
 
