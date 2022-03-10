@@ -97,6 +97,9 @@ for(i in levels(as.factor(recMeta$phase))){
 
 # Seperate out by recorder 
 
+colour = "blue"
+
+singleRec <-  recMeta[recMeta$phase == phase,]
 
 # Sumup recording hours from each 
 
