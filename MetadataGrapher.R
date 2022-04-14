@@ -10,6 +10,8 @@
 ##### Load Packages and set working directory #####
 library(data.table)
 library(dplyr)
+library(tidyverse)
+library(scales)
 
 #### Load in files ####
 
@@ -18,7 +20,7 @@ setwd("C:/Users/becky/Desktop/Github/multi-mic-recorder-analysis/multi-mic-recor
 
 # Load in Relevant data
 recStatus <- read.csv("Data/Recorder_status.csv")
-boxMeta <- read.csv("Data/Full_FileNo_Data.csv")
+boxMeta <- read.csv("Data/BoxData_Apr14.csv")
 
 
 ###### join dataframes #####
@@ -49,6 +51,8 @@ combinedDF <- full_join(long,boxMeta, by = c("date","Recorder"))
 
 ##### Get data about the recordings #####
 
+
+# Finding totals accross the whole dataset: 
 recMeta <- data.frame(Recorder = character(),
                        Phase = character(),
                        recHours = numeric(),
@@ -92,15 +96,31 @@ for(i in levels(as.factor(recMeta$phase))){
   metaTotals = rbind(metaTotals,outLine)
 }
 
+# Finding the per diem recorder numbers 
 
-##### Graphing Data #####
+fieldPhases <- c("conifer","oak")
+fieldRecs <- combinedDF[combinedDF$value == fieldPhases,]
 
-# Seperate out by recorder 
 
-colour = "blue"
 
-singleRec <-  recMeta[recMeta$phase == phase,]
+# Graph the actual recording period
 
-# Sumup recording hours from each 
+fullDep <- fieldRecs %>% filter(date >= "2021-08-25")
 
-# Look at graphing 
+fullDep$date <- as.Date(fullDep$date)
+
+cols <- c("darkgreen","gold1","yellowgreen","steelblue3")
+
+Recs <- ggplot(fullDep, aes(x=date, y= numFiles,col = Recorder, fill = Recorder))+
+  scale_x_date(breaks = "1 month", minor_breaks = "1 week", labels = date_format("%B")) +
+  scale_colour_manual(values=cols) +
+  scale_fill_manual(values=cols) +
+  geom_point(shape = 4,alpha=0.5) +
+  geom_smooth(alpha = 0.1)+ 
+  labs(x= "Date")+
+  labs(y= "Daily Uploads (max 144)")+
+  ylim(0,150)+
+  theme_minimal()+
+  theme(legend.position = c(0.9,0.8))
+Recs
+rm(Recs) 
