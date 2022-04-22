@@ -11,16 +11,16 @@ tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
 % Set up File Locations and Load in Relevant Data
-audio_path = "Data/Lab_Localisation/Audio_Data_Edited/Files_clean3/";
-csvs_path = "Data/Sweep_Data/";
+audio_path = "Data/Lab_Localisation/Pre_and_Post_Comparison/";
+csvs_path = "Data/Sweep_Data/PreAndPost/";
 
-desc1 = "No WP pinknoise";
-desc2 = "WP pinknoise";
-fn_1 = "1a_pinknoise2_N_2";
-fn_2 = "5a_pinknoise_Y_2";
+desc1 = "pre";
+desc2 = "post";
+fn_1 = "5a_pinknoise_Y_2";
+fn_2 = "Yellow_Bird";
 
 % Load in Audio
-samples = [1,9*16000]; % Sweeps are just the first 7 seconds
+samples = [1,9*16000]; % Sweeps are just the first 8 seconds
 aud1 = audioread(audio_path+fn_1+".wav",samples);
 aud2 = audioread(audio_path+fn_2+".wav",samples);
 
