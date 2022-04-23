@@ -31,34 +31,35 @@ for k = 1:size(rootPaths,2)
     
     %figure('WindowState','maximized')
     j=0;
-    for ch = 1:6
-        j=j+1;
-        for fileNo = 1:size(FileNames,2)
-            i_file = rootPath + FileNames(fileNo);
-    
-            % Work out spectra minutewise
-            for endSamp = 960000:960000:9600000
+    for fileNo = 1:size(FileNames,2)
+        i_file = rootPath + FileNames(fileNo);
+        
+        %Load in Audio
+        aud = audioread(i_file,600*16000);
+        
+        % Work out spectra minutewise
+        for endSamp = 960000:960000:9600000
             startSamp = 1;
             samples = [startSamp,endSamp];
-    
+
             aud = audioread(i_file,samples);
-            
+        
             startSamp = endSamp; % Swap over the start/end point
-    
+
             % Just get the first channel 
             audCh = aud(:,ch);
-    
-            [p,frequencies] = pspectrum(audCh,16000);
-            pdb = cat(2,frequencies,pow2db(p));
-            
-            ylab = "ch " +  j;
-    
-            % Plot Spectrogram
-            subplot(2,3,j);
-            e=plot(pdb(:,1), pdb(:,2), 'color','#EAC435','linewidth',1);e.Color(4)=0.4;
-            title(ylab)
-            hold on
-            end       
+
+        [p,frequencies] = pspectrum(audCh,16000);
+        pdb = cat(2,frequencies,pow2db(p));
+        
+        ylab = "ch " +  j;
+
+        % Plot Spectrogram
+        subplot(2,3,j);
+        e=plot(pdb(:,1), pdb(:,2), 'color','#EAC435','linewidth',1);e.Color(4)=0.4;
+        title(ylab)
+        hold on
+        end       
         end    
     end
     saveas(gcf, figName)
