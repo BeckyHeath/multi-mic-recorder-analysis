@@ -12,8 +12,8 @@ cd(fileparts(tmp.Filename));
 
 
 % One at a time
-%rootPaths = ["Data\yellow\early\","Data\yellowgreen\early\","Data\Blue\early\","Data\green\early\"];
-rootPaths = ["Data\yellow\early\"];
+rootPaths = ["Data\yellow\early\","Data\yellowgreen\early\","Data\Blue\early\","Data\green\early\"];
+%rootPaths = ["Data\yellow\early\"];
 
 
 figureNames = ["Figures/MicQualData/yellowfull.png","Figures/MicQualData/yellowgreenfull.png","Figures/MicQualData/bluefull.png","Figures/MicQualData/greenfull.png"];
@@ -30,40 +30,48 @@ for k = 1:size(rootPaths,2)
     FileNames =  { Files.name };
     
     %figure('WindowState','maximized')
-    j=0;
+    
     for fileNo = 1:size(FileNames,2)
         i_file = rootPath + FileNames(fileNo);
         
         %Load in Audio
-        aud = audioread(i_file,600*16000);
+        aud = audioread(i_file,[1,600*16000]); % Load in full file 
         
         % Work out spectra minutewise
         for endSamp = 960000:960000:9600000
             startSamp = 1;
             samples = [startSamp,endSamp];
+            
+            TestSection = aud(startSamp:endSamp,:);
+            startSamp = endSamp; % Swap over the start/end point for next loop
+            
+            % Iterate through channels
+            j=0;
+            for ch = 1:6
+                j=j+1;
+                audCh = aud(:,ch);
+                [p,frequencies] = pspectrum(audCh,16000);
+                pdb = cat(2,frequencies,pow2db(p));
 
-            aud = audioread(i_file,samples);
-        
-            startSamp = endSamp; % Swap over the start/end point
-
-            % Just get the first channel 
-            audCh = aud(:,ch);
-
-        [p,frequencies] = pspectrum(audCh,16000);
-        pdb = cat(2,frequencies,pow2db(p));
-        
-        ylab = "ch " +  j;
-
-        % Plot Spectrogram
-        subplot(2,3,j);
-        e=plot(pdb(:,1), pdb(:,2), 'color','#EAC435','linewidth',1);e.Color(4)=0.4;
-        title(ylab)
-        hold on
-        end       
-        end    
+                ylab = "ch " +  j;
+                
+                col = "#"+ colours2(k);
+                % Plot Spectrogram
+                subplot(2,3,j);
+                e=plot(pdb(:,1), pdb(:,2), 'color',col,'linewidth',1);e.Color(4)=0.4;
+                title(ylab)
+                hold on
+            end 
+        end 
+        disp(i_file + " done!")
     end
-    saveas(gcf, figName)
+        saveas(gcf, figName)
+        close(gfc)
 end
+
+
+   
+
 
 
 
