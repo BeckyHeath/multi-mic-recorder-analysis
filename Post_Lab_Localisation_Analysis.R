@@ -58,9 +58,11 @@ true_pred_plots <- function(df,tag,label){
   
   # Merge Data 
   df <- df[, c("Start.time", "Start.azimuth")]
-  df <- rename(df, c("Start.azimuth" = "Predicted.Azimuth"))
+  names(df)[names(df) == "Start.azimuth"] <- "Predicted.Azimuth"
+  
   merge_df <- merge(df, true, by=c("Start.time"),all=TRUE)
-  merge_df <- rename(merge_df, c("Start.azimuth" = "Real.Azimuth"))
+  
+  names(merge_df)[names(merge_df) == "Start.azimuth"] <- "Real.Azimuth"
   merge_df_er <- merge_df[complete.cases(merge_df),]
   
   dif <- merge_df_er$Real.Azimuth - merge_df_er$Predicted.Azimuth
