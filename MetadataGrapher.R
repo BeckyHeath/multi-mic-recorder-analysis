@@ -106,8 +106,33 @@ fieldRecs <- combinedDF[combinedDF$value == fieldPhases,]
 # Graph the actual recording period
 
 fullDep <- fieldRecs %>% filter(date >= "2021-08-25")
+fullDep <- fullDep %>% filter(date <= "2022-01-22")
+
+tot <- sum(fullDep$TotFileSizeMB,na.rm='True')
 
 fullDep$date <- as.Date(fullDep$date)
+
+cols <- c("darkgreen","gold1","yellowgreen","steelblue3")
+
+Recs <-ggplot(fullDep, aes(x=date, y= numFiles,col = Recorder, fill = Recorder))+
+  scale_x_date(breaks = "1 month", minor_breaks = "1 week", labels = date_format("%B")) +
+  scale_colour_manual(values=cols) +
+  scale_fill_manual(values=cols) +
+  geom_point(shape = 4,alpha=0.5) +
+  geom_smooth(alpha = 0.1)+
+  scale_y_continuous(limits= c(0,150), oob = squish)+
+  labs(x= "Date")+
+  labs(y= "Daily Uploads (max 144)")+
+  theme_minimal()+
+  theme(legend.position = c(0.9,0.79))+
+  theme(legend.title=element_text(size=9), 
+        legend.text=element_text(size=8))
+Recs
+rm(Recs) 
+
+# Present data in hours 
+
+fullDep$numFiles <- fullDep$numFiles/6
 
 cols <- c("darkgreen","gold1","yellowgreen","steelblue3")
 
@@ -116,11 +141,18 @@ Recs <- ggplot(fullDep, aes(x=date, y= numFiles,col = Recorder, fill = Recorder)
   scale_colour_manual(values=cols) +
   scale_fill_manual(values=cols) +
   geom_point(shape = 4,alpha=0.5) +
-  geom_smooth(alpha = 0.1)+ 
+  geom_smooth(alpha = 0.1)+
+  scale_y_continuous(limits= c(0,24), oob = squish)+
   labs(x= "Date")+
-  labs(y= "Daily Uploads (max 144)")+
-  ylim(0,150)+
+  labs(y= "Hours of Uploaded Data (daily)")+
   theme_minimal()+
-  theme(legend.position = c(0.9,0.8))
+  theme(legend.title=element_text(size=9), 
+        legend.text=element_text(size=8))+
+  theme(legend.position = c(0.85,0.75))
 Recs
 rm(Recs) 
+
+
+
+
+
