@@ -58,7 +58,8 @@ for k = 1:size(rootPaths,2)
                 col = "#"+ colours2(k);
                 % Plot Spectrogram
                 subplot(2,3,j);
-                e=plot(pdb(:,1), pdb(:,2), 'color',col,'linewidth',1);e.Color(4)=0.4;
+                e=plot(pdb(:,1), pdb(:,2), 'color',col,'linewidth',1);
+                e.Color(4)=0.2;
                 title(ylab)
                 hold on
             end 
@@ -66,7 +67,7 @@ for k = 1:size(rootPaths,2)
         disp(i_file + " done!")
     end
         saveas(gcf, figName)
-        close(gfc)
+        close
 end
 
 
