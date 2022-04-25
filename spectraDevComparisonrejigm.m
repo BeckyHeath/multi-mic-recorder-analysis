@@ -16,7 +16,7 @@ rootPaths = ["Data\yellow\early\","Data\yellowgreen\early\","Data\Blue\early\","
 %rootPaths = ["Data\yellow\early\"];
 
 
-figureNames = ["Figures/MicQualData/yellowfull.png","Figures/MicQualData/yellowgreenfull.png","Figures/MicQualData/bluefull.png","Figures/MicQualData/greenfull.png"];
+figureNames = ["Figures/MicQualData/yellow_less_samples_alph.png","Figures/MicQualData/yellowgreen_less_samples_alph.png","Figures/MicQualData/blue_less_samples_alph.png","Figures/MicQualData/green_less_samples_alph.png"];
 
 % Play with these Order: Yellow, YellowGreen, Blue, Green
 colours = ["F6BD60","86CB92","12664F","00A7E1"];
@@ -38,7 +38,7 @@ for k = 1:size(rootPaths,2)
         aud = audioread(i_file,[1,600*16000]); % Load in full file 
         
         % Work out spectra minutewise
-        for endSamp = 960000:960000:9600000
+        for endSamp = 960000:4800000:9600000
             startSamp = 1;
             samples = [startSamp,endSamp];
             
@@ -53,14 +53,14 @@ for k = 1:size(rootPaths,2)
                 [p,frequencies] = pspectrum(audCh,16000);
                 pdb = cat(2,frequencies,pow2db(p));
 
-                ylab = "ch " +  j;
+                %ylab = "ch " +  j;
                 
                 col = "#"+ colours2(k);
                 % Plot Spectrogram
                 subplot(2,3,j);
                 e=plot(pdb(:,1), pdb(:,2), 'color',col,'linewidth',1);
-                e.Color(4)=0.2;
-                title(ylab)
+                e.Color = [e.Color 0.25];
+                %title(ylab)
                 hold on
             end 
         end 
