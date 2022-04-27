@@ -70,6 +70,8 @@ for k = 1:size(rootPaths,2)
         close
 end
 
+% Sort Margins?
+
 
    
 

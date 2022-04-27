@@ -15,8 +15,11 @@ cd(fileparts(tmp.Filename));
 
 root = "Data/";
 
-RecNames = ["yellow","yellowgreen", "Blue", "green"];
-SubFolders = ["pre","early"];
+% RecNames = ["yellow","yellowgreen", "Blue", "green"];
+% SubFolders = ["pre","early"];
+
+RecNames = ["yellow"];
+SubFolders = ["pre"];
 
 % Play with these Order: Yellow, YellowGreen, Blue, Green
 colours = ["F6BD60","86CB92","12664F","00A7E1"];
@@ -25,6 +28,9 @@ colours2 = ["EAC435","18FF6D", "5C9EAD", "415D43"];
 % Note: The orders wierd but this is for graphing! 
 
 tok=-6; % this is to organise subfigs
+
+ha = tight_subplot(6,6,[.01 .03],[.1 .01],[.01 .01]); % Set up plot 
+
 % Iterate first through recorder types! 
 for k = 1:size(RecNames,2)
     recName = RecNames(k);
@@ -74,11 +80,9 @@ for k = 1:size(RecNames,2)
                     col = "#"+ colours(k);
     
                     % Plot Spectrogram
-                    subplot(8,6,j);
-                    e=plot(pdb(:,1), pdb(:,2), 'color',col,'linewidth',1);
-                    e.Color = [e.Color 0.25];
-                    set(gca,'Yticklabel',[]) 
-                    set(gca,'Xticklabel',[])
+                    %subplot(8,6,j);
+                    axis(ha(j));
+                    plot(pdb(:,1), pdb(:,2), 'color',col,'linewidth',1);
 
                     % Just Title Top Row
                     if j <= 6
@@ -92,6 +96,12 @@ for k = 1:size(RecNames,2)
     end
 end
 
+
+%           for ii = 1:6
+%               axes(ha(ii)); 
+%               plot(randn(10,ii)); 
+%           end
+%           set(ha(1:4),'XTickLabel',''); set(ha,'YTickLabel','')
 
    
 
