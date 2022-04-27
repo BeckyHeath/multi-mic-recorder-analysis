@@ -12,17 +12,17 @@ cd(fileparts(tmp.Filename));
 
 
 % One at a time
-rootPaths = ["Data\yellow\early\","Data\yellowgreen\early\","Data\Blue\early\","Data\green\early\"];
-%rootPaths = ["Data\yellow\early\"];
 
+RecNames = ["yellow","yellowgreen", "Blue", "green"];
 
-figureNames = ["Figures/MicQualData/yellow_less_samples_alph.png","Figures/MicQualData/yellowgreen_less_samples_alph.png","Figures/MicQualData/blue_less_samples_alph.png","Figures/MicQualData/green_less_samples_alph.png"];
+figureName = ["Figures/MicQualData/mega.png"];
+
 
 % Play with these Order: Yellow, YellowGreen, Blue, Green
 colours = ["F6BD60","86CB92","12664F","00A7E1"];
 colours2 = ["EAC435","18FF6D", "5C9EAD", "415D43"];
 
-for k = 1:size(rootPaths,2)
+for k = 1:size(RecNames,2)
     rootPath = rootPaths(k);
     figName = figureNames(k);
 
