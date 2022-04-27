@@ -18,7 +18,10 @@ function [ha, pos] = tight_subplot(Nh, Nw, gap, marg_h, marg_w)
 %        pos    positions of the axes objects
 %
 %  Example: ha = tight_subplot(3,2,[.01 .03],[.1 .01],[.01 .01])
-%           for ii = 1:6; axes(ha(ii)); plot(randn(10,ii)); end
+%           for ii = 1:6; 
+%               axes(ha(ii)); 
+%               plot(randn(10,ii)); 
+%           end
 %           set(ha(1:4),'XTickLabel',''); set(ha,'YTickLabel','')
 % Pekka Kumpulainen 21.5.2012   @tut.fi
 % Tampere University of Technology / Automation Science and Engineering
