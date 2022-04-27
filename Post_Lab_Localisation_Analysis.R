@@ -4,7 +4,7 @@
 # Becky Heath
 # r.heath18@imperial.ac.uk
 #
-# Autumn 2021
+# Autumn 2021/Spring 2022
 
 ##### Load Packages and set working directory #####
 
@@ -17,13 +17,13 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 ##### Define Test File Location #####
 
-file_directory = "Data/postMortem/LocalisedYellow_THRESH27_5"
+file_directory = "Data/postMortem/AllFiles/yellowOUT/Thresh27"
 
 
 ##### Define Functions #####
 
 # Load in true values: 
-true <- read.csv("Data/Real_Location_Clean.csv")
+true <- read.csv("Data/Real_Location_Clean2.csv")
 
 section_data <- function(df){
   
@@ -36,17 +36,17 @@ section_data <- function(df){
   df$Start.azimuth <- df$Start.azimuth - 30 # do HARK config Correction
   df$Start.azimuth <- df$Start.azimuth - 180 # do experiment orientation correction
   
-  # Correct for Angle Limitations
+  # Correct for Angle Flip-over
   df$Start.azimuth[df$Start.azimuth < -180] <- (df$Start.azimuth[df$Start.azimuth < -180] + 360)
   
   # Numbers not divisible by 15 will be Removed 
   
   df$Start.time[df$Start.time < 7] <- 1  # Sweep Signal (ignored)
-  df$Start.time[df$Start.time > 14 & df$Start.time < 21] <- 15  # First Tone  
-  df$Start.time[df$Start.time > 27 & df$Start.time < 36] <- 30  # Second Tone
-  df$Start.time[df$Start.time > 42 & df$Start.time < 51] <- 45  # Third Tone
-  df$Start.time[df$Start.time > 57 & df$Start.time < 66] <- 60  # Fourth Tone
-  df$Start.time[df$Start.time > 72 & df$Start.time < 81] <- 75  # Fifth Tone
+  df$Start.time[df$Start.time > 14 & df$Start.time < 19] <- 15  # First Tone  
+  df$Start.time[df$Start.time > 29 & df$Start.time < 31] <- 30  # Second Tone
+  df$Start.time[df$Start.time > 44 & df$Start.time < 46] <- 45  # Third Tone
+  df$Start.time[df$Start.time > 59 & df$Start.time < 61] <- 60  # Fourth Tone
+  df$Start.time[df$Start.time > 74.49 & df$Start.time < 77] <- 75  # Fifth Tone
 
   return(df)
 }
@@ -116,6 +116,7 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   # tidy label/ graph title name: 
   label = str_remove(as.character(i), file_directory)
   label = str_remove(label,"/localized_")
+  label = str_remove(label,"_PostMortemLoc")
   label = str_remove(label,".wav")
   j=j+1
   
@@ -149,9 +150,10 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
 
 
 # Patchwork Plots 
-plot <- `Yellow_Bird` | `Yellow_Pink02`
+plot <- `Yellow_bird01` | `Yellow_bird02`
+plot2 <- `Yellow_pink02` | `Yellow_pink03`
 
-plot
+plot/plot2
 
 
 

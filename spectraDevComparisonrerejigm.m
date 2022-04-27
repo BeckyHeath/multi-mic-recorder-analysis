@@ -15,11 +15,11 @@ cd(fileparts(tmp.Filename));
 
 root = "Data/";
 
-% RecNames = ["yellow","yellowgreen", "Blue", "green"];
-% SubFolders = ["pre","early"];
+RecNames = ["yellow","yellowgreen", "Blue", "green"];
+SubFolders = ["pre","early"];
 
-RecNames = ["yellow"];
-SubFolders = ["pre"];
+% RecNames = ["yellow"];
+% SubFolders = ["pre"];
 
 % Play with these Order: Yellow, YellowGreen, Blue, Green
 colours = ["F6BD60","86CB92","12664F","00A7E1"];
@@ -82,13 +82,13 @@ for k = 1:size(RecNames,2)
                     % Plot Spectrogram
                     %subplot(8,6,j);
                     axes(ha(j));
-                    plot(pdb(:,1), pdb(:,2), 'color',col,'linewidth',1);
+                    plot(pdb(:,1), pdb(:,2), 'color',col,'linewidth',0.4);
 
                     % Just Title Top Row
                     if j <= 6
                         title(ylab)
                     end
-                    %hold on
+                    hold on
                 end 
             end 
             disp(i_file + " done!")
