@@ -29,7 +29,7 @@ colours2 = ["EAC435","18FF6D", "5C9EAD", "415D43"];
 
 tok=-6; % this is to organise subfigs
 
-ha = tight_subplot(6,6,[.01 .03],[.1 .01],[.01 .01]); % Set up plot 
+ha = tight_subplot(8,6,[.01 .03],[.1 .01],[.01 .01]); % Set up plot 
 
 % Iterate first through recorder types! 
 for k = 1:size(RecNames,2)
@@ -81,14 +81,14 @@ for k = 1:size(RecNames,2)
     
                     % Plot Spectrogram
                     %subplot(8,6,j);
-                    axis(ha(j));
+                    axes(ha(j));
                     plot(pdb(:,1), pdb(:,2), 'color',col,'linewidth',1);
 
                     % Just Title Top Row
                     if j <= 6
                         title(ylab)
                     end
-                    hold on
+                    %hold on
                 end 
             end 
             disp(i_file + " done!")
@@ -96,7 +96,7 @@ for k = 1:size(RecNames,2)
     end
 end
 
-
+% ha = tight_subplot(3,2,[.01 .03],[.1 .01],[.01 .01])
 %           for ii = 1:6
 %               axes(ha(ii)); 
 %               plot(randn(10,ii)); 
