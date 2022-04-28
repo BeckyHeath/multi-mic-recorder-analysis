@@ -15,7 +15,7 @@ cd(fileparts(tmp.Filename));
 
 root = "Data/";
 
-RecNames = ["yellow","yellowgreen", "Blue", "green"];
+RecNames = ["yellow","yellowgreen", "green", "Blue"];
 SubFolders = ["pre","early"];
 
 % RecNames = ["yellow"];
@@ -29,7 +29,7 @@ colours2 = ["EAC435","18FF6D", "5C9EAD", "415D43"];
 
 tok=-6; % this is to organise subfigs
 
-ha = tight_subplot(8,6,[.01 .03],[.1 .01],[.01 .01]); % Set up plot 
+ha = tight_subplot(8,6,[.01 .01],[.04 .04],[.05 .01]); % Set up plot 
 
 % Iterate first through recorder types! 
 for k = 1:size(RecNames,2)
@@ -95,6 +95,10 @@ for k = 1:size(RecNames,2)
         end 
     end
 end
+
+% Get rid of all labels except bottom left
+set(ha(1:42),'XTickLabel',''); set(ha(1:42),'YTickLabel','')
+set(ha(44:48),'XTickLabel',''); set(ha(44:48),'YTickLabel','')
 
 % ha = tight_subplot(3,2,[.01 .03],[.1 .01],[.01 .01])
 %           for ii = 1:6
