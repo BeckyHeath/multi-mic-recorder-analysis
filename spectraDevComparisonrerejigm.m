@@ -82,7 +82,7 @@ for k = 1:size(RecNames,2)
                     % Plot Spectrogram
                     %subplot(8,6,j);
                     axes(ha(j));
-                    plot(pdb(:,1), pdb(:,2), 'color',col,'linewidth',0.4);
+                    plot(pdb(:,1), pdb(:,2), 'color',col,'linewidth',0.5);
 
                     % Just Title Top Row
                     if j <= 6
