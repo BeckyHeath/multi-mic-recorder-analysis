@@ -78,7 +78,7 @@ Angle_Dif_Plots <- function(df,tag,label){
     ylim(-180,180)+
     xlab("Predicted") + 
     ylab("True") +
-    annotate("text", x = -150, y = 150, label = tag) +
+    #annotate("text", x = -150, y = 150, label = tag) +
     theme_minimal()
   plot
   return(plot)
@@ -136,20 +136,22 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   label = str_remove(label,".wav")
   j=j+1
   
+  tag = str_remove(label,".*_")
+  tag = gsub('[[:digit:]]+', '', tag)
   
   # Set Graph Labels (Tags)
-  tags = array(data=c('A','B','C','D'))
-  tag = tags[j]
-  
   print(paste0("J = ",j))
   
-  if(j == 1){
-    label_g = "Bird Song"
-  } else if(j==3){
+  if(tag == "pink"){
     label_g = "Pink Noise"
+  } else if(j=="bird"){
+    label_g = "Bird Song"
   } else {
-    label_g =""
+    label_g ="??????"
   }
+
+  tag =label_g
+  
   
   # Stop files that didn't catch any signals tripping out the loop
   if(nrow(i_file) == 0){
@@ -165,11 +167,13 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
 
 
 
-# Patchwork Plots 
+# Patchwork Plots This is to see all plots 
 plot <- `Yellow_bird01` | `Yellow_bird02`
 plot2 <- `Yellow_pink02` | `Yellow_pink03`
 
 plot/plot2
 
+Plot <- `Yellow_bird01` | `Yellow_pink03`
+Plot
 
 
