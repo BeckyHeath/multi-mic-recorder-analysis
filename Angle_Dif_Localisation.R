@@ -140,11 +140,11 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   tag = gsub('[[:digit:]]+', '', tag)
   
   # Set Graph Labels (Tags)
-  print(paste0("J = ",j))
+  print(paste0("J =",tag))
   
   if(tag == "pink"){
     label_g = "Pink Noise"
-  } else if(j=="bird"){
+  } else if(tag=="bird"){
     label_g = "Bird Song"
   } else {
     label_g ="??????"
