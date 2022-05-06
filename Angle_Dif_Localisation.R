@@ -55,7 +55,7 @@ section_data <- function(df){
 
 Angle_Dif_Plots <- function(df,tag,label){
   
-  # Creates plots showing true vs. predicted values
+  # Creates plots showing true vs. prediced values
   
   # Merge Data 
   df <- df[, c("Start.time", "Start.azimuth")]
@@ -76,8 +76,8 @@ Angle_Dif_Plots <- function(df,tag,label){
     geom_hline(yintercept=0)+
     xlim(-180,180)+
     ylim(-180,180)+
-    xlab("Predicted") + 
-    ylab("True") +
+    xlab("True Angle") + 
+    ylab("Angle Difference") +
     #annotate("text", x = -150, y = 150, label = tag) +
     theme_minimal()
   plot
