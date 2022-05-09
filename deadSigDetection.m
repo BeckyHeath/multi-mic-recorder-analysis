@@ -1,5 +1,8 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Here we're looking to detect gain issues!
+% Here we're looking to detect gain/ dead channel issues!
+% It works for Lab Tests! 
+%
+%
 %
 % Becky Heath with advice from Dan Harmer + Lorenzo Picinali
 % Autumn 2021 
@@ -13,6 +16,9 @@ cd(fileparts(tmp.Filename));
 audio_dir_path = "Data\postMortem\LabLocalisation\Cleaned_wavs\";
 files = dir(audio_dir_path + "*.wav");
 file_names =  { files.name };
+
+% Decide where files shoud be saved (and most of their name):
+outFileRoot = "Data\AnomolyDatasheets\AvgAbs_justPostMortemLab";
 
 % Load in Audio 
 
@@ -55,15 +61,14 @@ for i = 1:size(file_names,2)
     outRaw = [fileName,outRaw];
     outDesc = [outDesc;outRaw];
     
-    disp(outLine);
+    %disp(outLine);
 
 end 
 
+% Save to CSVs
+rawFileName = outFileRoot + ".csv";
+descFileName = outFileRoot + "_Desc.csv";
+writematrix(outMat,rawFileName);
+writematrix(outDesc,descFileName);
 
-% Find sweep spectra per channel 
-
-% compare levels?
-
-% adjust the gain accordingly?
-
-
+fclose('all');
