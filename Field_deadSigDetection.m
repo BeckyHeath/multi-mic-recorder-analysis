@@ -1,79 +1,73 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Here we're looking to detect gain/ dead channel issues!
-% It works for Field Test
+% Adapted from Field + Lab test scipts for general use
 %
 %
 % Becky Heath with advice from Dan Harmer + Lorenzo Picinali
-% Autumn 2021 
+% Summer 2022
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Set working directory 
 tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
-outFileRoot = "Data\AnomolyDatasheets\Field_meanAbs";
 
-colours = ["green","yellow","yellowgreen","Blue"];
+% Set audio and output locations 
+audio_dir_path = "Path\To\Audio\";
+outFileRoot = "Path\To\Output\File"; % DO NOT include ending (.csv)
 
-% Setup Output DF: 
+recLength = 600; % Recording Length (seconds)
+recFreq = 16000; % Recording Frequency (Hz)
+
+% Setup Output DFs: 
 outMat = ["fileName","ch1","ch2","ch3","ch4","ch5","ch6"];
 
 outDesc = ["fileName","ch1","ch2","ch3","ch4","ch5","ch6"];
 
-for col =  1:size(colours,2)
-    % Go first through recorders
-    rootPath = "Data\" + colours(:,col) + "\";
-    dirs = ["pre","early","late"];
+      
+% Then through the subdirs get filelists
+files = dir(audio_dir_path + "*.wav");
+file_names =  { files.name };
 
-        
-     for k = 1:size(dirs,2)
-        % Then through the subdirs get filelists
-        audio_dir_path = rootPath + dirs(k) + "\";
-        files = dir(audio_dir_path + "*.wav");
-        file_names =  { files.name };
-        
-        % Decide where files shoud be saved (and most of their name):
-        outFileSubroot = outFileRoot + "_" + colours(:,col) + "_" +  dirs(k);
-        
-        % Load in data and join all sprectral data together
-        for i = 1:size(file_names,2)
-            %Load in File
-            fileName = string(file_names{1,i});
-            filePath = audio_dir_path + file_names{1,i};
-        
-            samples = [1,600*16000]; % Sweeps are first 10s, whole rec ~1.15s
-            aud = audioread(filePath,samples);
-            
-            % Use max to get a metric of the status of each channel
-            outRaw= mean(abs(aud));
-              
-            % consolidate this data:     
-            outLine = [filePath,outRaw];
-            outMat = [outMat;outLine];
-        
-        
-            % Get Descriptions here
-            outRaw = string(outRaw);
-            for j = 1:size(outRaw,2)
-                val = str2double(outRaw(j));
-                if val >= 0.01
-                    outRaw(j) = "OverPower";
-                end
-                if val < 0.01
-                    outRaw(j) = "ok";
-                end
-                if val <= 0.0005
-                    outRaw(j) = "dead";
-                end
-            end
-            
-            outRaw = [filePath,outRaw];
-            outDesc = [outDesc;outRaw];
-            
-            %disp(outLine)
-        end      
-     end
-end
+% Load in data and join all sprectral data together
+for i = 1:size(file_names,2)
+
+    %Load in File
+    fileName = string(file_names{1,i});
+    filePath = audio_dir_path + file_names{1,i};
+
+    samples = [1,recLength*recFreq]; 
+    aud = audioread(filePath,samples);
+    
+    % Use the absolute of the mean values to 
+    % get a metric of the status of each channel
+    outRaw= mean(abs(aud));
+      
+    % consolidate this data:     
+    outLine = [filePath,outRaw]; % add file label
+    outMat = [outMat;outLine];
+
+
+    % Get Text Descriptions here (Edit if necessary)
+    outRaw = string(outRaw);
+    for j = 1:size(outRaw,2)
+        val = str2double(outRaw(j));
+        if val >= 0.01
+            outRaw(j) = "OverPower";
+        end
+        if val < 0.01
+            outRaw(j) = "ok";
+        end
+        if val <= 0.0005
+            outRaw(j) = "dead";
+        end
+    end
+    
+    % Consolidate info: 
+    outRaw = [filePath,outRaw]; % Append file name
+    outDesc = [outDesc;outRaw];
+    
+end      
 
 rawFileName = outFileRoot + ".csv";
 descFileName = outFileRoot + "_Desc.csv";
