@@ -1,9 +1,7 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Here we're looking to detect gain/ dead channel issues!
-% It works for Field Tests! 
+% It works for Field Test
 %
-% This is fast and good but the save files need tidying!
-% Try to run on box?
 %
 % Becky Heath with advice from Dan Harmer + Lorenzo Picinali
 % Autumn 2021 
@@ -16,6 +14,11 @@ cd(fileparts(tmp.Filename));
 outFileRoot = "Data\AnomolyDatasheets\Field_meanAbs";
 
 colours = ["green","yellow","yellowgreen","Blue"];
+
+% Setup Output DF: 
+outMat = ["fileName","ch1","ch2","ch3","ch4","ch5","ch6"];
+
+outDesc = ["fileName","ch1","ch2","ch3","ch4","ch5","ch6"];
 
 for col =  1:size(colours,2)
     % Go first through recorders
@@ -32,10 +35,6 @@ for col =  1:size(colours,2)
         % Decide where files shoud be saved (and most of their name):
         outFileSubroot = outFileRoot + "_" + colours(:,col) + "_" +  dirs(k);
         
-        outMat = ["fileName","ch1","ch2","ch3","ch4","ch5","ch6"];
-
-        outDesc = ["fileName","ch1","ch2","ch3","ch4","ch5","ch6"];
-
         % Load in data and join all sprectral data together
         for i = 1:size(file_names,2)
             %Load in File
@@ -49,7 +48,7 @@ for col =  1:size(colours,2)
             outRaw= mean(abs(aud));
               
             % consolidate this data:     
-            outLine = [fileName,outRaw];
+            outLine = [filePath,outRaw];
             outMat = [outMat;outLine];
         
         
@@ -68,21 +67,17 @@ for col =  1:size(colours,2)
                 end
             end
             
-            outRaw = [fileName,outRaw];
+            outRaw = [filePath,outRaw];
             outDesc = [outDesc;outRaw];
             
-                 % Save to CSVs
-            rawFileName = outFileSubroot + ".csv";
-            descFileName = outFileSubroot + "_Desc.csv";
-            writematrix(outMat,rawFileName);
-            writematrix(outDesc,descFileName);
-                %disp(outLine);
-        
-        end 
-
-        
-        fclose('all');
+            %disp(outLine)
+        end      
      end
 end
 
+rawFileName = outFileRoot + ".csv";
+descFileName = outFileRoot + "_Desc.csv";
+writematrix(outMat,rawFileName);
+writematrix(outDesc,descFileName);
 
+fclose('all');
