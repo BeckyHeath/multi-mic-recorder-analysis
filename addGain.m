@@ -36,16 +36,15 @@ for i = 1:size(desc,1)
         % Isolate and average just the overpowered channels:
         opRaw = rawDat.*opChans;
         avgOp = sum(opRaw)/sum(opChans);
-
+        
+        % Find the average of other channels
         upRaw = rawDat - (rawDat.*opChans);
         avgUp = sum(upRaw)/(6-sum(opChans));
         
-        % Find difference: 
+        % Find factor difference
         opFactor = avgOp/(avgUp);
         
         disp(file + " has an OP factor of " +  opFactor);
-
-
 
         % Times all the relevant channels by the OP factor! 
         % Save as wavs somewhere else 
