@@ -13,8 +13,9 @@ cd(fileparts(tmp.Filename));
 
 
 % Set audio and output locations 
-audio_dir_path = "Path\To\Audio\";
-outFileRoot = "Path\To\Output\File"; % DO NOT include ending (.csv)
+audio_dir_path = 'Data\postMortem\LabLocalisation\Cleaned_wavs\'; % path to audio 
+outFileRoot = "Data\AnomolyDatasheets"; % include file name, but DO NOT include ending (.csv)
+
 
 recLength = 600; % Recording Length (seconds)
 recFreq = 16000; % Recording Frequency (Hz)
@@ -25,9 +26,8 @@ outMat = ["fileName","ch1","ch2","ch3","ch4","ch5","ch6"];
 outDesc = ["fileName","ch1","ch2","ch3","ch4","ch5","ch6"];
 
       
-% Then through the subdirs get filelists
-files = dir(audio_dir_path + "*.wav");
-file_names =  { files.name };
+% Get Filenames
+filenames = getfn(audio_dir_path, ".wav");
 
 % Load in data and join all sprectral data together
 for i = 1:size(file_names,2)
