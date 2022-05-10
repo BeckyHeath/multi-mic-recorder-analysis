@@ -1,5 +1,5 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Automate Adding Gain to an archive of audio depending on need
+% Automate Adding Gain to a repo of audio depending on need
 %
 %
 % Becky Heath with advice from Dan Harmer + Lorenzo Picinali
@@ -11,8 +11,20 @@ tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
 % Information repos: 
-raw = readtable("Data/AnomolyDatasheets/AvgAbs_justPostMortemLab.csv");
-desc = readtable("Data/AnomolyDatasheets/AvgAbs_justPostMortemLab_Desc.csv");
+raw = readtable("Data/AnomolyDatasheets/Field_meanAbs_automated.csv");
+desc = readtable("Data/AnomolyDatasheets/Field_meanAbs_automated_Desc.csv");
+
+outFiles = "Data/postMortem/LabLocalisation/AdjustedGain/absMean/";
+
+% Recording Details: 
+reqLen = 75;
+reqFreq = 16000;
+
+
+% set up 
+
+fullOn = [1,1,1,1,1,1];
+
 
 % Iterate through files and work out if you can analyse?
 for i = 1:size(desc,1)
@@ -24,6 +36,17 @@ for i = 1:size(desc,1)
     % Don't do anything to files that are okay
     if sum(count(data,"ok")) == 6
         disp(file + " is ok! no changes made")
+
+        % Load in corresponding audio
+        samples = [1,reqLen*reqFreq];
+        aud = audioread(file,samples);
+
+        outName = split(file,"\");
+        outName = outName{size(outName,1),1};
+        
+        outFN = outFiles + outName;
+        audiowrite(outFN,aud,reqFreq)
+
     end 
     
     if sum(count(data,"OverPower")) >= 1
@@ -43,11 +66,27 @@ for i = 1:size(desc,1)
         
         % Find factor difference
         opFactor = avgOp/(avgUp);
+
+        
         
         disp(file + " has an OP factor of " +  opFactor);
+        
+        % Load in corresponding audio
+        samples = [1,reqLen*reqFreq];
+        aud = audioread(file,samples);
+        
+        % Multiply the gain factor to the audio (just chans that need it)
+        new_vals = aud.*((opFactor*(fullOn-opChans))) + (aud.*opChans);
+        
 
-        % Times all the relevant channels by the OP factor! 
-        % Save as wavs somewhere else 
+        %Write Elsewhere
+        
+        outName = split(file,"\");
+        outName = outName{size(outName,1),1};
+        
+        outFN = outFiles + "AdjG_" + outName;
+        audiowrite(outFN,new_vals,reqFreq)
+
         % Run through HARKBird 
         % Great success :) 
 
