@@ -1,49 +1,54 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Here we're looking to detect gain/ dead channel issues!
-% It works for Lab Tests! 
-%
+% Adapted from Field + Lab test scipts for general use
 %
 %
 % Becky Heath with advice from Dan Harmer + Lorenzo Picinali
-% Autumn 2021 
+% Summer 2022
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Set working directory 
 tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
-% get a file list for the audio to be analysed: 
-audio_dir_path = "Data\postMortem\LabLocalisation\Cleaned_wavs\";
-files = dir(audio_dir_path + "*.wav");
-file_names =  { files.name };
 
-% Decide where files shoud be saved (and most of their name):
-outFileRoot = "Data\AnomolyDatasheets\AvgAbs_justPostMortemLab";
+% Set audio and output locations 
+audio_dir_path = "Path\To\Audio\";
+outFileRoot = "Path\To\Output\File"; % DO NOT include ending (.csv)
 
-% Load in Audio 
+recLength = 600; % Recording Length (seconds)
+recFreq = 16000; % Recording Frequency (Hz)
 
+% Setup Output DFs: 
 outMat = ["fileName","ch1","ch2","ch3","ch4","ch5","ch6"];
 
 outDesc = ["fileName","ch1","ch2","ch3","ch4","ch5","ch6"];
 
+      
+% Then through the subdirs get filelists
+files = dir(audio_dir_path + "*.wav");
+file_names =  { files.name };
+
 % Load in data and join all sprectral data together
 for i = 1:size(file_names,2)
+
     %Load in File
     fileName = string(file_names{1,i});
     filePath = audio_dir_path + file_names{1,i};
 
-    samples = [1,75*16000]; % Sweeps are first 10s, whole rec ~1.15s
+    samples = [1,recLength*recFreq]; 
     aud = audioread(filePath,samples);
     
-    % Use max to get a metric of the status of each channel
+    % Use the absolute of the mean values to 
+    % get a metric of the status of each channel
     outRaw= mean(abs(aud));
       
     % consolidate this data:     
-    outLine = [fileName,outRaw];
+    outLine = [filePath,outRaw]; % add file label
     outMat = [outMat;outLine];
 
 
-    % Get Descriptions here
+    % Get Text Descriptions here (Edit if necessary)
     outRaw = string(outRaw);
     for j = 1:size(outRaw,2)
         val = str2double(outRaw(j));
@@ -58,14 +63,12 @@ for i = 1:size(file_names,2)
         end
     end
     
-    outRaw = [fileName,outRaw];
+    % Consolidate info: 
+    outRaw = [filePath,outRaw]; % Append file name
     outDesc = [outDesc;outRaw];
     
-    %disp(outLine);
+end      
 
-end 
-
-% Save to CSVs
 rawFileName = outFileRoot + ".csv";
 descFileName = outFileRoot + "_Desc.csv";
 writematrix(outMat,rawFileName);
