@@ -14,7 +14,7 @@ cd(fileparts(tmp.Filename));
 
 % Set audio and output locations 
 audio_dir_path = 'Data\postMortem\LabLocalisation\Cleaned_wavs'; % path to audio 
-outFileRoot = "Data\AnomolyDatasheets\Field_meanAbs_automated"; % include file name, but DO NOT include ending (.csv)
+outFileRoot = "Data\AnomolyDatasheets\Field_maxAbs_automated"; % include file name, but DO NOT include ending (.csv)
 
 
 recLength = 75; % Recording Length (seconds)
@@ -41,7 +41,7 @@ for i = 1:size(file_names,2)
     
     % Use the absolute of the mean values to 
     % get a metric of the status of each channel
-    outRaw= mean(abs(aud));
+    outRaw= max(abs(aud));
       
     % consolidate this data:     
     outLine = [filePath,outRaw]; % add file label
@@ -52,13 +52,13 @@ for i = 1:size(file_names,2)
     outRaw = string(outRaw);
     for j = 1:size(outRaw,2)
         val = str2double(outRaw(j));
-        if val >= 0.01
+        if val >= 0.3
             outRaw(j) = "OverPower";
         end
-        if val < 0.01
+        if val < 0.3
             outRaw(j) = "ok";
         end
-        if val <= 0.0005
+        if val <= 0.001
             outRaw(j) = "dead";
         end
     end

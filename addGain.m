@@ -11,13 +11,13 @@ tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
 % Information repos: 
-raw = readtable("Data/AnomolyDatasheets/Field_meanAbs_automated.csv");
-desc = readtable("Data/AnomolyDatasheets/Field_meanAbs_automated_Desc.csv");
+raw = readtable("Data/AnomolyDatasheets/Field_maxAbs_automated.csv");
+desc = readtable("Data/AnomolyDatasheets/Field_maxAbs_automated_Desc.csv");
 
-outFiles = "Data/postMortem/LabLocalisation/AdjustedGain/absMean/";
+outFiles = "Data/postMortem/LabLocalisation/AdjustedGain/justAbs/";
 
 % Recording Details: 
-reqLen = 75;
+reqLen = 80;
 reqFreq = 16000;
 
 
@@ -76,7 +76,7 @@ for i = 1:size(desc,1)
         aud = audioread(file,samples);
         
         % Multiply the gain factor to the audio (just chans that need it)
-        new_vals = aud.*((opFactor*(fullOn-opChans))) + (aud.*opChans);
+        new_vals = aud.*((opFactor*(fullOn-opChans))/2) + (aud.*opChans);
         
 
         %Write Elsewhere
