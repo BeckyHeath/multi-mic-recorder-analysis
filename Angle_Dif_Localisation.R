@@ -77,7 +77,7 @@ Angle_Dif_Plots <- function(df,tag,label){
     xlim(-180,180)+
     ylim(-180,180)+
     xlab("True Angle") + 
-    ylab("Angle Difference") +
+    #ylab("Angle Difference") +
     #annotate("text", x = -150, y = 150, label = tag) +
     theme_minimal()
   plot
@@ -132,8 +132,10 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   # tidy label/ graph title name: 
   label = str_remove(as.character(i), file_directory)
   label = str_remove(label,"/localized_")
-  label = str_remove(label,"_PostMortemLoc")
+  label = str_remove(label,"_PostMortem")
+  label = str_remove(label,"Loc")
   label = str_remove(label,".wav")
+  label = str_remove(label,"AdjG_")
   j=j+1
   
   tag = str_remove(label,".*_")
@@ -168,12 +170,12 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
 
 
 # Patchwork Plots This is to see all plots 
-plot <- `Yellow_bird01` | `Yellow_bird02`
-plot2 <- `Yellow_pink02` | `Yellow_pink03`
+plot <- `YelloGreen_bird01` | `YelloGreen_bird02` | `YelloGreen_bird03`
+plot2 <- `YelloGreen_pink01`| `YelloGreen_pink02` | `YellowGreen_flipped_bird01`
 
 plot/plot2
 
-Plot <- `Yellow_bird01` | `Yellow_pink03`
+Plot <- `Yellow_bird01` | `Yellow_pink03` |`YelloGreen_bird02` | `YelloGreen_pink02` 
 Plot
 
 
