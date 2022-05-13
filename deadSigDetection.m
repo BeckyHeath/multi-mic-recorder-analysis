@@ -13,7 +13,7 @@ cd(fileparts(tmp.Filename));
 
 
 % Set audio and output locations 
-audio_dir_path = 'Data\postMortem\LabLocalisation\Cleaned_wavs'; % path to audio 
+audio_dir_path = 'Data\WavFieldRecordings'; % path to audio 
 outFileRoot = "Data\AnomolyDatasheets\Field_maxAbs_automated"; % include file name, but DO NOT include ending (.csv)
 
 
@@ -52,13 +52,13 @@ for i = 1:size(file_names,2)
     outRaw = string(outRaw);
     for j = 1:size(outRaw,2)
         val = str2double(outRaw(j));
-        if val >= 0.3
+        if val >= 0.5
             outRaw(j) = "OverPower";
         end
-        if val < 0.3
+        if val < 0.5
             outRaw(j) = "ok";
         end
-        if val <= 0.001
+        if val <= 0.01
             outRaw(j) = "dead";
         end
     end
