@@ -1,5 +1,5 @@
 ########################################################################### .
-# Scripts for Analysing Post Deployment Localisations
+# Scripts for Analysing Pre Deployment Localisations
 #
 # Becky Heath
 # r.heath18@imperial.ac.uk
@@ -18,13 +18,12 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 ##### Define Test File Location #####
 
-file_directory = "Data/CompleteLabLocalisation/OutPre"
+file_directory = "Data/CompleteLabLocalisation/OutPre/AdjGain"
 
 
 ##### Define Functions #####
 
 # Load in true values: 
-#true <- read.csv("Data/CompleteLabLocalisation/Real_Location_Post.csv") #POST 
 true <- read.csv("Data/CompleteLabLocalisation/Real_Location_Pre.csv") #PRE 
 
 
@@ -32,12 +31,9 @@ section_data <- function(df){
   
   # Function to group the real data into distinct time periods?? 
   # The recordings are then in groups to better compare real/predicted
-  #
-  # recallibrate start position to -180 
-  # 30deg mismatch in the transfer function (See HARKTOOL5)
   
-  df$Start.azimuth <- df$Start.azimuth - 30 # do HARK config Correction
-  df$Start.azimuth <- df$Start.azimuth - 180 # do experiment orientation correction
+  # 30deg mismatch in the transfer function (See HARKTOOL5)
+    df$Start.azimuth <- df$Start.azimuth - 30 # do HARK config Correction
   
   # Correct for Angle Flip-over
   df$Start.azimuth[df$Start.azimuth < -180] <- (df$Start.azimuth[df$Start.azimuth < -180] + 360)
@@ -45,15 +41,6 @@ section_data <- function(df){
   
   # Make Sure Recordings are compared to the right test tone
   # Numbers not divisible by 15 will be Removed 
-  
-  #post
-#  df$Start.time[df$Start.time < 7] <- 1  # Sweep Signal (ignored)
-#  df$Start.time[df$Start.time > 14 & df$Start.time < 19] <- 15  # First Tone  
-#  df$Start.time[df$Start.time > 29 & df$Start.time < 31] <- 30  # Second Tone
-#  df$Start.time[df$Start.time > 44 & df$Start.time < 46] <- 45  # Third Tone
-#  df$Start.time[df$Start.time > 59 & df$Start.time < 61] <- 60  # Fourth Tone
-#  df$Start.time[df$Start.time > 74.49 & df$Start.time < 77] <- 75  # Fifth Tone
-  
   #pre
   df$Start.time[df$Start.time < 20] <- 1  # Sweep Signal (ignored)
   df$Start.time[df$Start.time > 29 & df$Start.time < 33] <- 30  # First Tone  
@@ -62,7 +49,7 @@ section_data <- function(df){
   df$Start.time[df$Start.time > 72 & df$Start.time < 78] <- 75  # Fourth Tone
   df$Start.time[df$Start.time > 87 & df$Start.time < 93] <- 90  # Fifth Tone
   df$Start.time[df$Start.time > 102 & df$Start.time < 108] <- 105  # Fifth Tone
-  df$Start.time[df$Start.time < 108] <- 91  # Fifth Tone (ignored)
+  df$Start.time[df$Start.time > 108] <- 91  # Fifth Tone (ignored)
   
 
   return(df)
@@ -87,7 +74,7 @@ Angle_Dif_Plots <- function(df,tag,label){
   names(differences)[names(differences) == "x"] <- "True.Azimuth"
   
   plot <- ggplot(differences, aes(True.Azimuth, difference))+
-    ggtitle(label_g) +
+    ggtitle(label) +
     geom_point(color = "Red", size =4, shape = 4, stroke = 1.5)+
     geom_hline(yintercept=0)+
     xlim(-180,180)+
@@ -148,27 +135,11 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   # tidy label/ graph title name: 
   label = str_remove(as.character(i), file_directory)
   label = str_remove(label,"/localized_")
-  label = str_remove(label,"_PostMortem")
-  label = str_remove(label,"Loc")
   label = str_remove(label,".wav")
   label = str_remove(label,"AdjG_")
   j=j+1
   
-  tag = str_remove(label,".*_")
-  tag = gsub('[[:digit:]]+', '', tag)
-  
-  # Set Graph Labels (Tags)
-  print(paste0("J =",tag))
-  
-  if(tag == "pink"){
-    label_g = "Pink Noise"
-  } else if(tag=="bird"){
-    label_g = "Bird Song"
-  } else {
-    label_g ="??????"
-  }
-
-  tag =label_g
+  tag =label
   
   
   # Stop files that didn't catch any signals tripping out the loop
@@ -183,15 +154,11 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
 }
 
 
+# PLOTS 
 
+#pre
 
-## Patchwork Plots This is to see all plots 
-#plot <- `YelloGreen_bird01` | `YelloGreen_bird02` | `YelloGreen_bird03`
-#plot2 <- `YelloGreen_pink01`| `YelloGreen_pink02` | `YellowGreen_flipped_bird01`
+plot <- `1a_pinknoise_N_2` | `1b_bird_N_2` | `1b_bird_N_2`
+plot2 <- `5a_pinknoise_Y_2` | `5b_bird_Y_2` | `5b_bird_Y_2`
 
-#plot/plot2
-
-#Plot <- `Yellow_bird01` | `Yellow_pink03` 
-#Plot
-
-
+plot/plot2

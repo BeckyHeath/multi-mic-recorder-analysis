@@ -11,13 +11,13 @@ tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
 % Information repos: 
-raw = readtable("Data/AnomolyDatasheets/Field_maxAbs_automated.csv");
-desc = readtable("Data/AnomolyDatasheets/Field_maxAbs_automated_Desc.csv");
+raw = readtable("Data/CompleteLabLocalisation/StandPre.csv");
+desc = readtable("Data/CompleteLabLocalisation/StandPre_Desc.csv");
 
-outFiles = "Data/postMortem/LabLocalisation/AdjustedGain/justAbs/";
+outFiles = "Data/CompleteLabLocalisation/AdjGainPre/";
 
 % Recording Details: 
-reqLen = 80;
+reqLen = 130;
 reqFreq = 16000;
 
 
@@ -91,9 +91,4 @@ for i = 1:size(desc,1)
         % Great success :) 
 
     end 
-
-
-
-
-
 end

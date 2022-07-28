@@ -18,15 +18,13 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 ##### Define Test File Location #####
 
-file_directory = "Data/CompleteLabLocalisation/OutPre"
+file_directory = "Data/CompleteLabLocalisation/OutPost/AdjGain"
 
 
 ##### Define Functions #####
 
 # Load in true values: 
-#true <- read.csv("Data/CompleteLabLocalisation/Real_Location_Post.csv") #POST 
-true <- read.csv("Data/CompleteLabLocalisation/Real_Location_Pre.csv") #PRE 
-
+true <- read.csv("Data/CompleteLabLocalisation/Real_Location_Post.csv") #POST 
 
 section_data <- function(df){
   
@@ -45,25 +43,12 @@ section_data <- function(df){
   
   # Make Sure Recordings are compared to the right test tone
   # Numbers not divisible by 15 will be Removed 
-  
-  #post
-#  df$Start.time[df$Start.time < 7] <- 1  # Sweep Signal (ignored)
-#  df$Start.time[df$Start.time > 14 & df$Start.time < 19] <- 15  # First Tone  
-#  df$Start.time[df$Start.time > 29 & df$Start.time < 31] <- 30  # Second Tone
-#  df$Start.time[df$Start.time > 44 & df$Start.time < 46] <- 45  # Third Tone
-#  df$Start.time[df$Start.time > 59 & df$Start.time < 61] <- 60  # Fourth Tone
-#  df$Start.time[df$Start.time > 74.49 & df$Start.time < 77] <- 75  # Fifth Tone
-  
-  #pre
-  df$Start.time[df$Start.time < 20] <- 1  # Sweep Signal (ignored)
-  df$Start.time[df$Start.time > 29 & df$Start.time < 33] <- 30  # First Tone  
-  df$Start.time[df$Start.time > 42 & df$Start.time < 47] <- 45  # Second Tone
-  df$Start.time[df$Start.time > 57 & df$Start.time < 63] <- 60  # Third Tone
-  df$Start.time[df$Start.time > 72 & df$Start.time < 78] <- 75  # Fourth Tone
-  df$Start.time[df$Start.time > 87 & df$Start.time < 93] <- 90  # Fifth Tone
-  df$Start.time[df$Start.time > 102 & df$Start.time < 108] <- 105  # Fifth Tone
-  df$Start.time[df$Start.time < 108] <- 91  # Fifth Tone (ignored)
-  
+  df$Start.time[df$Start.time < 7] <- 1  # Sweep Signal (ignored)
+  df$Start.time[df$Start.time > 14 & df$Start.time < 19] <- 15  # First Tone  
+  df$Start.time[df$Start.time > 29 & df$Start.time < 31] <- 30  # Second Tone
+  df$Start.time[df$Start.time > 44 & df$Start.time < 46] <- 45  # Third Tone
+  df$Start.time[df$Start.time > 59 & df$Start.time < 61] <- 60  # Fourth Tone
+  df$Start.time[df$Start.time > 74.49 & df$Start.time < 77] <- 75  # Fifth Tone
 
   return(df)
 }
@@ -148,27 +133,29 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   # tidy label/ graph title name: 
   label = str_remove(as.character(i), file_directory)
   label = str_remove(label,"/localized_")
+  label = str_remove(label,"_PostMortemLoc")
   label = str_remove(label,"_PostMortem")
-  label = str_remove(label,"Loc")
   label = str_remove(label,".wav")
   label = str_remove(label,"AdjG_")
   j=j+1
   
-  tag = str_remove(label,".*_")
-  tag = gsub('[[:digit:]]+', '', tag)
+#  tag = str_remove(label,".*_")
+#  tag = gsub('[[:digit:]]+', '', tag)
+#  
+#  # Set Graph Labels (Tags)
+#  print(paste0("J =",tag))
+#  
+#  if(tag == "pink"){
+#    label_g = "Pink Noise"
+#  } else if(tag=="bird"){
+ #   label_g = "Bird Song"
+ # } else {
+#    label_g ="??????"
+#  }
   
-  # Set Graph Labels (Tags)
-  print(paste0("J =",tag))
-  
-  if(tag == "pink"){
-    label_g = "Pink Noise"
-  } else if(tag=="bird"){
-    label_g = "Bird Song"
-  } else {
-    label_g ="??????"
-  }
-
+  label_g=label
   tag =label_g
+  
   
   
   # Stop files that didn't catch any signals tripping out the loop
@@ -183,15 +170,20 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
 }
 
 
+# PLOTS 
 
+#post
 
-## Patchwork Plots This is to see all plots 
-#plot <- `YelloGreen_bird01` | `YelloGreen_bird02` | `YelloGreen_bird03`
-#plot2 <- `YelloGreen_pink01`| `YelloGreen_pink02` | `YellowGreen_flipped_bird01`
+## Raw
+#plot <- `Yellow_bird01` | `Yellow_bird02` | `Yellow_pink03` | `Yellow_pink02`
+#plot2 <- `Blue_bird01`| `Blue_bird02` | `Blue_pink01` | `YellowGreen_flipped_bird01` 
+#plot3 <- `Blue_Repowered_bird01`| `Blue_Repowered_bird02` | `Blue_Repowered_pink01` | `Blue_Repowered_pink02`
 
-#plot/plot2
+#plot/plot2/plot3
 
-#Plot <- `Yellow_bird01` | `Yellow_pink03` 
-#Plot
+## AdjGain
+plot <- `Yellow_bird01` | `Yellow_bird02` | `Yellow_pink03` | `Yellow_pink02`
+plot2 <- `YelloGreen_bird01`| `YelloGreen_bird02` | `YelloGreen_pink01` | `YelloGreen_pink02` 
+plot3 <- `YelloGreen_bird03` | `YellowGreen_flipped_pink01`| `YellowGreen_flipped_bird01` | `YellowGreen_flipped_pink01`
 
-
+plot/plot2/plot3
