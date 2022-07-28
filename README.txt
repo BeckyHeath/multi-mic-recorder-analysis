@@ -3,15 +3,15 @@ Files in this Repo (by order of most recently edited):
 
 deadSigDetection.m => Determine signal strength of each channel compared to eachother
 
-Angle_Dif_Localisation.R => Analysing Post Deployment Localisations (just angle differences now!)
+Angle_Dif_LocalisationPre.R => Analysing Pre Deployment Localisations (just angle differences now!)
+
+Angle_Dif_LocalisationPost.R => Analysing Post Deployment Localisations (just angle differences now!)
 
 addGain.m => Takes output files from deadSigDetection.m and adjusts the channel specific gain accordingly
 
 getfn.m => NOT MINE, from Thorsten.Hansesn@psychol.uni-giessen.de, gets filenames from directories and subdirectories
 
 spectraDevComparisonrerejigm.m => Channel Specific Spectra from all 4 Devices, this is the big spectra figure that shows dignal degredation. 
-
-Post_Lab_Localisation_Analyis.r => Graphs the post deployment lab localisations (same format as early)
 
 tight_subplot.m => NOT MINE, from Pekka Kumpulainen, allows you to customise subplotes easier 
 
