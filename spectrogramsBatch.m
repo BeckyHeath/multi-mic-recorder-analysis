@@ -14,7 +14,7 @@ cd(fileparts(tmp.Filename));
 % You may need to generate these files form the raw ones first
 
 
-rootPath = "Data\green\";
+rootPath = "Data\WavFieldRecordings\green\";
 dirs = ["deployment1","early","late"];
 
 for k = 1:size(dirs,2)
@@ -50,7 +50,7 @@ for k = 1:size(dirs,2)
             j = j+1;
 
         end 
-    figname = "Figures/GreenData/Spectrograms_"+ dirs(k) + "_ch" + ch + ".png" ;
+    figname = "Figures/SignalQualityFigures/GreenData/SpectrogramsREGEN_"+ dirs(k) + "_ch" + ch + ".png" ;
     saveas(gcf, figname)
      
     end
