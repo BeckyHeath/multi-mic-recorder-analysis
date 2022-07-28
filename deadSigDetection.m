@@ -14,7 +14,7 @@ cd(fileparts(tmp.Filename));
 
 % Set audio and output locations 
 audio_dir_path = 'Data\WavFieldRecordings'; % path to audio 
-outFileRoot = "Data\AnomolyDatasheets\Field_maxAbs_automated"; % include file name, but DO NOT include ending (.csv)
+outFileRoot = "Data\AnomolyDatasheets\Field_medianAbs_automated"; % include file name, but DO NOT include ending (.csv)
 
 
 recLength = 75; % Recording Length (seconds)
