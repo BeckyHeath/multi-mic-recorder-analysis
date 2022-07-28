@@ -11,10 +11,10 @@ tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
 % Information repos: 
-raw = readtable("Data/CompleteLabLocalisation/StandPre.csv");
-desc = readtable("Data/CompleteLabLocalisation/StandPre_Desc.csv");
+raw = readtable("Data/WavFieldRecordings/RawAbsMaxVals.csv");
+desc = readtable("Data/WavFieldRecordings/RawAbsMaxVals_Desc.csv");
 
-outFiles = "Data/CompleteLabLocalisation/AdjGainPre/";
+outFiles = "Data/WavFieldRecordings/AdjGain/";
 
 % Recording Details: 
 reqLen = 130;
