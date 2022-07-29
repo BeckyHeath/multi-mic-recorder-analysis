@@ -13,8 +13,8 @@ cd(fileparts(tmp.Filename));
 
 
 % Set audio and output locations 
-audio_dir_path = 'Data\CompleteLabLocalisation\StandardisedPost'; % path to audio 
-outFileRoot = "Data\CompleteLabLocalisation\StandPost"; % include file name, but DO NOT include ending (.csv)
+audio_dir_path = 'Data\WavFieldRecordings\Raw'; % path to audio 
+outFileRoot = "Data\WavFieldRecordings\RawAbsMaxVals"; % include file name, but DO NOT include ending (.csv)
 
 
 recLength = 75; % Recording Length (seconds)

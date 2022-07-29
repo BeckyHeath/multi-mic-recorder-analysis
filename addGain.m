@@ -17,7 +17,7 @@ desc = readtable("Data/WavFieldRecordings/RawAbsMaxVals_Desc.csv");
 outFiles = "Data/WavFieldRecordings/AdjGain/";
 
 % Recording Details: 
-reqLen = 130;
+reqLen = 600;
 reqFreq = 16000;
 
 
