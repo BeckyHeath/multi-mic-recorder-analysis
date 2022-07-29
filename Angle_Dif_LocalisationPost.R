@@ -18,8 +18,9 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 ##### Define Test File Location #####
 
-file_directory = "Data/CompleteLabLocalisation/OutPost/AdjGain"
+file_directory = "Data/CompleteLabLocalisation/OutPost/Raw"
 
+AngleDifPath = "Data/CompleteLabLocalisation/AngleDifferences/PostRaw.csv"
 
 ##### Define Functions #####
 
@@ -69,6 +70,15 @@ Angle_Dif_Plots <- function(df,tag,label){
   
   differences <- getDifferences(merge_df_er)
   differences <- as.data.frame(differences)
+  
+  # Apprend to difference matrix
+  outDif <- differences
+  outDif <- outDif %>% 
+    add_column(file = label,
+               .before= "x")
+  
+  diffMatrix <<- rbind(diffMatrix, outDif)
+  
   names(differences)[names(differences) == "x"] <- "True.Azimuth"
   
   plot <- ggplot(differences, aes(True.Azimuth, difference))+
@@ -123,6 +133,12 @@ getDifferences <- function(df){
 
 j=0
 
+
+diffMatrix <- data.frame(file = character(),
+                         x = numeric(),
+                         difference = numeric(), 
+                         stringsAsFactors = FALSE)
+
 # Load in all the files you need: 
 for(i in list.dirs(file_directory, recursive = FALSE)){
   path = paste(as.character(i),"sourcelist.csv", sep = "/")
@@ -169,6 +185,7 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   assign(label, o_plot)
 }
 
+write.csv(diffMatrix,AngleDifPath,row.names = FALSE)
 
 # PLOTS 
 

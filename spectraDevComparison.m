@@ -12,7 +12,7 @@ cd(fileparts(tmp.Filename));
 
 
 % One at a time
-root = "Data/WavFieldRecordings/AdjGain/";
+root = "Data/WavFieldRecordings/raw/";
 
 RecNames = ["yellow","yellowgreen", "green", "Blue"];
 SubFolders = ["pre","early"];

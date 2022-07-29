@@ -18,9 +18,9 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 ##### Define Test File Location #####
 
-file_directory = "Data/CompleteLabLocalisation/OutPre/AdjGain"
+file_directory = "Data/CompleteLabLocalisation/OutPre/raw"
 
-AngleDifPath = "Data/CompleteLabLocalisation/AngleDifferences/PreAdjGain.csv"
+AngleDifPath = "Data/CompleteLabLocalisation/AngleDifferences/PreRaw.csv"
 
 ##### Define Functions #####
 
