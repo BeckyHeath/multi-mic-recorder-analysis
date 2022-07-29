@@ -20,6 +20,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 file_directory = "Data/CompleteLabLocalisation/OutPre/AdjGain"
 
+AngleDifPath = "Data/CompleteLabLocalisation/AngleDifferences/PreAdjGain.csv"
 
 ##### Define Functions #####
 
@@ -32,8 +33,8 @@ section_data <- function(df){
   # Function to group the real data into distinct time periods?? 
   # The recordings are then in groups to better compare real/predicted
   
-  # 30deg mismatch in the transfer function (See HARKTOOL5)
-    df$Start.azimuth <- df$Start.azimuth - 30 # do HARK config Correction
+    # 30deg mismatch in the transfer function (See HARKTOOL5)
+  df$Start.azimuth <- df$Start.azimuth - 30 # do HARK config Correction
   
   # Correct for Angle Flip-over
   df$Start.azimuth[df$Start.azimuth < -180] <- (df$Start.azimuth[df$Start.azimuth < -180] + 360)
@@ -56,7 +57,7 @@ section_data <- function(df){
 }
 
 
-Angle_Dif_Plots <- function(df,tag,label){
+Angle_Dif_Plots <- function(df,diffMatrix,label){
   
   # Creates plots showing true vs. prediced values
   
@@ -69,8 +70,21 @@ Angle_Dif_Plots <- function(df,tag,label){
   names(merge_df)[names(merge_df) == "Start.azimuth"] <- "Real.Azimuth"
   merge_df_er <- merge_df[complete.cases(merge_df),]
   
+  # Generate Differences:
   differences <- getDifferences(merge_df_er)
   differences <- as.data.frame(differences)
+  
+  
+  # Apprend to difference matrix
+  outDif <- differences
+  outDif <- outDif %>% 
+    add_column(file = label,
+               .before= "x")
+  
+  diffMatrix <<- rbind(diffMatrix, outDif)
+  
+  #Print Data
+  
   names(differences)[names(differences) == "x"] <- "True.Azimuth"
   
   plot <- ggplot(differences, aes(True.Azimuth, difference))+
@@ -113,8 +127,6 @@ getDifferences <- function(df){
   outDf <- cbind(x,difference)
  
   names(outDf)[names(outDf) == "outDF"] <- "True.Azimuth" 
-
-
   return(outDf)
 }
 
@@ -124,6 +136,12 @@ getDifferences <- function(df){
 ##### Generate Real vs. Predicted Plots ####
 
 j=0
+
+diffMatrix <- data.frame(file = character(),
+                         x = numeric(),
+                         difference = numeric(), 
+                         stringsAsFactors = FALSE)
+
 
 # Load in all the files you need: 
 for(i in list.dirs(file_directory, recursive = FALSE)){
@@ -148,10 +166,12 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   }
   
   i_file <- section_data(i_file)
-  o_plot <- Angle_Dif_Plots(i_file,tag,label)
+  o_plot <- Angle_Dif_Plots(i_file,diffMatrix,label)
   
   assign(label, o_plot)
 }
+
+write.csv(diffMatrix,AngleDifPath,row.names = FALSE)
 
 
 # PLOTS 
