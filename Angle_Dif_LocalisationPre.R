@@ -18,9 +18,9 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 ##### Define Test File Location #####
 
-file_directory = "Data/CompleteLabLocalisation/OutPre/raw"
+file_directory = "Data/CompleteLabLocalisation/OutPre/AdjGain"
 
-AngleDifPath = "Data/CompleteLabLocalisation/AngleDifferences/PreRaw.csv"
+AngleDifPath = "Data/CompleteLabLocalisation/AngleDifferences/PreAdG.csv"
 
 ##### Define Functions #####
 
@@ -154,7 +154,7 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   label = str_remove(as.character(i), file_directory)
   label = str_remove(label,"/localized_")
   label = str_remove(label,".wav")
-  label = str_remove(label,"AdjG_")
+  #label = str_remove(label,"AdjG_")
   j=j+1
   
   tag =label

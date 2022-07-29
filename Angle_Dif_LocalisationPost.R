@@ -18,9 +18,9 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 ##### Define Test File Location #####
 
-file_directory = "Data/CompleteLabLocalisation/OutPost/Raw"
+file_directory = "Data/CompleteLabLocalisation/OutPost/AdjGain"
 
-AngleDifPath = "Data/CompleteLabLocalisation/AngleDifferences/PostRaw.csv"
+AngleDifPath = "Data/CompleteLabLocalisation/AngleDifferences/PostAdjGain.csv"
 
 ##### Define Functions #####
 
@@ -152,7 +152,7 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   label = str_remove(label,"_PostMortemLoc")
   label = str_remove(label,"_PostMortem")
   label = str_remove(label,".wav")
-  label = str_remove(label,"AdjG_")
+  #label = str_remove(label,"AdjG_")
   j=j+1
   
 #  tag = str_remove(label,".*_")
