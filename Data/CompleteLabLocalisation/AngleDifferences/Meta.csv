@@ -1,0 +1,24 @@
+﻿test,mean,sd,maxError,meanEchRm,sdEchRm,maxErEchRm,trueHits ,outOf,hitRate
+1a_pinknoise_N_2,0,0,0,NA,NA,NA,6,6,1
+1a_pinknoise2_N_2,1.67,2.58,5,NA,NA,NA,6,6,1
+1b_bird_N_2,1.43,2.31,5,NA,NA,NA,6,6,1
+5a_pinknoise_Y_2,-23.57,61.7,-175,1.67,5.16,10,6,6,1
+5b_bird_Y_2,4.17,7.03,10,3,7.58,10,6,6,1
+7a_pinknoise_N_3,0,3.2,5,NA,NA,NA,6,6,1
+Blue_bird01,-2.5,173.24,125,NA,NA,NA,2,5,0.4
+Blue_bird02,-2.5,173.24,125,NA,NA,NA,2,5,0.4
+Blue_pink01,22.5,208,170,NA,NA,NA,2,5,0.4
+Blue_Repowered_bird01,-80,98.99494937,-150,NA,NA,NA,2,5,0.4
+Blue_Repowered_bird02,-80,98.99494937,-150,NA,NA,NA,2,5,0.4
+Blue_Repowered_pink01,-80,106.0660172,-155,NA,NA,NA,2,5,0.4
+Blue_Repowered_pink02,-82.5,102.5304833,-155,NA,NA,NA,2,5,0.4
+Yellow_bird01,43.33,62.1,145,-2,2.74,-5,5,5,1
+Yellow_bird02,34.29,58.39,120,1,2.24,5,5,5,1
+Yellow_pink02,16.43,40.4,120,0,3.54,-5,5,5,1
+Yellow_pink03,0,3.45,5,NA,NA,NA,5,5,1
+AdjG_YelloGreen_bird01,42.14,70.82,180,-2,8.34,10,5,5,1
+AdjG_YelloGreen_bird02,50,81.55,180,-2,8.34,10,5,5,1
+AdjG_YelloGreen_pink01,66.88,94.41,180,-1,7.42,10,5,5,1
+AdjG_YelloGreen_pink02,-1,7.32,10,NA,NA,NA,5,5,1
+AdjG_YellowGreen_flipped_bird01,-9.29,74.77,175,-2,8.37,10,5,5,1
+AdjG_YellowGreen_flipped_pink01,21.25,56.16,175,-1,7.42,10,5,5,1

@@ -11,13 +11,19 @@ tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
 % Set up File Locations and Load in Relevant Data
-audio_path = "Data/Lab_Localisation/Pre_and_Post_Comparison/";
-csvs_path = "Data/Sweep_Data/PreAndPost/";
+audio_path = "Data/CompleteLabLocalisation/SweepComparisons/Audio/";
+csvs_path = "Data/CompleteLabLocalisation/SweepComparisons/Sweeps/";
+% 
+% %%% HASH OUT IF DONE: 
+% %Generate the sweep spectra: 
+% x = ["5b_bird_Y_2.wav","Blue_PostMortemLoc_bird01.wav","YelloGreen_PostMortem_bird01.wav","Yellow_PostMortemLoc_bird02.wav"];
+% status = generate_spectra(x,audio_path,csvs_path);
+
 
 desc1 = "pre";
-desc2 = "post";
-fn_1 = "5a_pinknoise_Y_2";
-fn_2 = "Yellow_Bird";
+desc2 = "post: blue";
+fn_1 = "5b_bird_Y_2";
+fn_2 = "Blue_PostMortemLoc_bird01";
 
 % Load in Audio
 samples = [1,9*16000]; % Sweeps are just the first 8 seconds
@@ -117,8 +123,8 @@ function status = generate_spectra(x,audio_dir_path,sweep_dir_path)
         test_file = audio_dir_path + in_file; 
 
         % Determine the number of samples
-        % The sweeps all fall within the first 25 secoonds! 
-        samples = [1,25*16000];   % Change if Fs is not 16000
+        % The sweeps all fall within the first 10 secoonds! 
+        samples = [1,10*16000];   % Change if Fs is not 16000
                                   % Change if recording is not 25s
 
         % load file
