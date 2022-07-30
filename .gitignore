@@ -4,6 +4,8 @@
 *.asv
 *.flac
 *.rhistory
+*.Rhistroy
+*.RData
 
 # Ignore files with personal information (FTP logins etc) 
 *NotForGithub*
