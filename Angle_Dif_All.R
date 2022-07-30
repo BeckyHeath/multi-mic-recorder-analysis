@@ -15,6 +15,7 @@ library(ggplot2)
 library(tidyr)
 library(dplyr)
 library(wesanderson)
+library(patchwork)
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 
@@ -45,7 +46,7 @@ true_pred_plots <- function(df, label){
   # Creates plots showing true vs. predicted values
   plot <- ggplot(df, aes(trueAzimuth, difference, col = recorder, shape = tone))+
     ggtitle(label) +
-    geom_jitter(size =3, alpha = 0.7, position = position_jitter(width=7,height=0))+
+    geom_jitter(size =3, alpha = 0.7, position = position_jitter(width=5,height=0))+
     scale_color_manual(values = c("2" =  wes_palette("Darjeeling1",5)[1],
                                   "3"= "black",
                                   "Blue"= wes_palette("Darjeeling1",5)[5],
