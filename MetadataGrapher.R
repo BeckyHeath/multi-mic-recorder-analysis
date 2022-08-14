@@ -116,10 +116,10 @@ cols <- c("darkgreen","gold1","yellowgreen","steelblue3")
 
 Recs <-ggplot(fullDep, aes(x=date, y= numFiles,col = Recorder, fill = Recorder))+
   scale_x_date(breaks = "1 month", minor_breaks = "1 week", labels = date_format("%B")) +
-  scale_colour_manual(values=cols) +
-  scale_fill_manual(values=cols) +
+  scale_colour_manual(values=cols,labels=c("ANSW1","PAWS1","PAWS2","ANSW2")) +
+  scale_fill_manual(values=cols, labels=c("ANSW1","PAWS1","PAWS2","ANSW2")) +
   geom_point(shape = 4,alpha=0.5) +
-  geom_smooth(alpha = 0.1)+
+  geom_smooth(method = lm, formula = y ~ splines::bs(x, 3), alpha = 0.0)+
   scale_y_continuous(limits= c(0,150), oob = squish)+
   labs(x= "Date")+
   labs(y= "Daily Uploads (max 144)")+
@@ -128,6 +128,10 @@ Recs <-ggplot(fullDep, aes(x=date, y= numFiles,col = Recorder, fill = Recorder))
   theme(legend.title=element_text(size=9), 
         legend.text=element_text(size=8))
 Recs
+
+ggsave("Figures/RecNumbers.png", width = 5.4, height = 3.2, device='png', dpi=700)
+
+
 rm(Recs) 
 
 # Present data in hours 
@@ -138,10 +142,10 @@ cols <- c("darkgreen","gold1","yellowgreen","steelblue3")
 
 Recs <- ggplot(fullDep, aes(x=date, y= numFiles,col = Recorder, fill = Recorder))+
   scale_x_date(breaks = "1 month", minor_breaks = "1 week", labels = date_format("%B")) +
-  scale_colour_manual(values=cols) +
-  scale_fill_manual(values=cols) +
+  scale_colour_manual(values=cols,labels=c("ANSW1","PAWS1","PAWS2","ANSW2")) +
+  scale_fill_manual(values=cols, labels=c("ANSW1","PAWS1","PAWS2","ANSW2")) +
   geom_point(shape = 4,alpha=0.5) +
-  geom_smooth(alpha = 0.1)+
+  geom_smooth(method = lm, formula = y ~ splines::bs(x, 3), alpha = 0.0)+
   scale_y_continuous(limits= c(0,24), oob = squish)+
   labs(x= "Date")+
   labs(y= "Hours of Uploaded Data (daily)")+
@@ -150,6 +154,8 @@ Recs <- ggplot(fullDep, aes(x=date, y= numFiles,col = Recorder, fill = Recorder)
         legend.text=element_text(size=8))+
   theme(legend.position = c(0.85,0.75))
 Recs
+
+ggsave("Figures/RecHours.png", width = 5.4, height = 3.2, device='png', dpi=700)
 rm(Recs) 
 
 

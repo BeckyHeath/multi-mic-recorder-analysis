@@ -129,9 +129,9 @@ post <- distinct(post)
 
 for(i in levels(post$gainTest)){
   if(i=="n"){
-    WPstr = "raw"
+    WPstr = "Raw"
   }else{
-    WPstr = "gainTest"
+    WPstr = "Adjusted"
   }
   postWP <- post[post$gainTest == i, ] 
   
@@ -160,10 +160,10 @@ for(i in levels(post$gainTest)){
   
 }
 
-plot1 <- `raw:bird` | `gainTest:bird`
-plot2 <- `raw:pinknoise` | `gainTest:pinknoise`
+plot1 <- `Raw:bird` | `Adjusted:bird`
+plot2 <- `Raw:pinknoise` | `Adjusted:pinknoise`
 plot <- plot1/plot2
 plot
 
 
-ggsave("Figures/PostDepLocalisation.png", width = 5.7, height = 4.30, device='png', dpi=700)
+ggsave("Figures/PostDepAdjustLocalisation.png", width = 5.7, height = 4.30, device='png', dpi=700)

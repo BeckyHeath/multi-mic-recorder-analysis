@@ -139,6 +139,7 @@ diffMatrix <- data.frame(file = character(),
                          difference = numeric(), 
                          stringsAsFactors = FALSE)
 
+
 # Load in all the files you need: 
 for(i in list.dirs(file_directory, recursive = FALSE)){
   path = paste(as.character(i),"sourcelist.csv", sep = "/")
@@ -152,7 +153,7 @@ for(i in list.dirs(file_directory, recursive = FALSE)){
   label = str_remove(label,"_PostMortemLoc")
   label = str_remove(label,"_PostMortem")
   label = str_remove(label,".wav")
-  #label = str_remove(label,"AdjG_")
+  label = str_remove(label,"AdjG_")
   j=j+1
   
 #  tag = str_remove(label,".*_")
