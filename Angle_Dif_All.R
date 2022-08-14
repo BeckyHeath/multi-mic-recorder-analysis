@@ -67,6 +67,8 @@ true_pred_plots <- function(df, label){
     theme(axis.title.x=element_blank())+
     theme(axis.title.y=element_blank()) +
     theme(plot.title = element_text(size = 10))
+  
+  
 
   return(plot)
 }
@@ -116,6 +118,9 @@ plot2 <- `WP:pinknoise` | `NoWP:pinknoise`
 plot <- plot1/plot2
 plot
 
+ggsave("Figures/PreDepLocalisation.png", width = 5.7, height = 4.30, device='png', dpi=700)
+
+
 ##### Run Analysis on the Post ####
 
 # get right dataset and get rid of Duplicates
@@ -161,4 +166,4 @@ plot <- plot1/plot2
 plot
 
 
-
+ggsave("Figures/PostDepLocalisation.png", width = 5.7, height = 4.30, device='png', dpi=700)
