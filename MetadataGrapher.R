@@ -12,6 +12,8 @@ library(data.table)
 library(dplyr)
 library(tidyverse)
 library(scales)
+library(ggplot2)
+library(tidyquant)
 
 #### Load in files ####
 
@@ -118,18 +120,19 @@ Recs <-ggplot(fullDep, aes(x=date, y= numFiles,col = Recorder, fill = Recorder))
   scale_x_date(breaks = "1 month", minor_breaks = "1 week", labels = date_format("%B")) +
   scale_colour_manual(values=cols,labels=c("ANSW1","PAWS1","PAWS2","ANSW2")) +
   scale_fill_manual(values=cols, labels=c("ANSW1","PAWS1","PAWS2","ANSW2")) +
-  geom_point(shape = 4,alpha=0.5) +
-  geom_smooth(method = lm, formula = y ~ splines::bs(x, 3), alpha = 0.0)+
+  geom_point(shape = 4,alpha=1) +
+  geom_ma(ma_fun = SMA, n = 5, size = 0.8 , aes(linetype = "solid")) +    
   scale_y_continuous(limits= c(0,150), oob = squish)+
   labs(x= "Date")+
   labs(y= "Daily Uploads (max 144)")+
   theme_minimal()+
   theme(legend.position = c(0.9,0.79))+
+  guides(linetype = "none")+
   theme(legend.title=element_text(size=9), 
         legend.text=element_text(size=8))
 Recs
 
-ggsave("Figures/RecNumbers.png", width = 5.4, height = 3.2, device='png', dpi=700)
+ggsave("Figures/RecNumbers5Day.png", width = 5.4, height = 3.2, device='png', dpi=700)
 
 
 rm(Recs) 
