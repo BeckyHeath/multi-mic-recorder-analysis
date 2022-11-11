@@ -19,14 +19,14 @@ fn_1 = "pink_noise";
 fn_2 = "Eurasian_Wren_";
 
 % Load in Audio
-samples = [1,1100000]; % whole signal
+% Used to be [1,100000] % Sweep and test tone 
+samples = [700000,1000000]; % just test tone
 aud1 = audioread(audio_path+fn_1+".wav",samples);
 aud2 = audioread(audio_path+fn_2+".wav",samples);
 
 
 %PLOT SPECTROGRAMS
 % Generate Spectrogram
-
 
 subplot(2,2,[1,2]);
 spectrogram(aud1,5280,1200,12800,48000,'yaxis')
