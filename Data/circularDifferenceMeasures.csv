@@ -1,0 +1,29 @@
+"angleType","test","group","echoRM","recs","mean","SD","maxER"
+"circular","pre","NoWP:bird","no","1b_bird_N_2",1.42801606128756,0.0394257770213254,5
+"circular","pre","NoWP:bird","yes","1b_bird_N_2",1.66619627955163,0.0411421567546152,5
+"circular","pre","NoWP:pinknoise","no","1a_pinknoise_N_2; 1a_pinknoise2_N_2; 7a_pinknoise_N_3",1.11050148770775,0.036280558436311,5
+"circular","pre","NoWP:pinknoise","yes","1a_pinknoise_N_2; 1a_pinknoise2_N_2; 7a_pinknoise_N_3",1.11050148770775,0.036280558436311,5
+"circular","pre","WP:bird","no","5b_bird_Y_2",7.5,0.0436401568930688,10
+"circular","pre","WP:bird","yes","5b_bird_Y_2",6.99969516436516,0.0427576318707455,10
+"circular","pre","WP:pinknoise","no","5a_pinknoise_Y_2",4.99239900820176,0.820338978675749,10
+"circular","pre","WP:pinknoise","yes","5a_pinknoise_Y_2",3.33168608193207,0.0650555894623656,10
+"circular","post","Raw:bird","no","Blue_bird01; Blue_bird02; Blue_Repowered_bird01; Blue_Repowered_bird02; Yellow_bird01; Yellow_bird02",40.6523007927149,1.18190032672513,145
+"circular","post","Raw:bird","yes","Blue_bird01; Blue_bird02; Blue_Repowered_bird01; Blue_Repowered_bird02; Yellow_bird01; Yellow_bird02",16.1750476046618,0.891847117723474,120
+"circular","post","Raw:pinknoise","no","Blue_pink01; Blue_Repowered_pink01; Blue_Repowered_pink02; Yellow_pink02; Yellow_pink03",13.5100734064059,0.893351872310431,170
+"circular","post","Raw:pinknoise","yes","Blue_pink01; Blue_Repowered_pink01; Blue_Repowered_pink02; Yellow_pink02; Yellow_pink03",8.55836728143954,0.806023309222503,170
+"circular","post","Adjusted:bird","no","AdjG_YelloGreen_bird01; AdjG_YelloGreen_bird02; AdjG_YellowGreen_flipped_bird01",17.1710313104795,1.06882380671031,180
+"circular","post","Adjusted:bird","yes","AdjG_YelloGreen_bird01; AdjG_YelloGreen_bird02; AdjG_YellowGreen_flipped_bird01",6.00244393710275,0.0855511378638244,10
+"circular","post","Adjusted:pinknoise","no","AdjG_YelloGreen_pink01; AdjG_YelloGreen_pink02; AdjG_YellowGreen_flipped_pink01",5.71217831103211,0.711921448693044,180
+"circular","post","Adjusted:pinknoise","yes","AdjG_YelloGreen_pink01; AdjG_YelloGreen_pink02; AdjG_YellowGreen_flipped_pink01",5,0.078088214929501,10
+"circular","post","Blue:NoWP:Raw:bird","no","Blue_bird01; Blue_bird02; Blue_Repowered_bird01; Blue_Repowered_bird02",112.036880895567,0.951069684117071,120
+"circular","post","Blue:NoWP:Raw:bird","yes","Blue_bird01; Blue_bird02; Blue_Repowered_bird01; Blue_Repowered_bird02",112.036880895567,0.951069684117071,120
+"circular","post","Blue:NoWP:Raw:pinknoise","no","Blue_pink01; Blue_Repowered_pink01; Blue_Repowered_pink02",123.515277945525,1.31798255497864,170
+"circular","post","Blue:NoWP:Raw:pinknoise","yes","Blue_pink01; Blue_Repowered_pink01; Blue_Repowered_pink02",123.515277945525,1.31798255497864,170
+"circular","post","Yellow:NoWP:Raw:bird","no","Yellow_bird01; Yellow_bird02",24.1498073718942,1.00018532734066,145
+"circular","post","Yellow:NoWP:Raw:bird","yes","Yellow_bird01; Yellow_bird02",1.49946661082529,0.0399938161264165,5
+"circular","post","Yellow:NoWP:Raw:pinknoise","no","Yellow_pink02; Yellow_pink03",7.0802423009012,0.505352081945893,120
+"circular","post","Yellow:NoWP:Raw:pinknoise","yes","Yellow_pink02; Yellow_pink03",1.99969516436516,0.0427576318707455,5
+"circular","post","yellowGreen:WP:Adjusted:bird","no","AdjG_YelloGreen_bird01; AdjG_YelloGreen_bird02; AdjG_YellowGreen_flipped_bird01",17.1710313104795,1.06882380671031,180
+"circular","post","yellowGreen:WP:Adjusted:bird","yes","AdjG_YelloGreen_bird01; AdjG_YelloGreen_bird02; AdjG_YellowGreen_flipped_bird01",6.00244393710275,0.0855511378638244,10
+"circular","post","yellowGreen:WP:Adjusted:pinknoise","no","AdjG_YelloGreen_pink01; AdjG_YelloGreen_pink02; AdjG_YellowGreen_flipped_pink01",5.71217831103211,0.711921448693044,180
+"circular","post","yellowGreen:WP:Adjusted:pinknoise","yes","AdjG_YelloGreen_pink01; AdjG_YelloGreen_pink02; AdjG_YellowGreen_flipped_pink01",5,0.078088214929501,10
