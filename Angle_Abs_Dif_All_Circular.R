@@ -353,20 +353,4 @@ for(k in levels(post$recorder)){
 outFile <- outFile[complete.cases(outFile),] 
 
 write.csv(outFile, "Data/circularDifferenceMeasures.csv", row.names = FALSE)  
-    
-    
-
-
-
-#plot1 <- `Raw:bird` | `Adjusted:bird`
-#plot2 <- `Raw:pinknoise` | `Adjusted:pinknoise`
-#plot <- plot1/plot2
-#plot
-
-
-#ggsave("Figures/PostDepAdjustLocalisationCIRCULAR.png", width = 5.7, height = 4.30, device='png', dpi=700)
-
-
-
-
 
