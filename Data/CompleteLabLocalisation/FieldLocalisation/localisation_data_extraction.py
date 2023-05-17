@@ -1,4 +1,6 @@
 import os 
+import csv
+import glob
 
 ''' 
 Script used to extract relevant data from the HARKBird output files.
@@ -13,7 +15,7 @@ Becky Heath
 April 2021, Edited May 2023
 '''
 
-def extract_data(sub_dir):
+def extract_data(sub_dir, all_data):
     '''
     Locates sourcelist.csv, renames to include 
     metadata and xxxx
@@ -25,13 +27,24 @@ def extract_data(sub_dir):
     
     # find and make a copy of relevant file 
     path_to_file = "THRESH_28/" + filename + "/sourcelist.csv"
-    output_file = "HARK_Data/" + filename +".csv" 
 
-    os.system("cp {} {}".format(path_to_file, output_file)) #use cp instead if on unix
+    with open(path_to_file, 'r') as file: 
+        reader = csv.reader(file, delimiter = '\t')
+        next (reader) # skip header row if there is one
+        for row in reader: 
+            row.append(filename)
+            all_data.append(row)
 
     # add column with meta data 
     # save file elsewhere in data
 
+def write_combined_csv(data):
+    output_file = "HARK_Data/combined_data.csv"
+
+    with open(output_file, "w", newline = '') as file: 
+        writer = csv.writer(file)
+        writer.writerow(["Sep", "Start.time","Start.azimuth", "End.time", "End.azimuth","filename"])
+        writer.writerows(data)
 
 def iterate(directory):
     ''' 
@@ -41,11 +54,15 @@ def iterate(directory):
     ARGS: 
         directory containing HARKBird output dirs 
     '''
+
+    all_data = [] #Initialise the joined dataframe
+
     # Index every subfolder in HARKBird folder
     for sub_dir in os.listdir(directory):
-        extract_data(sub_dir)
+        extract_data(sub_dir, all_data)
     
-    # TODO Congregate data
+
+    write_combined_csv(all_data)
 
 if __name__ == "__main__":
 
