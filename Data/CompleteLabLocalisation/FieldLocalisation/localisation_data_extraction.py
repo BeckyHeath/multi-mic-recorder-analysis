@@ -32,8 +32,7 @@ def extract_data(sub_dir, all_data):
         reader = csv.reader(file, delimiter = '\t')
         next (reader) # skip header row if there is one
         for row in reader: 
-            row.append(filename)
-            all_data.append(row)
+            all_data.append([filename] + row)
 
     # add column with meta data 
     # save file elsewhere in data
@@ -43,7 +42,7 @@ def write_combined_csv(data):
 
     with open(output_file, "w", newline = '') as file: 
         writer = csv.writer(file)
-        writer.writerow(["Sep", "Start.time","Start.azimuth", "End.time", "End.azimuth","filename"])
+        writer.writerow(["filename", "Sep", "Start.time","Start.azimuth", "End.time", "End.azimuth"])
         writer.writerows(data)
 
 def iterate(directory):
