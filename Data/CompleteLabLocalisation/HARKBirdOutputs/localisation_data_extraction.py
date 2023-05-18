@@ -15,7 +15,7 @@ Becky Heath
 April 2021, Edited May 2023
 '''
 
-def extract_data(sub_dir, all_data):
+def extract_data(sub_dir, all_data, directory):
     '''
     Locates sourcelist.csv, renames to include 
     metadata and xxxx
@@ -26,7 +26,7 @@ def extract_data(sub_dir, all_data):
     filename = str(sub_dir)
     
     # find and make a copy of relevant file 
-    path_to_file = "THRESH_28/" + filename + "/sourcelist.csv"
+    path_to_file = directory + "/" + filename + "/sourcelist.csv"
 
     with open(path_to_file, 'r') as file: 
         reader = csv.reader(file, delimiter = '\t')
@@ -38,7 +38,7 @@ def extract_data(sub_dir, all_data):
     # save file elsewhere in data
 
 def write_combined_csv(data):
-    output_file = "HARK_Data/combined_data.csv"
+    output_file = "HARK_Data/outPreRaw_combined_data.csv"               # EDIT HERE
 
     with open(output_file, "w", newline = '') as file: 
         writer = csv.writer(file)
@@ -58,7 +58,7 @@ def iterate(directory):
 
     # Index every subfolder in HARKBird folder
     for sub_dir in os.listdir(directory):
-        extract_data(sub_dir, all_data)
+        extract_data(sub_dir, all_data, directory)
     
 
     write_combined_csv(all_data)
@@ -67,4 +67,4 @@ if __name__ == "__main__":
 
     # Iterate through desired files
     # Change to file location if necessary
-    iterate("THRESH_28")
+    iterate("OUTPre/Raw")                                            # EDIT HERE
