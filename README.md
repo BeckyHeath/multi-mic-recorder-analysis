@@ -2,7 +2,7 @@
 
 The scripts in this repo have been used to generate figures and investigate the viability of a Multichannel Acoustic Autonomous Recording Unit for use in the field. 
 
-Please contact Becky Heath (me) at r.heath18@imperial.ac.uk if you're interested in using the device or the scripts in this repo!
+Please contact Becky Heath (me) at rh862@cam.ac.uk if you're interested in using the device or the scripts in this repo!
 
 
 ### General Audio Tools
