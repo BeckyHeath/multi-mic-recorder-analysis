@@ -1,7 +1,7 @@
-﻿sig.type,Start.time,Start.azimuth,value,inBird,inPink,duration
-sweep,0,-180,real,0,0,10
-tone,15,-180,real,17.5,15,5
-tone,30,-90,real,30,30,5
-tone,45,-45,real,45,45,5
-tone,60,0,real,60,60,5
-tone,75,90,real,76,75,5
+﻿sig.type,Start.time,Start.azimuth,value
+sweep,0,30,real
+tone,15,30,real
+tone,30,120,real
+tone,45,165,real
+tone,60,-150,real
+tone,75,-60,real
