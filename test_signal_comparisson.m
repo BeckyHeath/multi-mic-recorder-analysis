@@ -11,7 +11,7 @@ tmp = matlab.desktop.editor.getActive;
 cd(fileparts(tmp.Filename));
 
 % Set up File Locations and Load in Relevant Data
-audio_path = "Data/CompleteLabLocalisation/Test_Signals/";
+audio_path = "Data/CompleteLabLocalisation/Test_Signals/ExperimentFiles/";
 
 desc1 = "Pink Noise";
 desc2 = "Bird Song";
@@ -20,7 +20,7 @@ fn_2 = "Eurasian_Wren_";
 
 % Load in Audio
 % Used to be [1,100000] % Sweep and test tone 
-samples = [700000,1000000]; % just test tone
+samples = [1,1000000]; % just test tone
 aud1 = audioread(audio_path+fn_1+".wav",samples);
 aud2 = audioread(audio_path+fn_2+".wav",samples);
 
