@@ -38,7 +38,7 @@ def extract_data(sub_dir, all_data, directory):
     # save file elsewhere in data
 
 def write_combined_csv(data):
-    output_file = "HARK_Data/pre_THRESH24_combined_data.csv"               # EDIT HERE
+    output_file = "HARK_Data/FreqDeps.csv"               # EDIT HERE
 
     with open(output_file, "w", newline = '') as file: 
         writer = csv.writer(file)
@@ -67,4 +67,4 @@ if __name__ == "__main__":
 
     # Iterate through desired files
     # Change to file location if necessary
-    iterate("OUTPre/THRESH_24")                                            # EDIT HERE
+    iterate("FrequencyDepTests")                                            # EDIT HERE
