@@ -25,23 +25,24 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 #data <- read.csv("Data/CompleteLabLocalisation/AllTests_LocalisationData_ALLDETECTIONSTESTS.csv")
 
 # Just use this:
-data <- read.csv("Data/CompleteLabLocalisation/AllTests_LocalisationData.csv")
+data <- read.csv("Data/CompleteLabLocalisation/AllTestsJustTrueValues.csv")
 
-# For the analysis at the moment let's just use waterproofed devices
-data <- data[data$wpRAW == "y",]
+# For the analysis at the moment let's just use waterproofed
+data <- data[data$WP. == "y",]
 
 
-# Create Coarse Labells (no waterproofing)
+# Create Coarse Labels (no waterproofing)
 data <- data %>%
-  mutate(trial = case_when(
-    trial == "SilwoodField" ~ "Field",
-    trial == "IndoorPre" ~ "Lab",
-    # Add more conditions if needed
-    TRUE ~ trial  # Keep the original value if no condition matches
+  mutate(Trial = case_when(
+     Trial == "field" ~ "Field",
+#    trial == "IndoorPre" ~ "Lab",
+     Trial == "lab-pre" ~ "Lab",
+    TRUE ~ Trial  # Keep the original value if no condition matches
   ))
 
+# Collate label
 data <- data %>%
-  mutate(label = paste0(trial, " ", distance.m, "m ", substr(tone, 1, 1)))
+  mutate(label = paste0(Trial, " ", distance.m, "m ", substr(Test.tone, 1, 1), " WP-", WP.))
 
 # NOTES - This intentionally ignores weatherproofing! If you want to look at the weatherproofing you'll need
 #         to edit this code. 
@@ -49,28 +50,28 @@ data <- data %>%
 
 # Calculate median and IQR per group
 data$distance.m <- as.factor(data$distance.m)
-data$difference <- as.numeric(data$difference)
+data$error <- as.numeric(data$error)
 
 medianIQRs <- data %>%
   group_by(label) %>%
   summarise(
-    Median = median(difference, na.rm= TRUE),
-    Q1 = quantile(difference, 0.25, na.rm= TRUE),
-    Q3 = quantile(difference, 0.75, na.rm = TRUE),
+    Median = median(error, na.rm= TRUE),
+    Q1 = quantile(error, 0.25, na.rm= TRUE),
+    Q3 = quantile(error, 0.75, na.rm = TRUE),
     IQR = Q3 - Q1,
     .groups = "keep"
-  )
+  )``
 
 # ALL DATA (INSIDE AND OUT)
-ggplot(medianIQRs, aes(x = label, y = Median)) +
-  geom_boxplot(width = 0.6) +
-  geom_rect(aes(xmin = 0.5, xmax = 6.5, ymin = -18, ymax = 18),
-            fill = "gray", alpha = 0.03) +
-  geom_errorbar(aes(ymin = Q1, ymax = Q3), width = 0.2) +
+ggplot(data= na.omit(data), aes(x = label, y = error)) +
+  geom_jitter(position = position_jitter(width = 0.2), shape = 16, colour = "gray",alpha=0.5) +
+  stat_summary(fun = "median", geom = "point", shape = 18, size = 3, color = "red") +
+  stat_summary(fun.data = "median_hilow", geom = "errorbar", width = 0.2, color = "red") +
   labs(title = "True/Predicted Azimuth Error",
-       x = "Group", y = "Median Angle Difference") +
-  ylim(-50,50)+
+       x = "Group", y = "Angle Difference") +
   theme_minimal() +
-  theme(legend.position = "none")
+  ylim(-20, 20)+
+  theme(legend.position = "none")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
 
