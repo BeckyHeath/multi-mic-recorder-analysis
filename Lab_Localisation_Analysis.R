@@ -47,20 +47,9 @@ data <- data %>%
 # NOTES - This intentionally ignores weatherproofing! If you want to look at the weatherproofing you'll need
 #         to edit this code. 
 
-
 # Calculate median and IQR per group
 data$distance.m <- as.factor(data$distance.m)
 data$error <- as.numeric(data$error)
-
-medianIQRs <- data %>%
-  group_by(label) %>%
-  summarise(
-    Median = median(error, na.rm= TRUE),
-    Q1 = quantile(error, 0.25, na.rm= TRUE),
-    Q3 = quantile(error, 0.75, na.rm = TRUE),
-    IQR = Q3 - Q1,
-    .groups = "keep"
-  )``
 
 # ALL DATA (INSIDE AND OUT)
 ggplot(data= na.omit(data), aes(x = label, y = error)) +
