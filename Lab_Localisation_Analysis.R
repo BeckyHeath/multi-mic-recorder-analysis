@@ -25,13 +25,12 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 #data <- read.csv("Data/CompleteLabLocalisation/AllTests_LocalisationData_ALLDETECTIONSTESTS.csv")
 
 # Just use this:
-data <- read.csv("Data/CompleteLabLocalisation/AllTestsJustTrueValues.csv")
+dataRaw <- read.csv("Data/CompleteLabLocalisation/AllTestsJustTrueValues.csv")
 
-# For the analysis at the moment let's just use waterproofed
-data <- data[data$WP. == "y",]
+# get rid of freq-deps for now:
+data <- dataRaw[dataRaw$Trial != "freq-dep",]
 
-
-# Create Coarse Labels (no waterproofing)
+# Create Coarse Labels
 data <- data %>%
   mutate(Trial = case_when(
      Trial == "field" ~ "Field",
@@ -42,25 +41,29 @@ data <- data %>%
 
 # Collate label
 data <- data %>%
-  mutate(label = paste0(Trial, " ", distance.m, "m ", substr(Test.tone, 1, 1), " WP-", WP.))
-
-# NOTES - This intentionally ignores weatherproofing! If you want to look at the weatherproofing you'll need
-#         to edit this code. 
+  mutate(label = paste0(Trial, " ", distance.m, "m ", " WP-", WP.))
 
 # Calculate median and IQR per group
 data$distance.m <- as.factor(data$distance.m)
 data$error <- as.numeric(data$error)
 
 # ALL DATA (INSIDE AND OUT)
-ggplot(data= na.omit(data), aes(x = label, y = error)) +
-  geom_jitter(position = position_jitter(width = 0.2), shape = 16, colour = "gray",alpha=0.5) +
-  stat_summary(fun = "median", geom = "point", shape = 18, size = 3, color = "red") +
-  stat_summary(fun.data = "median_hilow", geom = "errorbar", width = 0.2, color = "red") +
+ggplot(data = na.omit(data), aes(x = label, y = error)) +
+  annotate('rect', ymin = -18, ymax = 18, xmin= -Inf, xmax = Inf, fill = "lightgray", alpha = 0.3)+
+  geom_hline(yintercept = 0, color = "darkgray") +
+  #geom_jitter(aes(shape = Test.tone), position = position_jitterdodge(0.2)  ,fill = "gray", color = "gray", size = 2, alpha = 0.5) +
+  stat_summary(aes(color = Test.tone, shape = Test.tone, fill = Test.tone), fun = "median", geom = "point", size = 3, position = position_dodge(width = 0.3)) +
+  stat_summary(aes(color = Test.tone), fun.data = "median_hilow", geom = "errorbar", width = 0.2, position = position_dodge(width = 0.3)) +
   labs(title = "True/Predicted Azimuth Error",
        x = "Group", y = "Angle Difference") +
+  scale_color_manual(values = c("red", "blue")) +
+  scale_shape_manual(values = c(21, 24)) +
+  scale_fill_manual(values = c("red", "blue")) +
   theme_minimal() +
-  ylim(-20, 20)+
-  theme(legend.position = "none")+
+  ylim(-20, 20) +
+  theme(legend.position = "none") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+
 
 
