@@ -57,12 +57,12 @@ ggplot(data = data, aes(x = label, y = error)) +
   stat_summary(aes(color = Test.tone, shape = Test.tone, fill = Test.tone), fun = "median", geom = "point", size = 3, position = position_dodge(width = 0.3)) +
   stat_summary(aes(color = Test.tone), fun.data = "median_hilow", geom = "errorbar", width = 0.2, position = position_dodge(width = 0.3)) +
   labs(title = "True/Predicted Azimuth Error",
-       x = "Group", y = "Angle Difference") +
-  scale_color_manual(values = c("red", "blue")) +
+       x = "Group", y = "Angle Error") +
+  scale_color_manual(values = c("grey25", "firebrick3")) +
   scale_shape_manual(values = c(21, 24)) +
-  scale_fill_manual(values = c("red", "blue")) +
+  scale_fill_manual(values = c("grey25", "firebrick3")) +
   theme_minimal() +
-  ylim(-20, 20) +
+  ylim(-25, 25) +
   theme(legend.position = "none") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
@@ -133,11 +133,76 @@ proportions$Test.tone <- factor(proportions$Test.tone, levels = setOrder)
 # Plot results! 
 ggplot(data = proportions, aes(x=Test.tone, y= proportion, fill = localised.))+
   geom_col(alpha = 0.7, position = position_stack(reverse=TRUE))+
-  scale_fill_manual(values = c("darkgreen","lightgreen","grey", "red"),
+  scale_fill_manual(values = c("darkgreen","lightgreen","grey", "grey25"),
                     name = " ",
                     labels = c("Detected", "Nearly Missed","Not Detected", "Missed"))+
   labs(title = "Signal localisation Detection",
        x = "Frequency (Hz) or Test Tone", y = "Proportion") +
   theme_minimal()
+
+
+# Now the others 
+
+data <- dataRaw
+
+#FreqDeps First: 
+data <- dataRaw[dataRaw$Trial != "freq-dep",]
+
+# Define the possible localisation? descriptors
+possible_labels <- c("y", "d", "n", "m")
+
+
+# Create Coarse Labels
+data <- data %>%
+  mutate(Trial = case_when(
+    Trial == "field" ~ "Field",
+    #    trial == "IndoorPre" ~ "Lab",
+    Trial == "lab-pre" ~ "Lab",
+    TRUE ~ Trial  # Keep the original value if no condition matches
+  ))
+
+# Collate label
+data <- data %>%
+  mutate(label = paste0(Trial, " ", distance.m, "m ", " WP-", WP.))
+
+
+
+
+# Calculate the count and proportion of each label within each group
+proportions <- data %>%
+  group_by(label, localised.) %>%
+  summarise(count = n()) %>%
+  ungroup() %>%
+  complete(label, localised. = possible_labels, fill = list(count = 0)) %>%
+  group_by(label) %>%
+  mutate(proportion = count / sum(count))
+
+# Fill up missing variables: 
+proportions <- proportions %>%
+  group_by(label) %>%
+  mutate(label = ifelse(is.na(label), max(label, na.rm = TRUE), label)) %>%
+  ungroup()
+
+
+setOrder <- c("y", "d", "n", "m")
+proportions$localised. <- factor(proportions$localised., levels = setOrder)
+
+# Set the order as before
+setOrder <- c("100", "400", "500", "1000","2000", "4000", "6000", "7000", "pink", "wren")
+proportions$Test.tone <- factor(proportions$Test.tone, levels = setOrder)
+
+
+# Plot results! 
+ggplot(data = proportions, aes(x=label, y= proportion, fill = localised.))+
+  geom_col(alpha = 0.7, position = position_stack(reverse=TRUE))+
+  scale_fill_manual(values = c("darkgreen","lightgreen","grey", "grey25"),
+                    name = " ",
+                    labels = c("Detected", "Nearly Missed","Not Detected", "Missed"))+
+  labs(title = "Signal localisation Detection",
+       x = "Test Label", y = "Proportion") +
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+
 
 
