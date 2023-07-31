@@ -49,13 +49,42 @@ data$error <- as.numeric(data$error)
 # get rid of the situations where a signal was not localised: 
 data <- data[!is.na(data$error), ]
 
-# ALL DATA (INSIDE AND OUT)
+
+
+## RAW DATA PLOTS: 
+dataSub <- data[data$Test.tone == "pink",]
+
+ggplot(data = dataSub, aes(x = label, y = error)) +
+  geom_dotplot(binaxis = "y", stackdir = "center", dotsize = 0.2, binwidth = 3, alpha = 0.5)+
+  ylim(-20, 20) +
+  labs(title = "Raw Values (Pink Noise)",
+       x = "Group", y = "Angle Error") +
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+
+
+dataSub <- data[data$Test.tone == "wren",]
+
+ggplot(data = dataSub, aes(x = label, y = error)) +
+  geom_dotplot(binaxis = "y", stackdir = "center", dotsize = 0.2, binwidth = 3, alpha = 0.5)+
+  ylim(-20, 20) +
+  labs(title = "Raw Values (Eurasian Wren)",
+       x = "Group", y = "Angle Error") +
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+
+
+
+
+# ALL DATA (Just Summary Statists)
 ggplot(data = data, aes(x = label, y = error)) +
-  annotate('rect', ymin = -18, ymax = 18, xmin= -Inf, xmax = Inf, fill = "lightgray", alpha = 0.3)+
+  #annotate('rect', ymin = -18, ymax = 18, xmin= -Inf, xmax = Inf, fill = "lightgray", alpha = 0.3)+
   geom_hline(yintercept = 0, color = "darkgray") +
-  #geom_jitter(aes(shape = Test.tone), position = position_jitterdodge(0.2)  ,fill = "gray", color = "gray", size = 2, alpha = 0.5) +
-  stat_summary(aes(color = Test.tone, shape = Test.tone, fill = Test.tone), fun = "median", geom = "point", size = 3, position = position_dodge(width = 0.3)) +
-  stat_summary(aes(color = Test.tone), fun.data = "median_hilow", geom = "errorbar", width = 0.2, position = position_dodge(width = 0.3)) +
+  #geom_jitter(aes(shape = Test.tone), position = position_jitterdodge(dodge.width =0.1)  ,fill = "black", color = "gray", size = 2, alpha = 0.5) +
+  stat_summary(aes(color = Test.tone, shape = Test.tone, fill = Test.tone), fun = "median", geom = "point", size = 3, position = position_dodge(width = 0.5)) +
+  stat_summary(aes(color = Test.tone), fun.data = "median_hilow", geom = "errorbar", width = 0.2, position = position_dodge(width = 0.5)) +
   labs(title = "True/Predicted Azimuth Error",
        x = "Group", y = "Angle Error") +
   scale_color_manual(values = c("grey25", "firebrick3")) +
