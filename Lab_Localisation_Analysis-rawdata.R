@@ -62,6 +62,8 @@ ggplot(data = dataSub, aes(x = label, y = error)) +
   theme_minimal()+
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
+ggsave(filename = "Figures/NewLocalisationTests/PinkNoise-Raw.png", plot = last_plot(), width = 6, height = 4, dpi = 300)
+
 
 
 dataSub <- data[data$Test.tone == "wren",]
@@ -73,9 +75,7 @@ ggplot(data = dataSub, aes(x = label, y = error)) +
        x = "Group", y = "Angle Error") +
   theme_minimal()+
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
-
-
-
+ggsave(filename = "Figures/NewLocalisationTests/Wren-Raw.png", plot = last_plot(), width = 6, height = 4, dpi = 300)
 
 
 # ALL DATA (Just Summary Statists)
@@ -94,6 +94,7 @@ ggplot(data = data, aes(x = label, y = error)) +
   ylim(-25, 25) +
   theme(legend.position = "none") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+ggsave(filename = "Figures/NewLocalisationTests/TestTones.png", plot = last_plot(), width = 6, height = 4, dpi = 300)
 
 
 
@@ -111,8 +112,26 @@ data$Aliaized.Azimuth <- as.numeric(data$Aliaized.Azimuth)
 # get rid of the situations where a signal was not localised (FOR NOW): 
 data <- data[!is.na(data$error), ]
 
+
+
+## RAW DATA PLOTS: 
+
+
 ggplot(data = data, aes(x = Test.tone, y = error)) +
-  annotate('rect', ymin = -18, ymax = 18, xmin= -Inf, xmax = Inf, fill = "lightgray", alpha = 0.15)+
+  geom_dotplot(binaxis = "y", stackdir = "center", dotsize = 0.2, binwidth = 3, alpha = 0.5)+
+  ylim(-20, 20) +
+  labs(title = "Raw Values (Single Frequency)",
+       x = "Group", y = "Angle Error") +
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+ggsave(filename = "Figures/NewLocalisationTests/FrequencyTests-Raw.png", plot = last_plot(), width = 6, height = 4, dpi = 300)
+
+
+
+# ALL DATA
+ggplot(data = data, aes(x = Test.tone, y = error)) +
+  #annotate('rect', ymin = -18, ymax = 18, xmin= -Inf, xmax = Inf, fill = "lightgray", alpha = 0.15)+
   geom_hline(yintercept = 0, color = "darkgray") +
   #geom_jitter(aes(shape = Test.tone), position = position_jitterdodge(0.2)  ,fill = "gray", color = "gray", size = 2, alpha = 0.5) +
   stat_summary(aes(color = Test.tone, fill = Test.tone), fun = "median", geom = "point", size = 3) +
@@ -124,6 +143,7 @@ ggplot(data = data, aes(x = Test.tone, y = error)) +
   theme(legend.position = "none") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
+ggsave(filename = "Figures/NewLocalisationTests/FrequencyTests-Summary.png", plot = last_plot(), width = 6, height = 4, dpi = 300)
 
 ##### RECALL CHARTS #####
 
@@ -168,6 +188,8 @@ ggplot(data = proportions, aes(x=Test.tone, y= proportion, fill = localised.))+
   labs(title = "Signal localisation Detection",
        x = "Frequency (Hz) or Test Tone", y = "Proportion") +
   theme_minimal()
+
+ggsave(filename = "Figures/NewLocalisationTests/FrequencyTests-Recall.png", plot = last_plot(), width = 6, height = 4, dpi = 300)
 
 
 # Now the others 
@@ -216,11 +238,6 @@ proportions <- proportions %>%
 setOrder <- c("y", "d", "n", "m")
 proportions$localised. <- factor(proportions$localised., levels = setOrder)
 
-# Set the order as before
-setOrder <- c("100", "400", "500", "1000","2000", "4000", "6000", "7000", "pink", "wren")
-proportions$Test.tone <- factor(proportions$Test.tone, levels = setOrder)
-
-
 # Plot results! 
 ggplot(data = proportions, aes(x=label, y= proportion, fill = localised.))+
   geom_col(alpha = 0.7, position = position_stack(reverse=TRUE))+
@@ -231,6 +248,8 @@ ggplot(data = proportions, aes(x=label, y= proportion, fill = localised.))+
        x = "Test Label", y = "Proportion") +
   theme_minimal()+
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+ggsave(filename = "Figures/NewLocalisationTests/DistanceTests-Recall.png", plot = last_plot(), width = 6, height = 4, dpi = 300)
 
 
 
