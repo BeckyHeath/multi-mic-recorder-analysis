@@ -23,7 +23,15 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 #data <- read.csv("Data/CompleteLabLocalisation/AllTests_LocalisationData_ALLDETECTIONSTESTS.csv")
 
 # Just use this:
-dataRaw <- read.csv("Data/CompleteLabLocalisation/AllTestsJustTrueValues.csv")
+dataRaw <- read.csv("Data/CompleteLabLocalisation/AllTestsJustTrueValues-newCategorisation.csv")
+
+# New Categorisations
+# s = sweep 
+# y = detection 
+# m = missed (s-m = missed sweep)
+# a = aliased 
+# d = double (indistinguishable top)
+# e = extra (first test had an extra test)
 
 ##### PRECISION CHARTS #####
 # get rid of freq-deps for now:
@@ -49,15 +57,17 @@ data$error <- as.numeric(data$error)
 # get rid of the situations where a signal was not localised: 
 data <- data[!is.na(data$error), ]
 
+# subset to just y and y-d
+data <- data[data$localised. %in% c("y", "y-d"), ]
+
 # ALL DATA (INSIDE AND OUT)
 ggplot(data = data, aes(x = label, y = error)) +
   annotate('rect', ymin = -18, ymax = 18, xmin= -Inf, xmax = Inf, fill = "lightgray", alpha = 0.3)+
   geom_hline(yintercept = 0, color = "darkgray") +
   #geom_jitter(aes(shape = Test.tone), position = position_jitterdodge(0.2)  ,fill = "gray", color = "gray", size = 2, alpha = 0.5) +
-  stat_summary(aes(color = Test.tone, shape = Test.tone, fill = Test.tone), fun = "median", geom = "point", size = 3, position = position_dodge(width = 0.3)) +
-  stat_summary(aes(color = Test.tone), fun.data = "median_hilow", geom = "errorbar", width = 0.2, position = position_dodge(width = 0.3)) +
-  labs(title = "True/Predicted Azimuth Error",
-       x = "Group", y = "Angle Error") +
+  stat_summary(aes(color = Test.tone, shape = Test.tone, fill = Test.tone), fun = "median", geom = "point", size = 3, position = position_dodge(width = 0.5)) +
+  stat_summary(aes(color = Test.tone), fun.data = "median_hilow", geom = "errorbar", width = 0.3, position = position_dodge(width = 0.5)) +
+  labs(x = "Group", y = "Angle Error") +
   scale_color_manual(values = c("grey25", "firebrick3")) +
   scale_shape_manual(values = c(21, 24)) +
   scale_fill_manual(values = c("grey25", "firebrick3")) +
@@ -66,6 +76,7 @@ ggplot(data = data, aes(x = label, y = error)) +
   theme(legend.position = "none") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
+ggsave(filename = "Figures/NewLocalisationTests/DistanceTests-NL-Summary.png", plot = last_plot(), width = 6, height = 4, dpi = 300)
 
 
 # Now the frequency-dependent trials
@@ -82,18 +93,24 @@ data$Aliaized.Azimuth <- as.numeric(data$Aliaized.Azimuth)
 # get rid of the situations where a signal was not localised (FOR NOW): 
 data <- data[!is.na(data$error), ]
 
+# subset to just y and y-d
+data <- data[data$localised. %in% c("y", "y-d"), ]
+
+
 ggplot(data = data, aes(x = Test.tone, y = error)) +
   annotate('rect', ymin = -18, ymax = 18, xmin= -Inf, xmax = Inf, fill = "lightgray", alpha = 0.15)+
   geom_hline(yintercept = 0, color = "darkgray") +
   #geom_jitter(aes(shape = Test.tone), position = position_jitterdodge(0.2)  ,fill = "gray", color = "gray", size = 2, alpha = 0.5) +
   stat_summary(aes(color = Test.tone, fill = Test.tone), fun = "median", geom = "point", size = 3) +
   stat_summary(aes(color = Test.tone), fun.data = "median_hilow", geom = "errorbar", width = 0.2) +
-  labs(title = "True/Predicted Azimuth Error",
-       x = "Group", y = "Angle Difference") +
+  labs(x = "Group", y = "Angle Difference") +
   theme_minimal() +
   ylim(-20, 20) +
   theme(legend.position = "none") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+ggsave(filename = "Figures/NewLocalisationTests/FrequencyTests-NL-Summary.png", plot = last_plot(), width = 6, height = 4, dpi = 300)
+
 
 
 ##### RECALL CHARTS #####
@@ -103,8 +120,24 @@ data <- dataRaw
 #FreqDeps First: 
 data <- dataRaw[dataRaw$Trial == "freq-dep",]
 
+# group labels for this part 
+
+# s = sweep 
+# y = detection 
+# m = missed (s-m = missed sweep)
+# a = aliased 
+# d = double (indistinguishable top)
+# e = extra (first test had an extra test)
+
+data$localised.[data$localised. == "y-d"] <- "y"
+data$localised.[data$localised. == "d"] <- "a"
+
+# Get rid of the sweeps for now
+data <- data[data$localised. != "s", ]
+
+
 # Define the possible localisation? descriptors
-possible_labels <- c("y", "d", "n", "m")
+possible_labels <- c("y", "a", "m")
 
 # Calculate the count and proportion of each label within each group
 proportions <- data %>%
@@ -122,7 +155,7 @@ proportions <- proportions %>%
   ungroup()
 
 
-setOrder <- c("y", "d", "n", "m")
+setOrder <- c("y", "a", "m")
 proportions$localised. <- factor(proportions$localised., levels = setOrder)
 
 # Set the order as before
@@ -133,12 +166,14 @@ proportions$Test.tone <- factor(proportions$Test.tone, levels = setOrder)
 # Plot results! 
 ggplot(data = proportions, aes(x=Test.tone, y= proportion, fill = localised.))+
   geom_col(alpha = 0.7, position = position_stack(reverse=TRUE))+
-  scale_fill_manual(values = c("darkgreen","lightgreen","grey", "grey25"),
+  scale_fill_manual(values = c("darkgreen","grey", "grey25"),
                     name = " ",
-                    labels = c("Detected", "Nearly Missed","Not Detected", "Missed"))+
-  labs(title = "Signal localisation Detection",
-       x = "Frequency (Hz) or Test Tone", y = "Proportion") +
+                    labels = c("Detected","Non Primary", "Missed"))+
+  labs(x = "Frequency (Hz) or Test Tone", y = "Proportion") +
   theme_minimal()
+
+ggsave(filename = "Figures/NewLocalisationTests/FrequencyRecall-NL-Summary.png", plot = last_plot(), width = 6, height = 4, dpi = 300)
+
 
 
 # Now the others 
@@ -148,9 +183,25 @@ data <- dataRaw
 #FreqDeps First: 
 data <- dataRaw[dataRaw$Trial != "freq-dep",]
 
-# Define the possible localisation? descriptors
-possible_labels <- c("y", "d", "n", "m")
+# group labels for this part 
 
+# s = sweep 
+# y = detection 
+# m = missed (s-m = missed sweep)
+# a = aliased 
+# d = double (indistinguishable top)
+# e = extra (first test had an extra test)
+
+data$localised.[data$localised. == "y-d"] <- "y"
+data$localised.[data$localised. == "d"] <- "a"
+data$localised.[data$localised. == "e"] <- "y"
+
+# Get rid of the sweeps for now
+data <- data[data$localised. != "s", ]
+data <- data[data$localised. != "s-m", ]
+
+# Define the possible localisation? descriptors
+possible_labels <- c("y", "a", "m")
 
 # Create Coarse Labels
 data <- data %>%
@@ -184,7 +235,7 @@ proportions <- proportions %>%
   ungroup()
 
 
-setOrder <- c("y", "d", "n", "m")
+setOrder <- c("y", "a", "m")
 proportions$localised. <- factor(proportions$localised., levels = setOrder)
 
 # Set the order as before
@@ -195,14 +246,39 @@ proportions$Test.tone <- factor(proportions$Test.tone, levels = setOrder)
 # Plot results! 
 ggplot(data = proportions, aes(x=label, y= proportion, fill = localised.))+
   geom_col(alpha = 0.7, position = position_stack(reverse=TRUE))+
-  scale_fill_manual(values = c("darkgreen","lightgreen","grey", "grey25"),
+  scale_fill_manual(values = c("darkgreen","grey", "grey25"),
                     name = " ",
-                    labels = c("Detected", "Nearly Missed","Not Detected", "Missed"))+
-  labs(title = "Signal localisation Detection",
-       x = "Test Label", y = "Proportion") +
+                    labels = c("Detected", "Non Primary", "Missed"))+
+  labs(x= "", y = "Proportion") +
   theme_minimal()+
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
 
+ggsave(filename = "Figures/NewLocalisationTests/DistanceRecall-NL-Summary.png", plot = last_plot(), width = 6, height = 4, dpi = 300)
+
+
+
+## Trial: Heatmaps
+
+data <- dataRaw
+
+data <- data[!is.na(data$Aliaized.Error),]
+
+data$Aliaized.Error <- as.numeric(data$Aliaized.Error)
+
+# Put into Bins
+data$Aliaized.Bins <- cut(data$Aliaized.Error, breaks = seq(0, 180, 10), include.lowest = TRUE, labels = FALSE)
+
+# Create a table of counts for heatmap
+heatmap_data <- as.data.frame(table(data$True.azimuth, data$Aliaized.Bins))
+
+colnames(heatmap_data) <- c("True.Azimuth", "Aliaised.Bins", "Count")
+
+# Plot the heatmap
+ggplot(heatmap_data, aes(x = True.Azimuth, y = Aliaised.Bins, fill = Count)) +
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "turquoise4") + 
+  labs(y = "Aliaized Azimuth", x = "True Azimuth", fill = "Count") +
+  theme_minimal()
 
 
