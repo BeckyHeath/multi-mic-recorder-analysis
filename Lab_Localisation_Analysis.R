@@ -43,7 +43,13 @@ dataRaw <- read.csv("Data/CompleteLabLocalisation/AllTestsJustTrueValues-newCate
 # d = double (indistinguishable top)
 # e = extra (first test had an extra test)
 
+# Map to example azimuths
 
+map_values <- c(-180, -90, -45, 0, 90)
+names(map_values) <- c(30, 120, 165, -150, -60)
+
+dataO <- dataRaw
+dataRaw$True.azimuth <- map_values[as.character(dataRaw$True.azimuth)]
 
 
 ### Distance Tests ####
@@ -53,15 +59,7 @@ dataRaw <- read.csv("Data/CompleteLabLocalisation/AllTestsJustTrueValues-newCate
 data <- dataRaw[dataRaw$Trial != "freq-dep",]
 data <- data[data$Trial != "Lab", ]
 
-# Map to example azimuths
 
-map_values <- c(-180, -90, -45, 0, 90)
-names(map_values) <- c(30, 120, 165, -150, -60)
-
-dataO <- data
-data$True.azimuth <- map_values[as.character(data$True.azimuth)]
-
-data$True.azimuth <- ifelse(is.na(map_values[as.character(df$my_column)]), df$my_column, map_values[as.character(df$my_column)])
 
 
 # Create Coarse Labels
@@ -197,12 +195,16 @@ heatmap_data <- complete_grid %>%
 
 heatmap_data$True.Azimuth <- as.factor(heatmap_data$True.Azimuth)
 
+heatmap_data$Aliaised.Bins <- heatmap_data$Aliaised.Bins *10
+
 # Plot the heatmap
 AD <- ggplot(heatmap_data, aes(x = True.Azimuth, y = Aliaised.Bins, fill = Count)) +
   geom_tile() +
-  scale_fill_gradient(low = "white", high = "turquoise4") + 
+  scale_fill_gradient(low = "white", high = "turquoise4", limits = c(0,5)) + 
   labs(y = "Aliaized Azimuth", x = "True Azimuth", fill = "Count") +
   theme_minimal() +
+  theme(legend.position = "none") +
+  scale_y_continuous(breaks = c(0, 30, 60, 90, 120, 150, 180))+
   theme(axis.title.x = element_blank(), axis.title.y = element_blank())
 
 AD
@@ -210,29 +212,25 @@ AD
 
 
 
+### Frequency-dependent trials: ####
 
-
-
-
-# Now the frequency-dependent trials
 data <- dataRaw[dataRaw$Trial == "freq-dep",]
 data$Test.tone <- as.factor(data$Test.tone)
+data <- data[!(data$Test.tone %in% c("wren", "pink")), ]
 
-setOrder <- c("100", "400", "500", "1000","2000", "4000", "6000", "7000", "pink", "wren")
+
+setOrder <- c("100", "400", "500", "1000","2000", "4000", "6000", "7000")
 data$Test.tone <- factor(data$Test.tone, levels = setOrder)
 
+dataStore <- data
 
 data$error <- as.numeric(data$error)
 data$Aliaized.Azimuth <- as.numeric(data$Aliaized.Azimuth)
 
-# get rid of the situations where a signal was not localised (FOR NOW): 
-data <- data[!is.na(data$error), ]
-
-data <- data[!(data$Test.tone %in% c("wren", "pink")), ]
-data$Test.tone <- droplevels(data$Test.tone)
-
 # subset to just y and y-d
 data <- data[data$localised. %in% c("y", "y-d"), ]
+
+data$Test.tone <- droplevels(data$Test.tone)
 
 # Set up colour map
 colour <- brewer.pal(9, "OrRd")
@@ -257,6 +255,94 @@ EF
 
 ggsave(filename = "Figures/NewLocalisationTests/FrequencyTests-NL-Summary.png", plot = last_plot(), width = 6, height = 4, dpi = 300)
 
+
+# Recall Chart: 
+
+data <- dataStore
+
+data$localised.[data$localised. == "y-d"] <- "y"
+data$localised.[data$localised. == "d"] <- "a"
+
+# Get rid of the sweeps for now
+data <- data[data$localised. != "s", ]
+data <- data[data$localised. != "s-m", ]
+
+# Define the possible localisation? descriptors
+possible_labels <- c("y", "a", "m")
+
+
+# Calculate the count and proportion of each label within each group
+proportions <- data %>%
+  group_by(Test.tone, localised.) %>%
+  summarise(count = n()) %>%
+  ungroup() %>%
+  complete(Test.tone, localised. = possible_labels, fill = list(count = 0)) %>%
+  group_by(Test.tone) %>%
+  mutate(proportion = count / sum(count))
+
+setOrder <- c("y", "a", "m")
+proportions$localised. <- factor(proportions$localised., levels = setOrder)
+
+# Plot results! 
+RF <- ggplot(data = proportions, aes(x=Test.tone, y= proportion, fill = localised.))+
+  geom_col(alpha = 0.7, position = position_stack(reverse=TRUE))+
+  scale_fill_manual(values = c("darkgreen","grey", "grey25"),
+                    name = " ",
+                    labels = c("Detected","Non Primary", "Missed"))+
+  labs(x = "Frequency (Hz) or Test Tone", y = "Proportion") +
+  theme_minimal()+
+  theme(axis.title.x = element_blank(), axis.title.y = element_blank())+
+  theme(legend.position = "none", ) +
+  scale_x_discrete(labels=c("100" = "100Hz", "400" = "400 Hz", "500" = "500Hz", "1000" = "1000Hz", "2000" = "2000Hz", "4000"= "4000Hz", "6000" = "6000Hz", "7000" = "7000Hz"))
+
+RF
+
+
+ggsave(filename = "Figures/NewLocalisationTests/FrequencyRecall-NL-Summary(noLegend).png", plot = last_plot(), width = 6, height = 4, dpi = 300)
+
+
+# Heatmap: 
+
+# Full Grid: 
+all_groups <- c(-180, -90, -45, 0, 90)
+all_bins <- 1:18
+
+complete_grid <- expand.grid(True.Azimuth = all_groups, Aliaised.Bins = all_bins)
+
+
+data <- data[data$localised. == "a", ]
+
+# Put into Bins
+data$Aliaized.Bins <- cut(data$Aliaized.Error, breaks = seq(0, 180, 10), include.lowest = TRUE, labels = FALSE)
+
+# Create a table of counts for heatmap
+heatmap_data <- as.data.frame(table(data$True.azimuth, data$Aliaized.Bins))
+
+colnames(heatmap_data) <- c("True.Azimuth", "Aliaised.Bins", "Count")
+
+# Join the dataframes
+heatmap_data$True.Azimuth <- as.numeric(as.character(heatmap_data$True.Azimuth))
+heatmap_data$Aliaised.Bins <- as.numeric(as.character(heatmap_data$Aliaised.Bins))
+
+heatmap_data <- complete_grid %>%
+  left_join(heatmap_data, by = c("True.Azimuth", "Aliaised.Bins")) %>%
+  replace_na(list(Count = 0))
+
+heatmap_data$True.Azimuth <- as.factor(heatmap_data$True.Azimuth)
+
+heatmap_data$Aliaised.Bins <- heatmap_data$Aliaised.Bins *10
+
+# Plot the heatmap
+AF <- ggplot(heatmap_data, aes(x = True.Azimuth, y = Aliaised.Bins, fill = Count)) +
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "turquoise4", limits = c(0,5)) + 
+  labs(y = "Aliaized Azimuth", x = "True Azimuth", fill = "Count") +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  scale_y_continuous(breaks = c(0, 30, 60, 90, 120, 150, 180))+
+  theme(axis.title.x = element_blank(), axis.title.y = element_blank())
+
+AF
 
 
 # Tone type
@@ -330,102 +416,6 @@ print(result)
 
 
 
-##### RECALL CHARTS #####
 
-data <- dataRaw
-
-#FreqDeps First: 
-data <- dataRaw[dataRaw$Trial == "freq-dep",]
-
-data <- data[!(data$Test.tone %in% c("wren", "pink")), ]
-
-# group labels for this part 
-
-# s = sweep 
-# y = detection 
-# m = missed (s-m = missed sweep)
-# a = aliased 
-# d = double (indistinguishable top)
-# e = extra (first test had an extra test)
-
-data$localised.[data$localised. == "y-d"] <- "y"
-data$localised.[data$localised. == "d"] <- "a"
-
-# Get rid of the sweeps for now
-data <- data[data$localised. != "s", ]
-
-
-# Define the possible localisation? descriptors
-possible_labels <- c("y", "a", "m")
-
-# Calculate the count and proportion of each label within each group
-proportions <- data %>%
-  group_by(Test.tone, localised.) %>%
-  summarise(count = n()) %>%
-  ungroup() %>%
-  complete(Test.tone, localised. = possible_labels, fill = list(count = 0)) %>%
-  group_by(Test.tone) %>%
-  mutate(proportion = count / sum(count))
-
-# Fill up missing variables: 
-proportions <- proportions %>%
-  group_by(Test.tone) %>%
-  mutate(Test.tone = ifelse(is.na(Test.tone), max(Test.tone, na.rm = TRUE), Test.tone)) %>%
-  ungroup()
-
-
-setOrder <- c("y", "a", "m")
-proportions$localised. <- factor(proportions$localised., levels = setOrder)
-
-# Set the order as before
-setOrder <- c("100", "400", "500", "1000","2000", "4000", "6000", "7000", "pink", "wren")
-proportions$Test.tone <- factor(proportions$Test.tone, levels = setOrder)
-
-
-# Plot results! 
-RF <- ggplot(data = proportions, aes(x=Test.tone, y= proportion, fill = localised.))+
-  geom_col(alpha = 0.7, position = position_stack(reverse=TRUE))+
-  scale_fill_manual(values = c("darkgreen","grey", "grey25"),
-                    name = " ",
-                    labels = c("Detected","Non Primary", "Missed"))+
-  labs(x = "Frequency (Hz) or Test Tone", y = "Proportion") +
-  theme_minimal()+
-  theme(axis.title.x = element_blank(), axis.title.y = element_blank())+
-  theme(legend.position = "none", ) +
-  scale_x_discrete(labels=c("100" = "100Hz", "400" = "400 Hz", "500" = "500Hz", "1000" = "1000Hz", "2000" = "2000Hz", "4000"= "4000Hz", "6000" = "6000Hz", "7000" = "7000Hz"))
-
-RF
-
-
-ggsave(filename = "Figures/NewLocalisationTests/FrequencyRecall-NL-Summary(noLegend).png", plot = last_plot(), width = 6, height = 4, dpi = 300)
-
-
-
-# Now the others 
-
-
-
-## Trial: Heatmaps
-
-data <- dataRaw
-
-data <- data[!is.na(data$Aliaized.Error),]
-
-data$Aliaized.Error <- as.numeric(data$Aliaized.Error)
-
-# Put into Bins
-data$Aliaized.Bins <- cut(data$Aliaized.Error, breaks = seq(0, 180, 10), include.lowest = TRUE, labels = FALSE)
-
-# Create a table of counts for heatmap
-heatmap_data <- as.data.frame(table(data$True.azimuth, data$Aliaized.Bins))
-
-colnames(heatmap_data) <- c("True.Azimuth", "Aliaised.Bins", "Count")
-
-# Plot the heatmap
-ggplot(heatmap_data, aes(x = True.Azimuth, y = Aliaised.Bins, fill = Count)) +
-  geom_tile() +
-  scale_fill_gradient(low = "white", high = "turquoise4") + 
-  labs(y = "Aliaized Azimuth", x = "True Azimuth", fill = "Count") +
-  theme_minimal()
 
 
