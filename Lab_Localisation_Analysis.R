@@ -25,7 +25,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 # Just use this:
 dataRaw <- read.csv("Data/CompleteLabLocalisation/AllTestsJustTrueValues-newCategorisation.csv")
 
-# New Categorisations
+# New Categorisations:
 # s = sweep 
 # y = detection 
 # m = missed (s-m = missed sweep)
@@ -60,7 +60,7 @@ data <- data[!is.na(data$error), ]
 # subset to just y and y-d
 data <- data[data$localised. %in% c("y", "y-d"), ]
 
-# ALL DATA (INSIDE AND OUT)
+# Distance Tests
 ggplot(data = data, aes(x = label, y = error)) +
   annotate('rect', ymin = -18, ymax = 18, xmin= -Inf, xmax = Inf, fill = "lightgray", alpha = 0.3)+
   geom_hline(yintercept = 0, color = "darkgray") +
@@ -110,6 +110,61 @@ ggplot(data = data, aes(x = Test.tone, y = error)) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
 ggsave(filename = "Figures/NewLocalisationTests/FrequencyTests-NL-Summary.png", plot = last_plot(), width = 6, height = 4, dpi = 300)
+
+
+
+# Tone type
+
+data <- dataRaw[dataRaw$Test.tone %in% c("wren", "pink"),]
+
+data$error <- as.numeric(data$error)
+
+ggplot(data = data, aes(x = Test.tone, y = error)) +
+  annotate('rect', ymin = -18, ymax = 18, xmin= -Inf, xmax = Inf, fill = "lightgray", alpha = 0.3)+
+  geom_hline(yintercept = 0, color = "darkgray") +
+  #geom_jitter(aes(shape = Test.tone), position = position_jitterdodge(0.2)  ,fill = "gray", color = "gray", size = 2, alpha = 0.5) +
+  stat_summary(aes(color = Test.tone, shape = Test.tone, fill = Test.tone), fun = "median", geom = "point", size = 3, position = position_dodge(width = 0.5)) +
+  stat_summary(aes(color = Test.tone), fun.data = "median_hilow", geom = "errorbar", width = 0.3, position = position_dodge(width = 0.5)) +
+  labs(x = "Group", y = "Angle Error") +
+  scale_color_manual(values = c("grey25", "firebrick3")) +
+  scale_shape_manual(values = c(21, 24)) +
+  scale_fill_manual(values = c("grey25", "firebrick3")) +
+  theme_minimal() +
+  ylim(-25, 25) +
+  theme(legend.position = "none") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+
+# Tone type
+data <- dataRaw
+
+data$error <- as.numeric(data$error)
+data$WP. <- as.factor(data$WP.)
+
+levels(data$WP.)
+
+ggplot(data = data, aes(x = WP., y = error)) +
+  annotate('rect', ymin = -18, ymax = 18, xmin= -Inf, xmax = Inf, fill = "lightgray", alpha = 0.3)+
+  geom_hline(yintercept = 0, color = "darkgray") +
+  #geom_jitter(aes(shape = Test.tone), position = position_jitterdodge(0.2)  ,fill = "gray", color = "gray", size = 2, alpha = 0.5) +
+  stat_summary(aes(color = WP., shape = WP., fill = WP.), fun = "median", geom = "point", size = 3, position = position_dodge(width = 0.5)) +
+  stat_summary(aes(color = WP.), fun.data = "median_hilow", geom = "errorbar", width = 0.3, position = position_dodge(width = 0.5)) +
+  labs(x = "Group", y = "Angle Error") +
+  #scale_color_manual(values = c("grey25", "firebrick3")) +
+  #scale_shape_manual(values = c(21, 24)) +
+  #scale_fill_manual(values = c("grey25", "firebrick3")) +
+  theme_minimal() +
+  ylim(-25, 25) +
+  theme(legend.position = "none") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+
+y <- data[data$WP. == "y", ]$error
+n <- data[data$WP. == "n", ]$error
+
+result <- wilcox.test(y, n)
+
+print(result)
 
 
 
