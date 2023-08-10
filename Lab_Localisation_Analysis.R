@@ -14,6 +14,7 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(RColorBrewer)
+library(gridExtra)
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
@@ -160,7 +161,8 @@ RD <- ggplot(data = proportions, aes(x=label, y= proportion, fill = localised.))
                     labels = c("Detected", "Non Primary", "Missed"))+
   labs(x= "", y = "Proportion") +
   theme_minimal()+
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+  theme(legend.position = "none") +
+  theme(axis.title.x = element_blank(), axis.title.y = element_blank())
 RD
 
 ggsave(filename = "Figures/NewLocalisationTests/DistanceRecall-NL-Summary.png", plot = last_plot(), width = 6, height = 4, dpi = 300)
@@ -200,7 +202,7 @@ heatmap_data$Aliaised.Bins <- heatmap_data$Aliaised.Bins *10
 # Plot the heatmap
 AD <- ggplot(heatmap_data, aes(x = True.Azimuth, y = Aliaised.Bins, fill = Count)) +
   geom_tile() +
-  scale_fill_gradient(low = "white", high = "turquoise4", limits = c(0,5)) + 
+  scale_fill_gradient(low = "white", high = "turquoise4", limits = c(0,6)) + 
   labs(y = "Aliaized Azimuth", x = "True Azimuth", fill = "Count") +
   theme_minimal() +
   theme(legend.position = "none") +
@@ -335,7 +337,7 @@ heatmap_data$Aliaised.Bins <- heatmap_data$Aliaised.Bins *10
 # Plot the heatmap
 AF <- ggplot(heatmap_data, aes(x = True.Azimuth, y = Aliaised.Bins, fill = Count)) +
   geom_tile() +
-  scale_fill_gradient(low = "white", high = "turquoise4", limits = c(0,5)) + 
+  scale_fill_gradient(low = "white", high = "turquoise4", limits = c(0,6)) + 
   labs(y = "Aliaized Azimuth", x = "True Azimuth", fill = "Count") +
   theme_minimal() +
   theme(legend.position = "none") +
@@ -346,6 +348,9 @@ AF
 
 
 # Tone type
+
+
+# Precision 
 
 data <- dataRaw[dataRaw$Test.tone %in% c("wren", "pink"),]
 
@@ -369,13 +374,97 @@ ET <- ggplot(data = data, aes(x = Test.tone, y = error)) +
 
 ET 
 
-
 # Test for difference? 
 y <- data[data$Test.tone == "wren", ]$error
-n <- data[data$T == "pink", ]$error
+n <- data[data$Test.tone == "pink", ]$error
 
 result <- wilcox.test(y, n)
 print(result)
+
+# Recall 
+
+data$localised.[data$localised. == "y-d"] <- "y"
+data$localised.[data$localised. == "d"] <- "a"
+
+# Get rid of the sweeps for now
+data <- data[data$localised. != "s", ]
+data <- data[data$localised. != "s-m", ]
+
+# Define the possible localisation? descriptors
+possible_labels <- c("y", "a", "m")
+
+
+# Calculate the count and proportion of each label within each group
+proportions <- data %>%
+  group_by(Test.tone, localised.) %>%
+  summarise(count = n()) %>%
+  ungroup() %>%
+  complete(Test.tone, localised. = possible_labels, fill = list(count = 0)) %>%
+  group_by(Test.tone) %>%
+  mutate(proportion = count / sum(count))
+
+setOrder <- c("y", "a", "m")
+proportions$localised. <- factor(proportions$localised., levels = setOrder)
+
+# Plot results! 
+RT <- ggplot(data = proportions, aes(x=Test.tone, y= proportion, fill = localised.))+
+  geom_col(alpha = 0.7, position = position_stack(reverse=TRUE))+
+  scale_fill_manual(values = c("darkgreen","grey", "grey25"),
+                    name = " ",
+                    labels = c("Detected","Non Primary", "Missed"))+
+  labs(x = "Frequency (Hz) or Test Tone", y = "Proportion") +
+  theme_minimal()+
+  theme(axis.title.x = element_blank(), axis.title.y = element_blank())+
+  theme(legend.position = "none", ) +
+  scale_x_discrete(labels=c("pink" = "Pink Noise", "wren" = "Eurasian Wren"))
+
+RT
+
+# Aliaising 
+
+# Full Grid: 
+all_groups <- c(-180, -90, -45, 0, 90)
+all_bins <- 1:18
+
+complete_grid <- expand.grid(True.Azimuth = all_groups, Aliaised.Bins = all_bins)
+
+data <- dataRaw
+data <- data[data$localised. == "a", ]
+
+# Put into Bins
+data$Aliaized.Bins <- cut(data$Aliaized.Error, breaks = seq(0, 180, 10), include.lowest = TRUE, labels = FALSE)
+
+# Create a table of counts for heatmap
+heatmap_data <- as.data.frame(table(data$True.azimuth, data$Aliaized.Bins))
+
+colnames(heatmap_data) <- c("True.Azimuth", "Aliaised.Bins", "Count")
+
+# Join the dataframes
+heatmap_data$True.Azimuth <- as.numeric(as.character(heatmap_data$True.Azimuth))
+heatmap_data$Aliaised.Bins <- as.numeric(as.character(heatmap_data$Aliaised.Bins))
+
+heatmap_data <- complete_grid %>%
+  left_join(heatmap_data, by = c("True.Azimuth", "Aliaised.Bins")) %>%
+  replace_na(list(Count = 0))
+
+heatmap_data$True.Azimuth <- as.factor(heatmap_data$True.Azimuth)
+
+heatmap_data$Aliaised.Bins <- heatmap_data$Aliaised.Bins *10
+
+# Plot the heatmap
+A <- ggplot(heatmap_data, aes(x = True.Azimuth, y = Aliaised.Bins, fill = Count)) +
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "turquoise4") + 
+  labs(y = "Aliaized Azimuth", x = "True Azimuth", fill = "Count", limits = c(0,6)) +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  scale_y_continuous(breaks = c(0, 30, 60, 90, 120, 150, 180))+
+  theme(axis.title.x = element_blank(), axis.title.y = element_blank())
+
+A
+
+
+
 
 
 # Weatherproofing 
@@ -405,14 +494,65 @@ EWP <- ggplot(data = data, aes(x = WP., y = error)) +
 
 EWP
 
-
-
 # Test for difference? 
 y <- data[data$WP. == "y", ]$error
 n <- data[data$WP. == "n", ]$error
 
 result <- wilcox.test(y, n)
 print(result)
+
+
+# Recall 
+
+data$localised.[data$localised. == "y-d"] <- "y"
+data$localised.[data$localised. == "d"] <- "a"
+
+# Get rid of the sweeps for now
+data <- data[data$localised. != "s", ]
+data <- data[data$localised. != "s-m", ]
+
+# Define the possible localisation? descriptors
+possible_labels <- c("y", "a", "m")
+
+
+# Calculate the count and proportion of each label within each group
+proportions <- data %>%
+  group_by(WP., localised.) %>%
+  summarise(count = n()) %>%
+  ungroup() %>%
+  complete(WP., localised. = possible_labels, fill = list(count = 0)) %>%
+  group_by(WP.) %>%
+  mutate(proportion = count / sum(count))
+
+setOrder <- c("y", "a", "m")
+proportions$localised. <- factor(proportions$localised., levels = setOrder)
+
+
+# Plot results! 
+RWP <- ggplot(data = proportions, aes(x=WP., y= proportion, fill = localised.))+
+  geom_col(alpha = 0.7, position = position_stack(reverse=TRUE))+
+  scale_fill_manual(values = c("darkgreen","grey", "grey25"),
+                    name = " ",
+                    labels = c("Detected","Non Primary", "Missed"))+
+  labs(x = "Frequency (Hz) or Test Tone", y = "Proportion") +
+  theme_minimal()+
+  theme(axis.title.x = element_blank(), axis.title.y = element_blank())+
+  theme(legend.position = "none", ) +
+  scale_x_discrete(labels=c("n" = "No WP", "y" = "WP"))
+
+RWP
+
+
+# COMBINE 
+
+top_row <- arrangeGrob(ET, EWP, RT, RWP, A, ncol=5, widths=c(1,1,1,1,1))
+middle_row <- arrangeGrob(ED, RD, AD, ncol=3, widths=c(2,2,1))
+bottom_row <- arrangeGrob(EF, RF, AF, ncol=3, widths=c(2,2,1))
+
+
+bigBoi <- grid.arrange(top_row, middle_row, bottom_row, nrow=3)
+
+ggsave(filename = "Figures/NewLocalisationTests/ALL-TESTS.png", plot = bigBoi, width = 7.5, height = 8.3, dpi = 500)
 
 
 
