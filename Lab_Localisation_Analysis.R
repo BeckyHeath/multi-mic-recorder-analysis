@@ -76,7 +76,7 @@ data <- data %>%
 data <- data %>%
   mutate(label = paste0(distance.m, "m ", " WP-", WP.))
 
-data$error <- as.numeric(data$error)
+data$error <- as.numeric(data$error) # NAs introduced by coersion (OK - they're NA anyway!)
 
 dataStore <- data
 
@@ -96,9 +96,9 @@ ED<- ggplot(data = data, aes(x = label, y = error)) +
   stat_summary(aes(color = Test.tone, shape = Test.tone, fill = Test.tone), fun = "median", geom = "point", size = 3, position = position_dodge(width = 0.5)) +
   stat_summary(aes(color = Test.tone), fun.data = compute_min_max, geom = "errorbar", width = 0.3, position = position_dodge(width = 0.5)) +
   labs(x = "Group", y = "Angle Error") +
-  scale_color_manual(values = c("grey25", "firebrick3")) +
+  scale_color_manual(values = c("#e9c46a", "#e76f51")) +
   scale_shape_manual(values = c(21, 24)) +
-  scale_fill_manual(values = c("grey25", "firebrick3")) +
+  scale_fill_manual(values = c("#e9c46a", "#e76f51")) +
   theme_minimal() +
   ylim(-15, 15) +
   theme(legend.position = "none") +
@@ -202,11 +202,11 @@ heatmap_data$Aliaised.Bins <- heatmap_data$Aliaised.Bins *10
 # Plot the heatmap
 AD <- ggplot(heatmap_data, aes(x = True.Azimuth, y = Aliaised.Bins, fill = Count)) +
   geom_tile() +
-  scale_fill_gradient(low = "white", high = "turquoise4", limits = c(0,6)) + 
+  scale_fill_gradient(low = "white", high = "#2a9d8f", limits = c(0,6)) + 
   labs(y = "Aliaized Azimuth", x = "True Azimuth", fill = "Count") +
   theme_minimal() +
   theme(legend.position = "none") +
-  scale_y_continuous(breaks = c(0, 30, 60, 90, 120, 150, 180))+
+  scale_y_continuous(breaks = c(0, 30, 60, 90, 120, 150, 180), position = "right")+
   theme(axis.title.x = element_blank(), axis.title.y = element_blank())
 
 AD
@@ -249,7 +249,7 @@ EF <- ggplot(data = data, aes(x = Test.tone, y = error)) +
   theme_minimal() +
   ylim(-15, 15) +
   theme(legend.position = "none") +
-  scale_x_discrete(labels=c("100" = "100Hz", "400" = "400 Hz", "500" = "500Hz", "1000" = "1000Hz", "2000" = "2000Hz", "4000"= "4000Hz", "6000" = "6000Hz"))+
+  #scale_x_discrete(labels=c("100" = "100Hz", "400" = "400 Hz", "500" = "500Hz", "1000" = "1000Hz", "2000" = "2000Hz", "4000"= "4000Hz", "6000" = "6000Hz"))+
   theme(axis.title.x = element_blank(), axis.title.y = element_blank())
 
 EF
@@ -294,8 +294,8 @@ RF <- ggplot(data = proportions, aes(x=Test.tone, y= proportion, fill = localise
   labs(x = "Frequency (Hz) or Test Tone", y = "Proportion") +
   theme_minimal()+
   theme(axis.title.x = element_blank(), axis.title.y = element_blank())+
-  theme(legend.position = "none", ) +
-  scale_x_discrete(labels=c("100" = "100Hz", "400" = "400 Hz", "500" = "500Hz", "1000" = "1000Hz", "2000" = "2000Hz", "4000"= "4000Hz", "6000" = "6000Hz", "7000" = "7000Hz"))
+  theme(legend.position = "none", ) #+
+  #scale_x_discrete(labels=c("100" = "100Hz", "400" = "400 Hz", "500" = "500Hz", "1000" = "1000Hz", "2000" = "2000Hz", "4000"= "4000Hz", "6000" = "6000Hz", "7000" = "7000Hz"))
 
 RF
 
@@ -341,7 +341,7 @@ AF <- ggplot(heatmap_data, aes(x = True.Azimuth, y = Aliaised.Bins, fill = Count
   labs(y = "Aliaized Azimuth", x = "True Azimuth", fill = "Count") +
   theme_minimal() +
   theme(legend.position = "none") +
-  scale_y_continuous(breaks = c(0, 30, 60, 90, 120, 150, 180))+
+  scale_y_continuous(breaks = c(0, 30, 60, 90, 120, 150, 180), position = "right")+
   theme(axis.title.x = element_blank(), axis.title.y = element_blank())
 
 AF
@@ -363,9 +363,9 @@ ET <- ggplot(data = data, aes(x = Test.tone, y = error)) +
   stat_summary(aes(color = Test.tone, shape = Test.tone, fill = Test.tone), fun = "median", geom = "point", size = 3, position = position_dodge(width = 0.5)) +
   stat_summary(aes(color = Test.tone), fun.data = compute_min_max, geom = "errorbar", width = 0.3, position = position_dodge(width = 0.5)) +
   labs(x = "Group", y = "Angle Error") +
-  scale_color_manual(values = c("grey25", "firebrick3")) +
+  scale_color_manual(values = c("#e9c46a", "#e76f51")) +
   scale_shape_manual(values = c(21, 24)) +
-  scale_fill_manual(values = c("grey25", "firebrick3")) +
+  scale_fill_manual(values = c("#e9c46a", "#e76f51")) +
   theme_minimal() +
   ylim(-15, 15) +
   theme(legend.position = "none") +
@@ -385,6 +385,7 @@ print(result)
 
 data$localised.[data$localised. == "y-d"] <- "y"
 data$localised.[data$localised. == "d"] <- "a"
+data$localised.[data$localised. == "e"] <- "y" # Keep the extra localisations from early tests
 
 # Get rid of the sweeps for now
 data <- data[data$localised. != "s", ]
@@ -454,11 +455,11 @@ heatmap_data$Aliaised.Bins <- heatmap_data$Aliaised.Bins *10
 # Plot the heatmap
 A <- ggplot(heatmap_data, aes(x = True.Azimuth, y = Aliaised.Bins, fill = Count)) +
   geom_tile() +
-  scale_fill_gradient(low = "white", high = "turquoise4") + 
+  scale_fill_gradient(low = "white", high = "#2a9d8f") + 
   labs(y = "Aliaized Azimuth", x = "True Azimuth", fill = "Count", limits = c(0,6)) +
   theme_minimal() +
   theme(legend.position = "none") +
-  scale_y_continuous(breaks = c(0, 30, 60, 90, 120, 150, 180))+
+  scale_y_continuous(breaks = c(0, 30, 60, 90, 120, 150, 180), position = "right")+
   theme(axis.title.x = element_blank(), axis.title.y = element_blank())
 
 A
@@ -482,9 +483,9 @@ EWP <- ggplot(data = data, aes(x = WP., y = error)) +
   stat_summary(aes(color = WP., shape = WP., fill = WP.), fun = "median", geom = "point", size = 3, position = position_dodge(width = 0.5)) +
   stat_summary(aes(color = WP.), fun.data = compute_min_max, geom = "errorbar", width = 0.3, position = position_dodge(width = 0.5)) +
   labs(x = "Group", y = "Angle Error") +
-  scale_color_manual(values = c("#09BA4F", "#0963BA")) +
+  scale_color_manual(values = c("#2a9d8f", "#264653")) +
   scale_shape_manual(values = c(22, 23)) +
-  scale_fill_manual(values = c("#09BA4F", "#0963BA")) +
+  scale_fill_manual(values = c("#2a9d8f", "#264653")) +
   theme_minimal() +
   ylim(-15, 15) +
   theme(legend.position = "none", ) +
@@ -506,6 +507,7 @@ print(result)
 
 data$localised.[data$localised. == "y-d"] <- "y"
 data$localised.[data$localised. == "d"] <- "a"
+data$localised.[data$localised. == "e"] <- "y" # Keep the extra localisations from early tests
 
 # Get rid of the sweeps for now
 data <- data[data$localised. != "s", ]
@@ -545,12 +547,14 @@ RWP
 
 # COMBINE 
 
-top_row <- arrangeGrob(ET, EWP, RT, RWP, A, ncol=5, widths=c(1,1,1,1,1))
-middle_row <- arrangeGrob(ED, RD, AD, ncol=3, widths=c(2,2,1))
-bottom_row <- arrangeGrob(EF, RF, AF, ncol=3, widths=c(2,2,1))
+top_row <- arrangeGrob(ET, EWP, RT, RWP, A, ncol=5, widths=c(1,1,1,1,1.3))
+middle_row <- arrangeGrob(ED, RD, AD, ncol=3, widths=c(2,2,1.3))
+bottom_row <- arrangeGrob(EF, RF, AF, ncol=3, widths=c(2,2,1.3))
 
 
 bigBoi <- grid.arrange(top_row, middle_row, bottom_row, nrow=3)
+
+bigBoi
 
 ggsave(filename = "Figures/NewLocalisationTests/ALL-TESTS.png", plot = bigBoi, width = 7.5, height = 8.3, dpi = 500)
 
