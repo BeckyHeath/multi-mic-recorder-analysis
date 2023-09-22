@@ -96,8 +96,8 @@ ED<- ggplot(data = data, aes(x = label, y = error)) +
   scale_color_manual(values = c("#2a9d8f", "#264653")) +
   geom_hline(yintercept = 0, color = "darkgray") +
   #geom_jitter(aes(shape = Test.tone), position = position_jitterdodge(0.2)  ,fill = "gray", color = "gray", size = 2, alpha = 0.5) +
-  stat_summary(aes(color = Test.tone, shape = WP., fill = Test.tone), fun = "median", geom = "point", size = 3, position = position_dodge(width = 0.5)) +
-  stat_summary(aes(color = Test.tone), fun.data = compute_min_max, geom = "errorbar", width = 0.3, position = position_dodge(width = 0.5)) +
+  stat_summary(aes(color = Test.tone, shape = WP., fill = Test.tone), fun = "median", geom = "point", size = 2, position = position_dodge(width = 0.8)) +
+  stat_summary(aes(color = Test.tone), fun.data = compute_min_max, geom = "errorbar", width = 0.3, position = position_dodge(width = 0.8)) +
   labs(x = "Group", y = "Angle Error") +
   theme_minimal() +
   ylim(-15, 15) +
@@ -463,7 +463,7 @@ bigBoi <- grid.arrange(top_row, middle_row, bottom_row, nrow=3)
 
 bigBoi
 
-ggsave(filename = "Figures/NewLocalisationTests/ALL-TESTS-precision-recall.png", plot = bigBoi, width = 7.5, height = 8.3, dpi = 500)
+ggsave(filename = "Figures/NewLocalisationTests/ALL-TESTS-precision-recall-long.png", plot = bigBoi, width = 6.3, height = 8.3, dpi = 500)
 
 
 
