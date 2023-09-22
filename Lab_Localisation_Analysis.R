@@ -91,14 +91,14 @@ data <- data[data$localised. %in% c("y", "y-d"), ]
 
 ED<- ggplot(data = data, aes(x = label, y = error)) +
   #annotate('rect', ymin = -18, ymax = 18, xmin= -Inf, xmax = Inf, fill = "lightgray", alpha = 0.3)+
+  scale_fill_manual(values = c("#2a9d8f", "#264653")) +
+  scale_shape_manual(values = c(24, 21)) +
+  scale_color_manual(values = c("#2a9d8f", "#264653")) +
   geom_hline(yintercept = 0, color = "darkgray") +
   #geom_jitter(aes(shape = Test.tone), position = position_jitterdodge(0.2)  ,fill = "gray", color = "gray", size = 2, alpha = 0.5) +
-  stat_summary(aes(color = Test.tone, shape = Test.tone, fill = Test.tone), fun = "median", geom = "point", size = 3, position = position_dodge(width = 0.5)) +
+  stat_summary(aes(color = Test.tone, shape = WP., fill = Test.tone), fun = "median", geom = "point", size = 3, position = position_dodge(width = 0.5)) +
   stat_summary(aes(color = Test.tone), fun.data = compute_min_max, geom = "errorbar", width = 0.3, position = position_dodge(width = 0.5)) +
   labs(x = "Group", y = "Angle Error") +
-  scale_color_manual(values = c("#e9c46a", "#e76f51")) +
-  scale_shape_manual(values = c(21, 24)) +
-  scale_fill_manual(values = c("#e9c46a", "#e76f51")) +
   theme_minimal() +
   ylim(-15, 15) +
   theme(legend.position = "none") +
@@ -243,7 +243,8 @@ EF <- ggplot(data = data, aes(x = Test.tone, y = error)) +
   geom_hline(yintercept = 0, color = "darkgray") +
   #geom_jitter(aes(shape = Test.tone), position = position_jitterdodge(0.2)  ,fill = "gray", color = "gray", size = 2, alpha = 0.5) +
   scale_color_manual(values=colour_map)+
-  stat_summary(aes(color = Test.tone, fill = Test.tone), fun = "median", geom = "point", size = 3) +
+  scale_fill_manual(values=colour_map)+
+  stat_summary(aes(color = Test.tone, fill = Test.tone), fun = "median", geom = "point", size = 3, shape = 24) +
   stat_summary(aes(color = Test.tone), fun.data = "median_hilow", geom = "errorbar", width = 0.2) +
   labs(x = "Group", y = "Angle Difference") +
   theme_minimal() +
@@ -303,56 +304,9 @@ RF
 ggsave(filename = "Figures/NewLocalisationTests/FrequencyRecall-NL-Summary(noLegend).png", plot = last_plot(), width = 6, height = 4, dpi = 300)
 
 
-# Heatmap: 
+## Tone type and Weatherproofing
 
-# Full Grid: 
-all_groups <- c(-180, -90, -45, 0, 90)
-all_bins <- 1:18
-
-complete_grid <- expand.grid(True.Azimuth = all_groups, Aliaised.Bins = all_bins)
-
-
-data <- data[data$localised. == "a", ]
-
-# Put into Bins
-data$Aliaized.Bins <- cut(data$Aliaized.Error, breaks = seq(0, 180, 10), include.lowest = TRUE, labels = FALSE)
-
-# Create a table of counts for heatmap
-heatmap_data <- as.data.frame(table(data$True.azimuth, data$Aliaized.Bins))
-
-colnames(heatmap_data) <- c("True.Azimuth", "Aliaised.Bins", "Count")
-
-# Join the dataframes
-heatmap_data$True.Azimuth <- as.numeric(as.character(heatmap_data$True.Azimuth))
-heatmap_data$Aliaised.Bins <- as.numeric(as.character(heatmap_data$Aliaised.Bins))
-
-heatmap_data <- complete_grid %>%
-  left_join(heatmap_data, by = c("True.Azimuth", "Aliaised.Bins")) %>%
-  replace_na(list(Count = 0))
-
-heatmap_data$True.Azimuth <- as.factor(heatmap_data$True.Azimuth)
-
-heatmap_data$Aliaised.Bins <- heatmap_data$Aliaised.Bins *10
-
-# Plot the heatmap
-AF <- ggplot(heatmap_data, aes(x = True.Azimuth, y = Aliaised.Bins, fill = Count)) +
-  geom_tile() +
-  scale_fill_gradient(low = "white", high = "turquoise4", limits = c(0,6)) + 
-  labs(y = "Aliaized Azimuth", x = "True Azimuth", fill = "Count") +
-  theme_minimal() +
-  theme(legend.position = "none") +
-  scale_y_continuous(breaks = c(0, 30, 60, 90, 120, 150, 180), position = "right")+
-  theme(axis.title.x = element_blank(), axis.title.y = element_blank())
-
-AF
-
-
-# Tone type
-
-
-# Precision 
-
-data <- dataRaw[dataRaw$Test.tone %in% c("wren", "pink"),]
+data <- dataRaw[dataRaw$Trial == "lab-pre",]
 
 data$error <- as.numeric(data$error)
 
@@ -363,9 +317,9 @@ ET <- ggplot(data = data, aes(x = Test.tone, y = error)) +
   stat_summary(aes(color = Test.tone, shape = Test.tone, fill = Test.tone), fun = "median", geom = "point", size = 3, position = position_dodge(width = 0.5)) +
   stat_summary(aes(color = Test.tone), fun.data = compute_min_max, geom = "errorbar", width = 0.3, position = position_dodge(width = 0.5)) +
   labs(x = "Group", y = "Angle Error") +
-  scale_color_manual(values = c("#e9c46a", "#e76f51")) +
-  scale_shape_manual(values = c(21, 24)) +
-  scale_fill_manual(values = c("#e9c46a", "#e76f51")) +
+  scale_fill_manual(values = c("#2a9d8f", "#264653")) +
+  scale_color_manual(values = c("#2a9d8f", "#264653")) +
+  scale_shape_manual(values = c(22, 23)) +
   theme_minimal() +
   ylim(-15, 15) +
   theme(legend.position = "none") +
@@ -421,55 +375,8 @@ RT <- ggplot(data = proportions, aes(x=Test.tone, y= proportion, fill = localise
 
 RT
 
-# Aliaising 
-
-# Full Grid: 
-all_groups <- c(-180, -90, -45, 0, 90)
-all_bins <- 1:18
-
-complete_grid <- expand.grid(True.Azimuth = all_groups, Aliaised.Bins = all_bins)
-
-data <- dataRaw
-data <- data[data$localised. == "a", ]
-
-# Put into Bins
-data$Aliaized.Bins <- cut(data$Aliaized.Error, breaks = seq(0, 180, 10), include.lowest = TRUE, labels = FALSE)
-
-# Create a table of counts for heatmap
-heatmap_data <- as.data.frame(table(data$True.azimuth, data$Aliaized.Bins))
-
-colnames(heatmap_data) <- c("True.Azimuth", "Aliaised.Bins", "Count")
-
-# Join the dataframes
-heatmap_data$True.Azimuth <- as.numeric(as.character(heatmap_data$True.Azimuth))
-heatmap_data$Aliaised.Bins <- as.numeric(as.character(heatmap_data$Aliaised.Bins))
-
-heatmap_data <- complete_grid %>%
-  left_join(heatmap_data, by = c("True.Azimuth", "Aliaised.Bins")) %>%
-  replace_na(list(Count = 0))
-
-heatmap_data$True.Azimuth <- as.factor(heatmap_data$True.Azimuth)
-
-heatmap_data$Aliaised.Bins <- heatmap_data$Aliaised.Bins *10
-
-# Plot the heatmap
-A <- ggplot(heatmap_data, aes(x = True.Azimuth, y = Aliaised.Bins, fill = Count)) +
-  geom_tile() +
-  scale_fill_gradient(low = "white", high = "#2a9d8f") + 
-  labs(y = "Aliaized Azimuth", x = "True Azimuth", fill = "Count", limits = c(0,6)) +
-  theme_minimal() +
-  theme(legend.position = "none") +
-  scale_y_continuous(breaks = c(0, 30, 60, 90, 120, 150, 180), position = "right")+
-  theme(axis.title.x = element_blank(), axis.title.y = element_blank())
-
-A
-
-
-
-
-
 # Weatherproofing 
-data <- dataRaw
+data <- dataRaw[dataRaw$Trial == "lab-pre",]
 
 data$error <- as.numeric(data$error)
 data$WP. <- as.factor(data$WP.)
@@ -483,9 +390,9 @@ EWP <- ggplot(data = data, aes(x = WP., y = error)) +
   stat_summary(aes(color = WP., shape = WP., fill = WP.), fun = "median", geom = "point", size = 3, position = position_dodge(width = 0.5)) +
   stat_summary(aes(color = WP.), fun.data = compute_min_max, geom = "errorbar", width = 0.3, position = position_dodge(width = 0.5)) +
   labs(x = "Group", y = "Angle Error") +
-  scale_color_manual(values = c("#2a9d8f", "#264653")) +
-  scale_shape_manual(values = c(22, 23)) +
-  scale_fill_manual(values = c("#2a9d8f", "#264653")) +
+  scale_fill_manual(values = c("#e9c46a","#e9c46a")) +
+  scale_shape_manual(values = c(24, 21)) +
+  scale_color_manual(values = c("#e9c46a","#e9c46a")) +
   theme_minimal() +
   ylim(-15, 15) +
   theme(legend.position = "none", ) +
@@ -547,19 +454,102 @@ RWP
 
 # COMBINE 
 
-top_row <- arrangeGrob(ET, EWP, RT, RWP, A, ncol=5, widths=c(1,1,1,1,1.3))
-middle_row <- arrangeGrob(ED, RD, AD, ncol=3, widths=c(2,2,1.3))
-bottom_row <- arrangeGrob(EF, RF, AF, ncol=3, widths=c(2,2,1.3))
+top_row <- arrangeGrob(ET, EWP, RT, RWP, ncol=4, widths=c(1,1,1,1))
+middle_row <- arrangeGrob(ED, RD, ncol=2, widths=c(2,2))
+bottom_row <- arrangeGrob(EF, RF, ncol=2, widths=c(2,2))
 
 
 bigBoi <- grid.arrange(top_row, middle_row, bottom_row, nrow=3)
 
 bigBoi
 
-ggsave(filename = "Figures/NewLocalisationTests/ALL-TESTS.png", plot = bigBoi, width = 7.5, height = 8.3, dpi = 500)
+ggsave(filename = "Figures/NewLocalisationTests/ALL-TESTS-precision-recall.png", plot = bigBoi, width = 7.5, height = 8.3, dpi = 500)
 
 
 
-
-
-
+### Retired Code I didn't have the heart to delete 
+# 
+# # Heatmap: 
+# 
+# # Full Grid: 
+# all_groups <- c(-180, -90, -45, 0, 90)
+# all_bins <- 1:18
+# 
+# complete_grid <- expand.grid(True.Azimuth = all_groups, Aliaised.Bins = all_bins)
+# # 
+# 
+# data <- data[data$localised. == "a", ]
+# 
+# # Put into Bins
+# data$Aliaized.Bins <- cut(data$Aliaized.Error, breaks = seq(0, 180, 10), include.lowest = TRUE, labels = FALSE)
+# 
+# # Create a table of counts for heatmap
+# heatmap_data <- as.data.frame(table(data$True.azimuth, data$Aliaized.Bins))
+# 
+# colnames(heatmap_data) <- c("True.Azimuth", "Aliaised.Bins", "Count")
+# 
+# # Join the dataframes
+# heatmap_data$True.Azimuth <- as.numeric(as.character(heatmap_data$True.Azimuth))
+# heatmap_data$Aliaised.Bins <- as.numeric(as.character(heatmap_data$Aliaised.Bins))
+# 
+# heatmap_data <- complete_grid %>%
+#   left_join(heatmap_data, by = c("True.Azimuth", "Aliaised.Bins")) %>%
+#   replace_na(list(Count = 0))
+# 
+# heatmap_data$True.Azimuth <- as.factor(heatmap_data$True.Azimuth)
+# 
+# heatmap_data$Aliaised.Bins <- heatmap_data$Aliaised.Bins *10
+# 
+# # Plot the heatmap
+# AF <- ggplot(heatmap_data, aes(x = True.Azimuth, y = Aliaised.Bins, fill = Count)) +
+#   geom_tile() +
+#   scale_fill_gradient(low = "white", high = "turquoise4", limits = c(0,6)) + 
+#   labs(y = "Aliaized Azimuth", x = "True Azimuth", fill = "Count") +
+#   theme_minimal() +
+#   theme(legend.position = "none") +
+#   scale_y_continuous(breaks = c(0, 30, 60, 90, 120, 150, 180), position = "right")+
+#   theme(axis.title.x = element_blank(), axis.title.y = element_blank())
+# 
+# AF
+# 
+# 
+# # Full Grid: 
+# all_groups <- c(-180, -90, -45, 0, 90)
+# all_bins <- 1:18
+# 
+# complete_grid <- expand.grid(True.Azimuth = all_groups, Aliaised.Bins = all_bins)
+# 
+# data <- dataRaw
+# data <- data[data$localised. == "a", ]
+# 
+# # Put into Bins
+# data$Aliaized.Bins <- cut(data$Aliaized.Error, breaks = seq(0, 180, 10), include.lowest = TRUE, labels = FALSE)
+# 
+# # Create a table of counts for heatmap
+# heatmap_data <- as.data.frame(table(data$True.azimuth, data$Aliaized.Bins))
+# 
+# colnames(heatmap_data) <- c("True.Azimuth", "Aliaised.Bins", "Count")
+# 
+# # Join the dataframes
+# heatmap_data$True.Azimuth <- as.numeric(as.character(heatmap_data$True.Azimuth))
+# heatmap_data$Aliaised.Bins <- as.numeric(as.character(heatmap_data$Aliaised.Bins))
+# 
+# heatmap_data <- complete_grid %>%
+#   left_join(heatmap_data, by = c("True.Azimuth", "Aliaised.Bins")) %>%
+#   replace_na(list(Count = 0))
+# 
+# heatmap_data$True.Azimuth <- as.factor(heatmap_data$True.Azimuth)
+# 
+# heatmap_data$Aliaised.Bins <- heatmap_data$Aliaised.Bins *10
+# 
+# # Plot the heatmap
+# A <- ggplot(heatmap_data, aes(x = True.Azimuth, y = Aliaised.Bins, fill = Count)) +
+#   geom_tile() +
+#   scale_fill_gradient(low = "white", high = "#2a9d8f") + 
+#   labs(y = "Aliaized Azimuth", x = "True Azimuth", fill = "Count", limits = c(0,6)) +
+#   theme_minimal() +
+#   theme(legend.position = "none") +
+#   scale_y_continuous(breaks = c(0, 30, 60, 90, 120, 150, 180), position = "right")+
+#   theme(axis.title.x = element_blank(), axis.title.y = element_blank())
+# 
+# A
