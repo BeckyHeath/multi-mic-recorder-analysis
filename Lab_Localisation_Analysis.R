@@ -57,10 +57,7 @@ dataRaw$True.azimuth <- map_values[as.character(dataRaw$True.azimuth)]
 
 
 # get rid of freq-deps and Lab data for now:
-data <- dataRaw[dataRaw$Trial != "freq-dep",]
-data <- data[data$Trial != "Lab", ]
-
-
+data <- dataRaw[dataRaw$Trial == "field",]
 
 
 # Create Coarse Labels
@@ -168,7 +165,6 @@ RD
 ggsave(filename = "Figures/NewLocalisationTests/DistanceRecall-NL-Summary.png", plot = last_plot(), width = 6, height = 4, dpi = 300)
 
 
-# Heatmaps
 
 # Full Grid: 
 all_groups <- c(-180, -90, -45, 0, 90)
@@ -178,41 +174,6 @@ complete_grid <- expand.grid(True.Azimuth = all_groups, Aliaised.Bins = all_bins
 
 
 data <- data[data$localised. == "a", ]
-
-# Put into Bins
-data$Aliaized.Bins <- cut(data$Aliaized.Error, breaks = seq(0, 180, 10), include.lowest = TRUE, labels = FALSE)
-
-# Create a table of counts for heatmap
-heatmap_data <- as.data.frame(table(data$True.azimuth, data$Aliaized.Bins))
-
-colnames(heatmap_data) <- c("True.Azimuth", "Aliaised.Bins", "Count")
-
-# Join the dataframes
-heatmap_data$True.Azimuth <- as.numeric(as.character(heatmap_data$True.Azimuth))
-heatmap_data$Aliaised.Bins <- as.numeric(as.character(heatmap_data$Aliaised.Bins))
-
-heatmap_data <- complete_grid %>%
-  left_join(heatmap_data, by = c("True.Azimuth", "Aliaised.Bins")) %>%
-  replace_na(list(Count = 0))
-
-heatmap_data$True.Azimuth <- as.factor(heatmap_data$True.Azimuth)
-
-heatmap_data$Aliaised.Bins <- heatmap_data$Aliaised.Bins *10
-
-# Plot the heatmap
-AD <- ggplot(heatmap_data, aes(x = True.Azimuth, y = Aliaised.Bins, fill = Count)) +
-  geom_tile() +
-  scale_fill_gradient(low = "white", high = "#2a9d8f", limits = c(0,6)) + 
-  labs(y = "Aliaized Azimuth", x = "True Azimuth", fill = "Count") +
-  theme_minimal() +
-  theme(legend.position = "none") +
-  scale_y_continuous(breaks = c(0, 30, 60, 90, 120, 150, 180), position = "right")+
-  theme(axis.title.x = element_blank(), axis.title.y = element_blank())
-
-AD
-
-
-
 
 ### Frequency-dependent trials: ####
 
@@ -463,7 +424,7 @@ bigBoi <- grid.arrange(top_row, middle_row, bottom_row, nrow=3)
 
 bigBoi
 
-ggsave(filename = "Figures/NewLocalisationTests/ALL-TESTS-precision-recall-long.png", plot = bigBoi, width = 6.3, height = 8.3, dpi = 500)
+ggsave(filename = "Figures/NewLocalisationTests/ALL-TESTS-precision-recall-long-update.png", plot = bigBoi, width = 6.3, height = 8.3, dpi = 500)
 
 
 
